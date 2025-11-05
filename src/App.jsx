@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter, Route, Routes, Navigate, useLocation } from 'react-router-dom'
 import Product from './features/products/Product'
 import ProductDetail from './features/products/ProductDetail'
@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast'
 import Login from './features/auth/Login'
 import Register from './features/auth/Register'
 import Profile from './features/auth/Profile'
+import useDocumentTitle from './hooks/useDocumentTitle'
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -21,9 +22,31 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+// Component to handle page titles based on route
+const PageTitle = () => {
+  const location = useLocation();
+  
+  useEffect(() => {
+    const pathname = location.pathname;
+    let pageTitle = 'frontend';
+
+    // Set page title based on the current route
+    if (pathname === '/') pageTitle = 'Home';
+    else if (pathname.includes('/product/')) pageTitle = 'Product Details';
+    else if (pathname === '/login') pageTitle = 'Login';
+    else if (pathname === '/register') pageTitle = 'Register';
+    else if (pathname === '/profile') pageTitle = 'My Profile';
+    
+    document.title = `TP-Cambo | ${pageTitle}`;
+  }, [location]);
+
+  return null;
+};
+
 function App() {
   return (
     <BrowserRouter>
+      <PageTitle />
       <Toaster
         position="bottom-right"
         reverseOrder={false}

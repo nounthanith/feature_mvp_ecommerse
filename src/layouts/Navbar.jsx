@@ -48,7 +48,7 @@ function Navbar() {
 
     return (
         <>
-            <div className="overflow-hidden bg-gradient-to-r from-black via-rose-300 to-black py-1 text-white text-sm font-medium">
+            <div className="overflow-hidden bg-gradient-to-r from-black via-pink-950 to-black py-1 text-white text-sm font-medium">
                 <Marquee
                     autoFill
                     speed={30}
@@ -103,9 +103,6 @@ function Navbar() {
 
                         {/* Right side icons */}
                         <div className="flex items-center space-x-1">
-                            <button className="p-2 text-gray-600 hover:text-rose-600">
-                                <FiSearch className="w-5 h-5" />
-                            </button>
                             <button className="p-2 text-gray-600 hover:text-rose-600 relative">
                                 <FiShoppingCart className="w-5 h-5" />
                                 <span className="absolute -top-1 -right-1 bg-rose-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">

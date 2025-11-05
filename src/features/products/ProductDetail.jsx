@@ -70,8 +70,8 @@ function ProductDetail() {
     <div className="max-w-6xl mx-auto">
       {/* Back Button */}
       <button
-        onClick={() => navigate('/')}
-        className="flex items-center text-black hover:text-blue-600 transition-colors px-4 cursor-pointer"
+        onClick={() => navigate("/")}
+        className="flex items-center text-black hover:text-blue-600 transition-colors px-4 cursor-pointer mt-4"
       >
         <FaChevronLeft className="mr-2" /> Back to Products
       </button>

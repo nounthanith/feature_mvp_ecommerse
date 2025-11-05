@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import useProduct from './useProduct';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 
 function FeaturedProduct() {
     const { featuredProducts, getFeaturedProducts } = useProduct();
     const [currentSlide, setCurrentSlide] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         getFeaturedProducts();
@@ -52,7 +54,7 @@ function FeaturedProduct() {
                             <div className="max-w-2xl text-center">
                                 <h2 className="text-4xl md:text-3xl font-bold mb-4">{product.name}</h2>
                                 <p className="text-lg mb-6">{product.description}</p>
-                                <button className="bg-white text-black px-8 py-2 rounded-none font-medium hover:bg-gray-100 transition-colors">
+                                <button onClick={() => navigate(`/product/${product._id}`)} className="bg-white text-black px-8 py-2 rounded-none font-medium hover:bg-gray-100 transition-colors">
                                     Shop Now
                                 </button>
                             </div>
