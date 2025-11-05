@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useProduct from './useProduct';
 import { CiShoppingCart } from "react-icons/ci";
+import FeaturedProduct from './FeaturedProduct';
 function Product() {
     const { products, loading, error, getProducts, getProductById } = useProduct();
     const [hoveredProductId, setHoveredProductId] = useState(null);
@@ -15,6 +16,14 @@ function Product() {
 
     return (
         <div className="">
+            <FeaturedProduct />
+            <h2 className="text-2xl font-bold text-center text-black group mt-5">
+                <span className="relative inline-block">
+                    Products
+                    <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
+                </span>
+            </h2>
+            <p className='text-center text-gray-500 mb-5'>Explore our latest collection of high-quality products. From trendy fashion to practical accessories, we've got you covered.</p>
             <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2">
                 {products.map((product, index) => (
                     <div
@@ -40,13 +49,7 @@ function Product() {
                             )}
                         </div>
                         <div className=''>
-                            <p className="text-gray-700 font-semibold text-[12px] flex justify-end mt-2 mr-2">
-                                {new Date(product.createdAt).toLocaleDateString('en-GB', {
-                                    day: '2-digit',
-                                    month: 'short',
-                                    year: 'numeric'
-                                }).replace(/ /g, '-')}
-                            </p>
+                            <p className="text-gray-700 font-semibold text-[12px] flex justify-end mt-2 mr-2">{new Date(product?.createdAt).toLocaleDateString()}</p>
                             <div className='px-2'>
                                 <h2 className='text-lg font-bold'>{product.name}</h2>
                                 <div className="flex items-center justify-between">
@@ -54,13 +57,8 @@ function Product() {
                                 </div>
                             </div>
                             <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    // console.log(`🛒 Added ${product.name} to cart`);
-                                    // later you can call your addToCart(product) function here
-                                }}
-                                className="mt-2 bg-black hover:bg-black/80 text-white font-semibold py-2 px-4 w-full flex items-center justify-center gap-2 rounded-none cursor-pointer transition-all duration-300"
-                            >
+                                onClick={(e) => { e.stopPropagation() }}
+                                className="mt-2 bg-black hover:bg-black/80 text-white font-semibold py-2 px-4 w-full flex items-center justify-center gap-2 rounded-none cursor-pointer transition-all duration-300">
                                 Add to cart
                                 <CiShoppingCart className="text-xl" />
                             </button>

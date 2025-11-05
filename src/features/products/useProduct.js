@@ -2,6 +2,7 @@ import { useState } from "react";
 import api from "../../lib/api";
 import { useNavigate } from "react-router-dom";
 const useProduct = () => {
+    const [featuredProducts, setFeaturedProducts] = useState([]);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -32,6 +33,39 @@ const useProduct = () => {
         }
     };
 
+    const getProductsByCategory = async (categoryId, currentProductId) => {
+        if (!categoryId) return;
+
+        setLoading(true);
+        try {
+            const response = await api.get(`/products?category=${categoryId}`);
+            const filteredProducts = response.data.data.filter(product => product._id !== currentProductId);
+            setProducts(filteredProducts);
+            if (filteredProducts.length === 0) {
+                setError("No related products found");
+            } else {
+                setError(null);
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getFeaturedProducts = async () => {
+        setLoading(true);
+        try {
+            const response = await api.get("/products/featured");
+            setFeaturedProducts(response.data.data);
+        } catch (error) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     return {
         products,
         loading,
@@ -39,6 +73,9 @@ const useProduct = () => {
         getProducts,
         getProductById,
         product,
+        getProductsByCategory,
+        featuredProducts,
+        getFeaturedProducts,
     };
 };
 

@@ -1,11 +1,34 @@
 import { useState, useEffect } from 'react';
-import { Outlet, useNavigate, NavLink } from 'react-router-dom';
+import { Outlet, useNavigate, NavLink, useLocation } from 'react-router-dom';
 import { FiMenu, FiX, FiShoppingCart, FiUser, FiSearch } from 'react-icons/fi';
+import Marquee from 'react-fast-marquee';
+import Footer from './Footer';
+import { toast } from 'react-hot-toast';
 
 function Navbar() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+
+    const handleProfileClick = () => {
+        if (isLoggedIn) {
+            navigate('/profile');
+        } else {
+            navigate('/login', { state: { from: location.pathname } });
+        }
+    };
+
+    // Listen for login/logout
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setIsLoggedIn(!!localStorage.getItem('token'));
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -21,25 +44,42 @@ function Navbar() {
 
     const navLinks = [
         { name: 'Shop', path: '/' },
-        
     ];
 
     return (
         <>
-            <header 
-                className={`fixed w-full z-50 transition-all duration-300 ${
-                    scrolled ? 'bg-white shadow-md py-2' : 'bg-white/90 backdrop-blur-sm py-4'
-                }`}
+            <div className="overflow-hidden bg-gradient-to-r from-black via-rose-300 to-black py-1 text-white text-sm font-medium">
+                <Marquee
+                    autoFill
+                    speed={30}
+                    pauseOnHover={true}
+                    gradient={false}
+                    direction="left"
+                >
+                    <div className='flex items-center space-x-8 mx-4'>
+                        <span>🚚 Free shipping on orders over $50</span>
+                        <span className='hidden sm:inline'>•</span>
+                        <span className='hidden sm:inline'>🔥 New arrivals just dropped!</span>
+                        <span className='hidden md:inline'>•</span>
+                        <span className='hidden md:inline'>🎁 15% off your first order - NEW15</span>
+                        <span className='hidden lg:inline'>•</span>
+                        <span className='hidden lg:inline'>💯 100% Satisfaction Guaranteed</span>
+                    </div>
+                </Marquee>
+            </div>
+            <header
+                className={`sticky top-0 w-full z-50 transition-all duration-300 border-b border-gray-300 ${scrolled ? 'bg-white shadow-md py-2' : 'bg-white/90 backdrop-blur-sm py-4'
+                    }`}
             >
                 <div className="container mx-auto px-4">
                     <div className="flex justify-between items-center">
                         {/* Logo */}
                         <div className="flex items-center">
-                            <button 
+                            <button
                                 onClick={() => navigate('/')}
-                                className="text-2xl font-bold text-indigo-600"
+                                className="text-2xl font-bold text-black"
                             >
-                                ShopEase
+                                TP-Cambo
                             </button>
                         </div>
 
@@ -50,10 +90,9 @@ function Navbar() {
                                     key={link.name}
                                     to={link.path}
                                     className={({ isActive }) =>
-                                        `px-3 py-2 text-sm font-medium transition-colors ${
-                                            isActive 
-                                                ? 'text-indigo-600 border-b-2 border-indigo-600' 
-                                                : 'text-gray-600 hover:text-indigo-600'
+                                        `px-3 py-2 text-sm font-medium transition-colors ${isActive
+                                            ? 'text-black border-b-2 border-black'
+                                            : 'text-gray-600 hover:text-black'
                                         }`
                                     }
                                 >
@@ -63,22 +102,22 @@ function Navbar() {
                         </nav>
 
                         {/* Right side icons */}
-                        <div className="flex items-center space-x-4">
-                            <button className="p-2 text-gray-600 hover:text-indigo-600">
+                        <div className="flex items-center space-x-1">
+                            <button className="p-2 text-gray-600 hover:text-rose-600">
                                 <FiSearch className="w-5 h-5" />
                             </button>
-                            <button className="p-2 text-gray-600 hover:text-indigo-600 relative">
+                            <button className="p-2 text-gray-600 hover:text-rose-600 relative">
                                 <FiShoppingCart className="w-5 h-5" />
-                                <span className="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                                <span className="absolute -top-1 -right-1 bg-rose-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
                                     3
                                 </span>
                             </button>
-                            <button className="p-2 text-gray-600 hover:text-indigo-600">
+                            <button onClick={() => navigate('/login')} className="p-2 text-gray-600 hover:text-rose-600">
                                 <FiUser className="w-5 h-5" />
                             </button>
                             {/* Mobile menu button */}
-                            <button 
-                                className="md:hidden p-2 text-gray-600 hover:text-indigo-600"
+                            <button
+                                className="md:hidden p-2 text-gray-600 hover:text-rose-600"
                                 onClick={() => setIsOpen(!isOpen)}
                             >
                                 {isOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
@@ -87,10 +126,9 @@ function Navbar() {
                     </div>
 
                     {/* Mobile Navigation */}
-                    <div 
-                        className={`md:hidden transition-all duration-300 ease-in-out overflow-hidden ${
-                            isOpen ? 'max-h-96 py-4' : 'max-h-0 py-0'
-                        }`}
+                    <div
+                        className={`md:hidden transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'max-h-96 py-4' : 'max-h-0 py-0'
+                            }`}
                     >
                         <div className="flex flex-col space-y-3 mt-4">
                             {navLinks.map((link) => (
@@ -98,10 +136,9 @@ function Navbar() {
                                     key={`mobile-${link.name}`}
                                     to={link.path}
                                     className={({ isActive }) =>
-                                        `px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                                            isActive 
-                                                ? 'bg-indigo-50 text-indigo-600' 
-                                                : 'text-gray-600 hover:bg-gray-100'
+                                        `px-3 py-2 text-sm font-medium rounded-lg transition-colors ${isActive
+                                            ? 'bg-rose-50 text-rose-600'
+                                            : 'text-gray-600 hover:bg-gray-100'
                                         }`
                                     }
                                     onClick={() => setIsOpen(false)}
@@ -113,10 +150,11 @@ function Navbar() {
                     </div>
                 </div>
             </header>
-            
+
             {/* Add padding to account for fixed navbar */}
-            <div className="h-20"></div>
+            <div className="h-2"></div>
             <Outlet />
+            <Footer />
         </>
     );
 }
