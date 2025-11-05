@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react'
-import { BrowserRouter, Route, Routes, Navigate, useLocation } from 'react-router-dom'
-import Product from './features/products/Product'
-import ProductDetail from './features/products/ProductDetail'
-import Navbar from './layouts/Navbar'
-import { Toaster } from 'react-hot-toast'
-import Login from './features/auth/Login'
-import Register from './features/auth/Register'
-import Profile from './features/auth/Profile'
-import useDocumentTitle from './hooks/useDocumentTitle'
+import React, { useEffect } from 'react';
+import { BrowserRouter, Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import Product from './features/products/Product';
+import ProductDetail from './features/products/ProductDetail';
+import Navbar from './layouts/Navbar';
+import { Toaster } from 'react-hot-toast';
+import Login from './features/auth/Login';
+import Register from './features/auth/Register';
+import Profile from './features/auth/Profile';
+import useDocumentTitle from './hooks/useDocumentTitle';
+import NotFound from './pages/NotFound';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -120,6 +121,8 @@ function App() {
               </ProtectedRoute>
             } 
           />
+          {/* 404 Route - Catch all unmatched routes */}
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
