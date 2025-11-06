@@ -8,6 +8,7 @@ const useProduct = () => {
     const [error, setError] = useState(null);
     const [product, setProduct] = useState(null);
     const navigate = useNavigate();
+    
     const getProducts = async () => {
         setLoading(true);
         try {

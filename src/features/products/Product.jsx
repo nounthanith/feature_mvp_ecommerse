@@ -3,17 +3,20 @@ import useProduct from './useProduct';
 import { CiShoppingCart } from "react-icons/ci";
 import FeaturedProduct from './FeaturedProduct';
 import Category from '../category/Category';
+import useCart from '../cart/useCart';
 function Product() {
     const { products, loading, error, getProducts, getProductById } = useProduct();
     const [hoveredProductId, setHoveredProductId] = useState(null);
+    const { addToCart } = useCart();
 
+    // console.log(products);
     useEffect(() => {
         getProducts();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, []);
 
     if (loading) return (
-        <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="flex items-center justify-center min-h-[80vh]">
             <div className="animate-pulse flex flex-col items-center space-y-4">
                 <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
                 <p className="text-gray-600">Loading products...</p>
@@ -22,7 +25,7 @@ function Product() {
     );
 
     if (error) return (
-        <div className="flex flex-col items-center justify-center min-h-[50vh] p-6 text-center">
+        <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
             <div className="bg-red-50 border-l-4 border-red-500 p-4 w-full max-w-md">
                 <div className="flex">
                     <div className="shrink-0">
@@ -47,7 +50,7 @@ function Product() {
     );
 
     if (!products?.length) return (
-        <div className="flex flex-col items-center justify-center min-h-[50vh] p-6 text-center">
+        <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
             <svg className="h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
@@ -109,7 +112,7 @@ function Product() {
                                     </div>
                                 </div>
                                 <button
-                                    onClick={(e) => { e.stopPropagation() }}
+                                    onClick={() => addToCart(product._id, 1)}
                                     className="mt-2 bg-black hover:bg-black/80 text-white font-semibold py-2 px-4 w-full flex items-center justify-center gap-2 rounded-none cursor-pointer transition-all duration-300">
                                     Add to cart
                                     <CiShoppingCart className="text-xl" />

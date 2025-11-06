@@ -47,24 +47,7 @@ function ProductDetail() {
     addToCart({ ...product, quantity });
   };
 
-  const renderRatingStars = (rating) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-
-    for (let i = 1; i <= 5; i++) {
-      if (i <= fullStars) {
-        stars.push(<FaStar key={i} className="text-yellow-400" />);
-      } else if (i === fullStars + 1 && hasHalfStar) {
-        stars.push(<FaStarHalfAlt key={i} className="text-yellow-400" />);
-      } else {
-        stars.push(<FaRegStar key={i} className="text-yellow-400" />);
-      }
-    }
-    return stars;
-  };
-
-  if (!product) return <div className="flex items-center justify-center h-screen text-gray-600">Loading product details...</div>;
+  if (!product) return <div className="flex items-center justify-center h-[80vh] text-gray-600">Loading product details...</div>;
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -108,13 +91,29 @@ function ProductDetail() {
 
           {/* Product Info */}
           <div className="md:w-1/2 p-6">
+            <div>
+              {product.isActive ? (
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold bg-green-50 text-green-700 border border-green-300 shadow-sm">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                  </span>
+                  Active
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold bg-red-50 text-red-700 border border-red-300 shadow-sm">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                  </span>
+                  Inactive
+                </span>
+              )}
+            </div>
+
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
-                {/* <div className="flex items-center mb-4">
-                  <div className="flex">{renderRatingStars(product.rating || 0)}</div>
-                  <span className="text-gray-500 ml-2">({product.numReviews || 0} reviews)</span>
-                </div> */}
               </div>
               <button className="text-gray-400 hover:text-rose-500 transition-colors">
                 <CiHeart className="w-6 h-6" />

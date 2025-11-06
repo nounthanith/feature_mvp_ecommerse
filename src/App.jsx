@@ -9,6 +9,7 @@ import Register from './features/auth/Register';
 import Profile from './features/auth/Profile';
 import NotFound from './pages/NotFound';
 import CategoryIdProduct from './features/category/CategoryIdProduct';
+import Cart from './features/cart/Cart';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -26,7 +27,7 @@ const ProtectedRoute = ({ children }) => {
 // Component to handle page titles based on route
 const PageTitle = () => {
   const location = useLocation();
-  
+
   useEffect(() => {
     const pathname = location.pathname;
     let pageTitle = 'TP-Cambo';
@@ -41,7 +42,8 @@ const PageTitle = () => {
     else if (pathname.includes('/category/:id')) pageTitle = 'Category';
     else if (pathname.includes('/product/:id')) pageTitle = 'Product Details';
     else if (pathname === '*') pageTitle = 'Not Found';
-    
+    else if (pathname === '/cart') pageTitle = 'Cart';
+
     document.title = `TP-Cambo | ${pageTitle}`;
   }, [location]);
 
@@ -118,13 +120,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/category/:id" element={<CategoryIdProduct />} />
-          <Route 
-            path="/profile" 
+          <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/profile"
             element={
               <ProtectedRoute>
                 <Profile />
               </ProtectedRoute>
-            } 
+            }
           />
           {/* 404 Route - Catch all unmatched routes */}
           <Route path="*" element={<NotFound />} />
