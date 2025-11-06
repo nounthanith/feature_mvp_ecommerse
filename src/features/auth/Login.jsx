@@ -38,7 +38,7 @@ function Login() {
             setIsLoading(true);
             await login(email, password);
             toast.success('Login successful!');
-            
+
             // Redirect to the intended page or home
             const { state } = location;
             const from = state?.from?.pathname || '/';

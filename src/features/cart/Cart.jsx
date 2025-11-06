@@ -17,15 +17,6 @@ export default function Cart() {
 
     const navigate = useNavigate();
 
-    const handleUpdateQuantity = async (itemId, newQuantity) => {
-        if (newQuantity < 1) return;
-        try {
-            await updateCartItem(itemId, { quantity: newQuantity });
-        } catch (err) {
-            console.error('Error updating quantity:', err);
-        }
-    };
-
     const handleClearCart = async () => {
         try {
             await clearCart();
@@ -45,20 +36,7 @@ export default function Cart() {
     }
 
     if (error) {
-        return (
-            <div className="min-h-[60vh] flex items-center justify-center px-4">
-                <div className="text-center p-6 max-w-md w-full bg-white">
-                    <p className="text-black font-bold mb-2">{error}</p>
-                    <button
-                        onClick={getCart}
-                        className="px-6 py-2 bg-rose-100 text-rose-600 rounded-full hover:bg-rose-200 transition-colors border-2 border-rose-400"
-                    >
-                        <span className="flex items-center gap-2"><span className='animate-spin'><FiRefreshCw className="w-5 h-5 text-rose-600" /></span>
-                            Retry</span>
-                    </button>
-                </div>
-            </div>
-        );
+
     }
 
     return (
@@ -93,7 +71,7 @@ export default function Cart() {
                 </h1>
                 <button
                     onClick={handleClearCart}
-                    className="text-sm text-purple-600 cursor-pointer underline hover:text-purple-800 transition-colors"
+                    className="text-sm hidden md:block text-purple-600 cursor-pointer underline hover:text-purple-800 transition-colors"
                     disabled={loading || !cart?.items?.length}
                 >
                     {loading ? 'Clearing...' : 'Clear Cart'}
