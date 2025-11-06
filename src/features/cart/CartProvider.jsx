@@ -14,24 +14,32 @@ const CartProvider = ({ children }) => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         getCart();
     }, []);
 
     const addToCart = async (productId, quantity = 1) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            toast.error('Please login first to add items to cart');
+            return Promise.reject('User not logged in');
+        }
+
         try {
             setLoading(true);
             const res = await api.post('/cart/items',
                 { productId, quantity },
                 {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 }
             );
             await getCart();
+            
             toast.success('Item added to cart');
             return res.data;
         } catch (error) {

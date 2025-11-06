@@ -36,7 +36,7 @@ export default function Cart() {
     }
 
     if (error) {
-
+       
     }
 
     return (

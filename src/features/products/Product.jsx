@@ -12,7 +12,7 @@ function Product() {
     // console.log(products);
     useEffect(() => {
         getProducts();
-        
+
     }, []);
 
     if (loading) return (
