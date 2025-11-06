@@ -10,7 +10,6 @@ import useCart from '../cart/useCart';
 
 function ProductDetail() {
   const { product, getProductById, getProductsByCategory, getRelatedProducts, relatedProducts } = useProduct();
-  console.log(relatedProducts);
   const { addToCart } = useCart();
   const { id } = useParams();
   const navigate = useNavigate();
