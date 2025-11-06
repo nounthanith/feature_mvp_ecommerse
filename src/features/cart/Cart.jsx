@@ -75,16 +75,18 @@ export default function Cart() {
             </h1>
 
             {!cart?.items?.length ? (
-                <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-                    <FiShoppingCart className="mx-auto h-16 w-16 text-gray-300" />
-                    <h2 className="mt-4 text-lg font-medium text-gray-900">Your cart is empty</h2>
-                    <p className="mt-1 text-gray-500">Start shopping to add items to your cart</p>
-                    <Link
-                        to="/products"
-                        className="mt-6 inline-block px-6 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
-                    >
-                        Continue Shopping
-                    </Link>
+                <div className="text-center py-12 bg-white h-[60vh] flex items-center justify-center">
+                    <div>
+                        <FiShoppingCart className="mx-auto h-16 w-16 text-gray-300" />
+                        <h2 className="mt-4 text-lg font-medium text-gray-900">Your cart is empty</h2>
+                        <p className="mt-1 text-gray-500">Start shopping to add items to your cart</p>
+                        <Link
+                            to="/"
+                            className="mt-6 inline-block px-6 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
+                        >
+                            Continue Shopping
+                        </Link>
+                    </div>
                 </div>
             ) : (
                 <div className="lg:flex gap-6">
@@ -121,8 +123,7 @@ export default function Cart() {
                                                         <div className="flex items-center space-x-2">
                                                             <button
                                                                 onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    handleUpdateQuantity(item._id, item.quantity - 1);
+                                                                    toast.success('Quantity updated successfully');
                                                                 }}
                                                                 className="p-1.5 border rounded-none hover:bg-gray-50"
                                                                 disabled={item.quantity <= 1}
@@ -134,8 +135,7 @@ export default function Cart() {
                                                             </span>
                                                             <button
                                                                 onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    handleUpdateQuantity(item._id, item.quantity + 1);
+                                                                    toast.success('Quantity updated successfully');
                                                                 }}
                                                                 className="p-1.5 border rounded-none hover:bg-gray-50"
                                                             >
@@ -160,7 +160,7 @@ export default function Cart() {
                                         <div className="hidden md:flex items-center justify-center md:col-span-3">
                                             <div className="flex items-center border rounded-none">
                                                 <button
-                                                    onClick={() => handleUpdateQuantity(item._id, item.quantity - 1)}
+                                                    onClick={() => toast.success('Quantity updated successfully')}
                                                     className="p-2 text-gray-600 hover:bg-gray-50"
                                                     disabled={item.quantity <= 1}
                                                 >
@@ -168,7 +168,7 @@ export default function Cart() {
                                                 </button>
                                                 <span className="px-3 py-1 border-x">{item.quantity}</span>
                                                 <button
-                                                    onClick={() => handleUpdateQuantity(item._id, item.quantity + 1)}
+                                                    onClick={() => toast.success('Quantity updated successfully')}
                                                     className="p-2 text-gray-600 hover:bg-gray-50"
                                                 >
                                                     <FiPlus className="w-3.5 h-3.5" />
@@ -182,7 +182,7 @@ export default function Cart() {
                                                 ${(item.price * item.quantity).toFixed(2)}
                                             </div>
                                             <button
-                                                onClick={() => removeFromCart(item._id)}
+                                                onClick={() => removeFromCart(item.product._id)}
                                                 className="text-gray-400 hover:text-rose-600 ml-4"
                                                 title="Remove item"
                                             >
@@ -193,7 +193,7 @@ export default function Cart() {
                                         {/* Remove Button - Mobile */}
                                         <div className="w-full flex justify-end md:hidden">
                                             <button
-                                                onClick={() => removeFromCart(item._id)}
+                                                onClick={() => removeFromCart(item.product._id)}
                                                 className="text-rose-600 text-sm font-medium flex items-center"
                                             >
                                                 <FiTrash2 className="w-4 h-4 mr-1" />

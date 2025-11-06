@@ -13,12 +13,9 @@ function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
-    const { cart, getCart } = useCart();
+    const { cart } = useCart();
 
     const cartCount = cart.items?.length;
-    useEffect(() => {
-        getCart();
-    }, []);
 
     // Listen for login/logout
     useEffect(() => {

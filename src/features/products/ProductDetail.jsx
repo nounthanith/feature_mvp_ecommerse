@@ -6,9 +6,11 @@ import { FaStar, FaStarHalfAlt, FaRegStar, FaChevronLeft } from "react-icons/fa"
 import { TbTruckDelivery } from "react-icons/tb";
 import { BsShieldCheck } from "react-icons/bs";
 import toast from 'react-hot-toast';
+import useCart from '../cart/useCart';
 
 function ProductDetail() {
-  const { product, getProductById, addToCart, getProductsByCategory, products } = useProduct();
+  const { product, getProductById, getProductsByCategory, products } = useProduct();
+  const { addToCart } = useCart();
   const { id } = useParams();
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(0);
@@ -93,7 +95,7 @@ function ProductDetail() {
           <div className="md:w-1/2 p-6">
             <div>
               {product.isActive ? (
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold bg-green-50 text-green-700 border border-green-300 shadow-sm">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[14px] font-semibold">
                   <span className="relative flex h-2.5 w-2.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
@@ -163,7 +165,7 @@ function ProductDetail() {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                onClick={handleAddToCart}
+                onClick={() => addToCart(product._id, quantity)}
                 className="flex-1 bg-black hover:bg-black/80 cursor-pointer text-white py-3 px-6 rounded-none font-medium flex items-center justify-center gap-2 transition-all"
               >
                 <CiShoppingCart className="w-5 h-5" />
@@ -252,7 +254,7 @@ function ProductDetail() {
                     </div>
                   </div>
                   <button
-                    onClick={(e) => { e.stopPropagation() }}
+                    onClick={() => addToCart(product._id, 1)}
                     className="mt-2 bg-black hover:bg-black/80 text-white font-semibold py-2 px-4 w-full flex items-center justify-center gap-2 rounded-none cursor-pointer transition-all duration-300">
                     Add to cart
                     <CiShoppingCart className="text-xl" />
