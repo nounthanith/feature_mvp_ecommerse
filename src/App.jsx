@@ -9,6 +9,7 @@ import Register from './features/auth/Register';
 import Profile from './features/auth/Profile';
 import useDocumentTitle from './hooks/useDocumentTitle';
 import NotFound from './pages/NotFound';
+import CategoryIdProduct from './features/category/CategoryIdProduct';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -37,6 +38,8 @@ const PageTitle = () => {
     else if (pathname === '/login') pageTitle = 'Login';
     else if (pathname === '/register') pageTitle = 'Register';
     else if (pathname === '/profile') pageTitle = 'My Profile';
+    else if (pathname.includes('/category/')) pageTitle = 'Category';
+    else if (pathname.includes('/category/:id')) pageTitle = 'Category';
     
     document.title = `TP-Cambo | ${pageTitle}`;
   }, [location]);
@@ -113,6 +116,7 @@ function App() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/category/:id" element={<CategoryIdProduct />} />
           <Route 
             path="/profile" 
             element={
