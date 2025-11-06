@@ -214,7 +214,7 @@ function ProductDetail() {
 
         {/* Product you may also like */}
         <div>
-          {<h2 className="text-2xl font-semibold text-center text-black mb-10 group mt-4">
+          {products.length > 0 && <h2 className="text-2xl font-semibold text-center text-black mb-10 group mt-4">
             <span className="relative inline-block">
               You may also like
               <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>

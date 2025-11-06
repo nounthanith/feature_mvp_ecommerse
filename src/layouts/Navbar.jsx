@@ -44,6 +44,9 @@ function Navbar() {
 
     const navLinks = [
         { name: 'Shop', path: '/' },
+        { name: 'Our Partner', path: '/our-partner' },
+        { name: 'About Us', path: '/about' },
+        { name: 'Contact Us', path: '/contact' },
     ];
 
     return (
@@ -85,21 +88,27 @@ function Navbar() {
 
                         {/* Desktop Navigation */}
                         <nav className="hidden md:flex items-center space-x-8">
-                            {navLinks.map((link) => (
-                                <NavLink
-                                    key={link.name}
-                                    to={link.path}
-                                    className={({ isActive }) =>
-                                        `px-3 py-2 text-sm font-medium transition-colors ${isActive
-                                            ? 'text-black border-b-2 border-black'
-                                            : 'text-gray-600 hover:text-black'
-                                        }`
-                                    }
-                                >
-                                    {link.name}
-                                </NavLink>
-                            ))}
-                        </nav>
+  {navLinks.map((link) => (
+    <NavLink
+      key={link.name}
+      to={link.path}
+      className={({ isActive }) =>
+        `relative px-3 py-2 text-sm font-medium transition-all duration-300
+        ${isActive ? 'text-black' : 'text-gray-600 hover:text-black'}`
+      }
+    >
+      {({ isActive }) => (
+        <span
+          className={`relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:bg-black after:transition-all after:duration-300
+            ${isActive ? 'after:w-full' : 'after:w-0 hover:after:w-full'}`}
+        >
+          {link.name}
+        </span>
+      )}
+    </NavLink>
+  ))}
+</nav>
+
 
                         {/* Right side icons */}
                         <div className="flex items-center space-x-1">

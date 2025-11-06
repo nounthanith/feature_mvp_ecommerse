@@ -22,7 +22,12 @@ function Category() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Explore Our Categories</h2>
+      <h2 className="text-2xl font-bold text-center text-black group mt-5 mb-5">
+        <span className="relative inline-block">
+          Explore Our Categories
+          <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
+        </span>
+      </h2>
 
       <div className="relative group">
         {/* Gradient Overlays */}
@@ -41,7 +46,7 @@ function Category() {
         {/* Scrollable container */}
         <div
           ref={scrollContainer}
-          className="flex overflow-x-auto scrollbar-hide px-16 py-4 gap-4 bg-pink-50"
+          className="flex overflow-x-auto scrollbar-hide px-16 py-4 gap-4 border-b border-t"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
@@ -49,9 +54,11 @@ function Category() {
             <Link
               to={`/category/${category._id}`}
               key={category._id}
-              className="flex-shrink-0 px-6 py-3 text-2xl font-bold whitespace-nowrap transition-all duration-200 hover:cursor-grabbing"
+              className="relative inline-block shrink-0 px-6 py-3 text-2xl font-bold whitespace-nowrap text-gray-900 hover:text-black transition-all duration-300 cursor-grab"
             >
-              {category.name}
+              <span className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full">
+                {category.name}
+              </span>
             </Link>
           ))}
         </div>

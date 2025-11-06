@@ -54,7 +54,7 @@ function FeaturedProduct() {
                             <div className="max-w-2xl text-center">
                                 <h2 className="text-4xl md:text-3xl font-bold mb-4">{product.name}</h2>
                                 <p className="text-lg mb-6">{product.description}</p>
-                                <button onClick={() => navigate(`/product/${product._id}`)} className="bg-white text-black px-8 py-2 rounded-none font-medium hover:bg-gray-100 transition-colors">
+                                <button onClick={() => navigate(`/product/${product._id}`)} className="text-black font-bold text-xl border px-8 py-2 rounded-none hover:bg-white/10 transition-colors">
                                     Shop Now
                                 </button>
                             </div>

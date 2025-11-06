@@ -23,7 +23,7 @@ const useCategory = () => {
             setLoading(true);
             setError(null);
             const response = await api.get(`/categories/${id}/products`);
-            setProducts(response.data.data);
+            setProducts(response.data.data.products);
         } catch (error) {
             setError(error);
         } finally {

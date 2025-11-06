@@ -7,7 +7,6 @@ import { Toaster } from 'react-hot-toast';
 import Login from './features/auth/Login';
 import Register from './features/auth/Register';
 import Profile from './features/auth/Profile';
-import useDocumentTitle from './hooks/useDocumentTitle';
 import NotFound from './pages/NotFound';
 import CategoryIdProduct from './features/category/CategoryIdProduct';
 
@@ -30,7 +29,7 @@ const PageTitle = () => {
   
   useEffect(() => {
     const pathname = location.pathname;
-    let pageTitle = 'frontend';
+    let pageTitle = 'TP-Cambo';
 
     // Set page title based on the current route
     if (pathname === '/') pageTitle = 'Home';
@@ -40,6 +39,8 @@ const PageTitle = () => {
     else if (pathname === '/profile') pageTitle = 'My Profile';
     else if (pathname.includes('/category/')) pageTitle = 'Category';
     else if (pathname.includes('/category/:id')) pageTitle = 'Category';
+    else if (pathname.includes('/product/:id')) pageTitle = 'Product Details';
+    else if (pathname === '*') pageTitle = 'Not Found';
     
     document.title = `TP-Cambo | ${pageTitle}`;
   }, [location]);
