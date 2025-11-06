@@ -87,7 +87,6 @@ const CartProvider = ({ children }) => {
                 shippingCost: 0
             });
             setError(null);
-            toast.success('Cart cleared');
         } catch (error) {
             console.error('Error clearing cart:', error);
             setError('Failed to clear cart');
@@ -123,10 +122,10 @@ const CartProvider = ({ children }) => {
         }
     };
 
-    const updateCartItem = async (itemId, data) => {
+    const updateCartItem = async (productId, quantity) => {
         try {
             setLoading(true);
-            const res = await api.patch(`/cart/items/${itemId}`, data, {
+            const res = await api.put(`/cart/items/${productId}`, { quantity }, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'application/json'

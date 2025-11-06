@@ -15,6 +15,7 @@ function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
     const { cart } = useCart();
 
+
     const cartCount = cart.items?.length;
 
     // Listen for login/logout

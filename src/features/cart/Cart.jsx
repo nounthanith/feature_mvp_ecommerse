@@ -11,7 +11,8 @@ export default function Cart() {
         error,
         getCart,
         updateCartItem,
-        removeFromCart
+        removeFromCart,
+        clearCart
     } = useCart();
 
     const navigate = useNavigate();
@@ -22,6 +23,16 @@ export default function Cart() {
             await updateCartItem(itemId, { quantity: newQuantity });
         } catch (err) {
             console.error('Error updating quantity:', err);
+        }
+    };
+
+    const handleClearCart = async () => {
+        try {
+            await clearCart();
+            toast.success('Cart cleared successfully');
+        } catch (err) {
+            console.error('Error clearing cart:', err);
+            toast.error('Failed to clear cart');
         }
     };
 
@@ -51,28 +62,43 @@ export default function Cart() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Mobile Header */}
             <div className="md:hidden flex items-center justify-between mb-6">
                 <button
                     onClick={() => navigate(-1)}
-                    className="p-2 -ml-2 text-gray-600 hover:text-rose-600"
+                    className="p-2 -ml-2 text-gray-600 hover:text-rose-600 flex justify-center items-center"
                 >
-                    <FiArrowLeft className="w-5 h-5" />
+                    <FiArrowLeft className="w-5 h-5" /><span>back</span>
                 </button>
-                <h1 className="text-xl font-semibold text-gray-900">Your Cart</h1>
-                <div className="w-9"></div> {/* For alignment */}
+                <h1 className="text-xl font-semibold text-gray-900 underline underline-offset-4">Your Cart</h1>
+                <button
+                    onClick={handleClearCart}
+                    className="text-sm text-purple-600 cursor-pointer underline hover:text-purple-800 transition-colors"
+                    disabled={loading || !cart?.items?.length}
+                >
+                    {loading ? 'Clearing...' : 'Clear Cart'}
+                </button>
             </div>
 
             {/* Desktop Header */}
-            <h1 className="hidden md:block text-2xl font-bold text-gray-900 mb-8">
-                Your Shopping Cart
-                {cart?.items?.length > 0 && (
-                    <span className="ml-3 text-sm font-normal bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
-                        {cart.totalItems} {cart.totalItems === 1 ? 'item' : 'items'}
-                    </span>
-                )}
-            </h1>
+            <div className='flex justify-between items-center mt-2'>
+                <h1 className="hidden md:block text-2xl font-bold text-gray-900 mb-5">
+                    Your Shopping Cart
+                    {cart?.items?.length > 0 && (
+                        <span className="ml-3 text-sm font-normal bg-gray-100 text-gray-700 px-3 py-1 rounded-full border">
+                            {cart.totalItems} {cart.totalItems === 1 ? 'item' : 'items'}
+                        </span>
+                    )}
+                </h1>
+                <button
+                    onClick={handleClearCart}
+                    className="text-sm text-purple-600 cursor-pointer underline hover:text-purple-800 transition-colors"
+                    disabled={loading || !cart?.items?.length}
+                >
+                    {loading ? 'Clearing...' : 'Clear Cart'}
+                </button>
+            </div>
 
             {!cart?.items?.length ? (
                 <div className="text-center py-12 bg-white h-[60vh] flex items-center justify-center">
@@ -123,7 +149,7 @@ export default function Cart() {
                                                         <div className="flex items-center space-x-2">
                                                             <button
                                                                 onClick={(e) => {
-                                                                    toast.success('Quantity updated successfully');
+                                                                    updateCartItem(item.product._id, item.quantity - 1);
                                                                 }}
                                                                 className="p-1.5 border rounded-none hover:bg-gray-50"
                                                                 disabled={item.quantity <= 1}
@@ -135,7 +161,7 @@ export default function Cart() {
                                                             </span>
                                                             <button
                                                                 onClick={(e) => {
-                                                                    toast.success('Quantity updated successfully');
+                                                                    updateCartItem(item.product._id, item.quantity + 1);
                                                                 }}
                                                                 className="p-1.5 border rounded-none hover:bg-gray-50"
                                                             >
@@ -160,7 +186,7 @@ export default function Cart() {
                                         <div className="hidden md:flex items-center justify-center md:col-span-3">
                                             <div className="flex items-center border rounded-none">
                                                 <button
-                                                    onClick={() => toast.success('Quantity updated successfully')}
+                                                    onClick={() => updateCartItem(item.product._id, item.quantity - 1)}
                                                     className="p-2 text-gray-600 hover:bg-gray-50"
                                                     disabled={item.quantity <= 1}
                                                 >
@@ -168,7 +194,7 @@ export default function Cart() {
                                                 </button>
                                                 <span className="px-3 py-1 border-x">{item.quantity}</span>
                                                 <button
-                                                    onClick={() => toast.success('Quantity updated successfully')}
+                                                    onClick={() => updateCartItem(item.product._id, item.quantity + 1)}
                                                     className="p-2 text-gray-600 hover:bg-gray-50"
                                                 >
                                                     <FiPlus className="w-3.5 h-3.5" />
