@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { FiShoppingCart, FiTrash2, FiPlus, FiMinus, FiArrowLeft } from 'react-icons/fi';
+import { FiShoppingCart, FiTrash2, FiPlus, FiMinus, FiArrowLeft, FiRefreshCw } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import useCart from './useCart';
+import toast from 'react-hot-toast';
 
 export default function Cart() {
     const {
@@ -35,13 +36,14 @@ export default function Cart() {
     if (error) {
         return (
             <div className="min-h-[60vh] flex items-center justify-center px-4">
-                <div className="text-center p-6 max-w-md w-full bg-white rounded-lg shadow">
-                    <p className="text-red-500 mb-4">{error}</p>
+                <div className="text-center p-6 max-w-md w-full bg-white">
+                    <p className="text-black font-bold mb-2">{error}</p>
                     <button
                         onClick={getCart}
-                        className="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700 transition-colors"
+                        className="px-6 py-2 bg-rose-100 text-rose-600 rounded-full hover:bg-rose-200 transition-colors border-2 border-rose-400"
                     >
-                        Retry
+                        <span className="flex items-center gap-2"><span className='animate-spin'><FiRefreshCw className="w-5 h-5 text-rose-600" /></span>
+                            Retry</span>
                     </button>
                 </div>
             </div>
@@ -230,13 +232,13 @@ export default function Cart() {
 
                             <button
                                 className="w-full bg-rose-600 text-white py-3 rounded-md hover:bg-rose-700 transition-colors"
-                                onClick={() => alert('Proceeding to checkout')}
+                                onClick={() => toast.success('Proceeding to checkout')}
                             >
                                 Proceed to Checkout
                             </button>
 
                             <div className="mt-4 text-center">
-                                <Link to="/products" className="text-rose-600 hover:text-rose-700 text-sm font-medium">
+                                <Link to="/" className="text-rose-600 hover:text-rose-700 text-sm font-medium">
                                     Continue Shopping
                                 </Link>
                             </div>
