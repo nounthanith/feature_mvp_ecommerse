@@ -9,7 +9,8 @@ import toast from 'react-hot-toast';
 import useCart from '../cart/useCart';
 
 function ProductDetail() {
-  const { product, getProductById, getProductsByCategory, products } = useProduct();
+  const { product, getProductById, getProductsByCategory, getRelatedProducts, relatedProducts } = useProduct();
+  console.log(relatedProducts);
   const { addToCart } = useCart();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ function ProductDetail() {
   useEffect(() => {
     if (id) {
       getProductById(id);
+      getRelatedProducts(id);
     }
   }, [id]);
 
@@ -215,14 +217,14 @@ function ProductDetail() {
 
         {/* Product you may also like */}
         <div>
-          {products.length > 0 && <h2 className="text-2xl font-semibold text-center text-black mb-10 group mt-4">
+          {relatedProducts.length > 0 && <h2 className="text-2xl font-semibold text-center text-black mb-10 group mt-4">
             <span className="relative inline-block">
               You may also like
               <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
             </span>
           </h2>}
           <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2">
-            {products.map((product, index) => (
+            {relatedProducts.map((product, index) => (
               <div
                 key={product._id}
                 className='overflow-hidden  cursor-pointer'

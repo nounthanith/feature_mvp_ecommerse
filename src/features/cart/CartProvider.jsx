@@ -135,7 +135,7 @@ const CartProvider = ({ children }) => {
             toast.success('Cart item updated');
             return res.data;
         } catch (error) {
-            console.error('Error updating cart item:', error);
+            // console.error('Error updating cart item:', error);
             setError('Failed to update cart item');
             toast.error('Failed to update cart item');
             throw error;

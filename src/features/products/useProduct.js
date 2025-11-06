@@ -7,8 +7,9 @@ const useProduct = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [product, setProduct] = useState(null);
+    const [relatedProducts, setRelatedProducts] = useState([]);
     const navigate = useNavigate();
-    
+
     const getProducts = async () => {
         setLoading(true);
         try {
@@ -34,19 +35,27 @@ const useProduct = () => {
         }
     };
 
-    const getProductsByCategory = async (categoryId, currentProductId) => {
+    const getProductsByCategory = async (categoryId) => {
         if (!categoryId) return;
 
         setLoading(true);
         try {
             const response = await api.get(`/products?category=${categoryId}`);
-            const filteredProducts = response.data.data.filter(product => product._id !== currentProductId);
-            setProducts(filteredProducts);
-            if (filteredProducts.length === 0) {
-                setError("No related products found");
-            } else {
-                setError(null);
-            }
+            setProducts(response.data.data);
+        } catch (error) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getRelatedProducts = async (productId) => {
+        if (!productId) return;
+
+        setLoading(true);
+        try {
+            const response = await api.get(`/products/${productId}/related`);
+            setRelatedProducts(response.data.data);
         } catch (error) {
             setError(error);
         } finally {
@@ -77,6 +86,8 @@ const useProduct = () => {
         getProductsByCategory,
         featuredProducts,
         getFeaturedProducts,
+        getRelatedProducts,
+        relatedProducts,
     };
 };
 

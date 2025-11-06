@@ -41,7 +41,7 @@ function Navbar() {
     }, [scrolled]);
 
     const navLinks = [
-        { name: 'Shop', path: '/' },
+        { name: 'Shop & Collections', path: '/' },
         { name: 'Our Partner', path: '/our-partner' },
         { name: 'About Us', path: '/about' },
         { name: 'Contact Us', path: '/contact' },
