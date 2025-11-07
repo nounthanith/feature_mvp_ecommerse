@@ -106,7 +106,7 @@ function Product() {
                             <div className=''>
                                 <p className="text-gray-700 font-semibold text-[12px] flex justify-end mt-2 mr-2">{new Date(product?.createdAt).toLocaleDateString()}</p>
                                 <div className='px-2'>
-                                    <h2 className='text-lg font-bold'>{product.name}</h2>
+                                    <h2 className='text-lg font-bold truncate' title={product.name}>{product.name}</h2>
                                     <div className="flex items-center justify-between">
                                         <p className='text-rose-600 text-xl font-bold'>{product.price} $</p>
                                     </div>
