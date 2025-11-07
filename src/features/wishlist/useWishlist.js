@@ -40,7 +40,7 @@ const useWishlist = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            setCount(res);
+            setCount(res.data);
             setError(null);
         } catch (error) {
             console.error('Error fetching wishlist:', error);

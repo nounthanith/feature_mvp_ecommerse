@@ -6,6 +6,7 @@ import Footer from './Footer';
 import { toast } from 'react-hot-toast';
 import { BsHeart } from 'react-icons/bs';
 import useCart from '../features/cart/useCart';
+import useWishlist from '../features/wishlist/useWishlist';
 
 function Navbar() {
     const navigate = useNavigate();
@@ -18,6 +19,11 @@ function Navbar() {
 
     const cartCount = cart.items?.length;
 
+    const { count, countWishlist } = useWishlist();
+    const wishlistCount = count?.data?.count;
+    useEffect(() => {
+        countWishlist();
+    }, []);
     // Listen for login/logout
     useEffect(() => {
         const handleStorageChange = () => {
@@ -111,7 +117,7 @@ function Navbar() {
                             <button onClick={() => navigate('/wishlist')} className="p-2 text-gray-600 hover:text-rose-600 relative">
                                 <BsHeart className="w-5 h-5" />
                                 <span className="absolute -top-1 -right-1 bg-rose-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                                    {1}
+                                    {wishlistCount > 9 ? '9+' : wishlistCount}
                                 </span>
                             </button>
                             <button onClick={() => navigate('/cart')} className="p-2 text-gray-600 hover:text-rose-600 relative">
