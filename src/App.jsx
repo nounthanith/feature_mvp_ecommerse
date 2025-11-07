@@ -10,6 +10,7 @@ import Profile from './features/auth/Profile';
 import NotFound from './pages/NotFound';
 import CategoryIdProduct from './features/category/CategoryIdProduct';
 import Cart from './features/cart/Cart';
+import Wishlist from './features/wishlist/Wishlist';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -43,6 +44,7 @@ const PageTitle = () => {
     else if (pathname.includes('/product/:id')) pageTitle = 'Product Details';
     else if (pathname === '*') pageTitle = 'Not Found';
     else if (pathname === '/cart') pageTitle = 'Cart';
+    else if (pathname === '/wishlist') pageTitle = 'Wishlist';
 
     document.title = `TP-Cambo | ${pageTitle}`;
   }, [location]);
@@ -121,6 +123,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/category/:id" element={<CategoryIdProduct />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/wishlist" element={<Wishlist />} />
           <Route
             path="/profile"
             element={

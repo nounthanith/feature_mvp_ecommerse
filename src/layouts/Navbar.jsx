@@ -49,24 +49,24 @@ function Navbar() {
 
     return (
         <>
-            <div className="overflow-hidden bg-gradient-to-r from-black via-pink-950 to-black py-1 text-white text-sm font-medium">
+            <div className="bg-gradient-to-r from-black via-pink-950 to-black py-1 text-white text-sm font-medium">
                 <Marquee
-                    autoFill
-                    speed={30}
-                    pauseOnHover={true}
-                    gradient={false}
-                    direction="left"
-                >
-                    <div className='flex items-center space-x-8 mx-4'>
-                        <span>🚚 Free shipping on orders over $50</span>
-                        <span className='hidden sm:inline'>•</span>
-                        <span className='hidden sm:inline'>🔥 New arrivals just dropped!</span>
-                        <span className='hidden md:inline'>•</span>
-                        <span className='hidden md:inline'>🎁 15% off your first order - NEW15</span>
-                        <span className='hidden lg:inline'>•</span>
-                        <span className='hidden lg:inline'>💯 100% Satisfaction Guaranteed</span>
-                    </div>
-                </Marquee>
+                autoFill
+                speed={40}
+                pauseOnHover={true}
+                gradient={false}
+                direction="left"
+            >
+                <div className='flex items-center space-x-8 mx-4'>
+                    <span>🚚 Free shipping on orders over $50</span>
+                    <span className='sm:inline'>•</span>
+                    <span className='sm:inline'>🔥 New arrivals just dropped!</span>
+                    <span className='md:inline'>•</span>
+                    <span className='md:inline'>🎁 15% off your first order - NEW15</span>
+                    <span className='lg:inline'>•</span>
+                    <span className='lg:inline'>💯 100% Satisfaction Guaranteed</span>
+                </div>
+            </Marquee>
             </div>
             <header
                 className={`sticky top-0 w-full z-50 transition-all duration-300 border-b border-gray-300 ${scrolled ? 'bg-white shadow-md py-2' : 'bg-white/90 backdrop-blur-sm py-4'
@@ -108,7 +108,7 @@ function Navbar() {
                         </nav>
                         {/* Right side icons */}
                         <div className="flex items-center space-x-1">
-                            <button className="p-2 text-gray-600 hover:text-rose-600 relative">
+                            <button onClick={() => navigate('/wishlist')} className="p-2 text-gray-600 hover:text-rose-600 relative">
                                 <BsHeart className="w-5 h-5" />
                                 <span className="absolute -top-1 -right-1 bg-rose-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
                                     {1}
