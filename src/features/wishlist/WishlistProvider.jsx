@@ -96,7 +96,6 @@ export const WishlistProvider = ({ children }) => {
             setLoading(true);
             const token = localStorage.getItem('token');
             if (!token) {
-                toast.error('Please log in to remove items from your wishlist.');
                 setLoading(false);
                 return;
             }
@@ -112,13 +111,11 @@ export const WishlistProvider = ({ children }) => {
                     ? prev.products.filter(item => (item._id ?? item.productId) !== productId)
                     : []
             }));
-            toast.success('Item removed from wishlist!');
             countWishlist(); // Update count after removing
             setError(null);
         } catch (error) {
             console.error('Error removing from wishlist:', error);
             setError('Failed to remove item from wishlist');
-            toast.error(error.response?.data?.message || 'Failed to remove item from wishlist');
         } finally {
             setLoading(false);
         }

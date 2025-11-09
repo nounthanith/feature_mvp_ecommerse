@@ -64,12 +64,10 @@ const CartProvider = ({ children }) => {
                 }
             });
             await getCart();
-            toast.success('Item removed from cart');
             return res.data;
         } catch (error) {
             console.error('Error removing item from cart:', error);
             setError('Failed to remove item from cart');
-            toast.error('Failed to remove item from cart');
             throw error;
         } finally {
             setLoading(false);

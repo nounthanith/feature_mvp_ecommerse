@@ -3,7 +3,7 @@ import { useWishlist } from './WishlistContext';
 import useProduct from '../products/useProduct';
 import { CiHeart, CiShoppingCart } from 'react-icons/ci';
 import useCart from '../cart/useCart';
-import { FaHeart } from 'react-icons/fa';
+import { GoTrash } from "react-icons/go";
 
 function Wishlist() {
     const { wishlist, loading, error, getWishlist, clearWishlist, checkWishlistStatus, addToWishlist, removeFromWishlist } = useWishlist();
@@ -78,12 +78,15 @@ function Wishlist() {
     return (
         <div>
             <div className='flex items-center justify-between max-w-7xl mx-auto p-2'>
-                <h2 className="text-2xl font-bold text-start text-black group">
-                    <span className="relative inline-block">
-                        Your Wishlist
-                        <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
-                    </span>
-                </h2>
+                <div className='flex items-center'>
+                    <h2 className="text-2xl font-bold text-start text-black group">
+                        <span className="relative inline-block">
+                            Your Wishlist
+                            <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
+                        </span>
+                    </h2>
+                    <p className='ml-3 text-sm font-normal bg-gray-100 text-gray-700 px-3 py-1 rounded-full border'>{wishlist.products?.length} {wishlist.products?.length === 1 ? 'product' : 'products'}</p>
+                </div>
                 <div className=''>
                     <button
                         onClick={() => clearWishlist()}
@@ -104,25 +107,25 @@ function Wishlist() {
                         <div className='relative w-full h-64'>
                             <div
                                 onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); }}
-                                className='absolute top-2 right-2 z-10 p-2 bg-black/70 rounded-full hover:bg-black/80 transition-colors cursor-pointer'
+                                className='absolute top-2 right-2 z-10 p-2 bg-white/50 rounded-full hover:bg-white/80 transition-colors cursor-pointer'
                             >
                                 {checkWishlistStatus(product._id) ? (
-                                    <FaHeart className='text-rose-500 text-xl' />
+                                    <GoTrash className='text-rose-500 text-xl' />
                                 ) : (
-                                    <CiHeart className='text-white text-xl hover:text-rose-500' />
+                                    <CiHeart className='text-rose-500 text-xl hover:text-rose-500' />
                                 )}
                             </div>
                             <div onClick={() => getProductById(product._id)} className='w-full h-full'>
                                 <img
                                     className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer'
-                                    src={import.meta.env.VITE_BASE_URL +"/uploads/" + product.images[0]}
+                                    src={import.meta.env.VITE_BASE_URL + "/uploads/" + product.images[0]}
                                     alt={product.name}
                                     style={{ transform: hoveredProductId === product._id ? 'translateX(-100%)' : 'translateX(0)' }}
                                 />
                                 {product.images[1] && (
                                     <img
                                         className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer'
-                                        src={import.meta.env.VITE_BASE_URL +"/uploads/" + product.images[1]}
+                                        src={import.meta.env.VITE_BASE_URL + "/uploads/" + product.images[1]}
                                         alt={product.name}
                                         style={{ transform: hoveredProductId === product._id ? 'translateX(0)' : 'translateX(100%)' }}
                                     />
@@ -138,7 +141,7 @@ function Wishlist() {
                                 </div>
                             </div>
                             <button
-                                onClick={() => addToCart(product._id, 1)}
+                                onClick={async () => { await addToCart(product._id, 1); removeFromWishlist(product._id); }}
                                 className="mt-2 bg-black hover:bg-black/80 text-white font-semibold py-2 px-4 w-full flex items-center justify-center gap-2 rounded-none cursor-pointer transition-all duration-300">
                                 Add to cart
                                 <CiShoppingCart className="text-xl" />
