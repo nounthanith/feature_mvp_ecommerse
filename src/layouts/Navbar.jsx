@@ -177,7 +177,7 @@ function Navbar() {
             </header>
 
             {/* Add padding to account for fixed navbar */}
-            <div className="h-2"></div>
+            <div className="h-"></div>
             <Outlet />
             <Footer />
         </>

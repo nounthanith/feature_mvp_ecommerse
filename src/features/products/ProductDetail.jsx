@@ -24,12 +24,12 @@ function ProductDetail() {
   }
 
   const toggleWishlist = (productId) => {
-        if (checkWishlistStatus(productId)) {
-            removeFromWishlist(productId);
-        } else {
-            addToWishlist(productId);
-        }
-    };
+    if (checkWishlistStatus(productId)) {
+      removeFromWishlist(productId);
+    } else {
+      addToWishlist(productId);
+    }
+  };
 
 
 
@@ -60,7 +60,7 @@ function ProductDetail() {
     addToCart({ ...product, quantity });
   };
 
-  if (!product) return <div className="flex items-center justify-center h-[80vh] text-gray-600">Loading product details...</div>;
+  if (!product) return <div className="flex items-center justify-center pt-20 text-gray-600">Loading product details...</div>;
 
   return (
     <div className="max-w-6xl mx-auto">

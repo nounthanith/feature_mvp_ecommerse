@@ -6,7 +6,7 @@ function Footer() {
 
   return (
     <div className='mt-20'>
-      <div className="overflow-hidden text-sm font-medium border-t border-b">
+      <div className="overflow-hidden text-sm font-medium border-t border-b mb-1">
         <Marquee
           autoFill
           speed={50}

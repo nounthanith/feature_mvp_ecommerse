@@ -71,7 +71,7 @@ function Register() {
     };
 
     return (
-        <div className="min-h-[70vh] flex items-center justify-center p-4">
+        <div className="pt-20 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                     <div className="p-8">

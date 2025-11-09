@@ -13,13 +13,39 @@ function Wishlist() {
         getWishlist();
     }, []);
 
-    if (loading) {
-        return <div>Loading...</div>
-    }
+    if (loading) return (
+        <div className="flex items-center justify-center min-h-[80vh]">
+            <div className="animate-pulse flex flex-col items-center space-y-4">
+                <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-gray-600">Loading products...</p>
+            </div>
+        </div>
+    );
 
-    if (error) {
-        return <div>Error: {error}</div>
-    }
+    if (error) return (
+        <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
+            <div className="bg-red-50 border-l-4 border-red-500 p-4 w-full max-w-md">
+                <div className="flex">
+                    <div className="shrink-0">
+                        <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                    </div>
+                    <div className="ml-3">
+                        <p className="text-sm text-red-700">
+                            Failed to load products. {error.message || 'Please try again later.'}
+                        </p>
+                    </div>
+                </div>
+                <button
+                    onClick={() => getProducts()}
+                    className="mt-4 px-4 py-2 bg-rose-500 text-white rounded hover:bg-rose-600 transition-colors text-sm font-medium"
+                >
+                    Retry
+                </button>
+            </div>
+        </div>
+    );
 
     if (!wishlist.products?.length) return (
         <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
