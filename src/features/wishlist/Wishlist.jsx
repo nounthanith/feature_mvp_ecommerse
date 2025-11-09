@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import useWishlist from './useWishlist';
+import { useWishlist } from './WishlistContext';
 import useProduct from '../products/useProduct';
 import { CiShoppingCart } from 'react-icons/ci';
 import useCart from '../cart/useCart';
+
 function Wishlist() {
-    const { wishlist, loading, error, getWishlist } = useWishlist();
+    const { wishlist, loading, error, getWishlist, clearWishlist } = useWishlist();
     const { addToCart } = useCart();
     const [hoveredProductId, setHoveredProductId] = useState(null);
     const { getProductById } = useProduct();
@@ -20,15 +21,42 @@ function Wishlist() {
         return <div>Error: {error}</div>
     }
 
+    if (!wishlist.products?.length) return (
+        <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
+            <svg className="h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+            <h3 className="text-lg font-medium text-gray-900 mb-1">No products found</h3>
+            <p className="text-gray-500 max-w-md">
+                We couldn't find any products in your wishlist.
+            </p>
+            <button
+                onClick={() => window.history.back()}
+                className="mt-6 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors text-sm font-medium"
+            >
+                Go Back
+            </button>
+        </div>
+    );
+
     return (
         <div>
-            <h2 className="text-2xl font-bold text-start text-black group mt-5 mb-5 max-w-7xl mx-auto">
-                <span className="relative inline-block">
-                    Your Wishlist
-                    <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
-                </span>
-            </h2>
-            <p className='text-start p-2 text-lg md:text-xl font-bold max-w-7xl mx-auto'>{wishlist.count} {wishlist.count === 1 ? "Product" : "Products"} in your wishlist</p>
+            <div className='flex items-center justify-between max-w-7xl mx-auto p-2'>
+                <h2 className="text-2xl font-bold text-start text-black group">
+                    <span className="relative inline-block">
+                        Your Wishlist
+                        <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
+                    </span>
+                </h2>
+                <div className=''>
+                    <button
+                        onClick={() => clearWishlist()}
+                        className="text-sm text-purple-600 cursor-pointer underline hover:text-purple-800 transition-colors "
+                    >
+                        Clear Wishlist
+                    </button>
+                </div>
+            </div>
             <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2">
                 {wishlist.products?.map((product, index) => (
                     <div

@@ -9,7 +9,6 @@ export default function Cart() {
         cart,
         loading,
         error,
-        getCart,
         updateCartItem,
         removeFromCart,
         clearCart
@@ -36,7 +35,7 @@ export default function Cart() {
     }
 
     if (error) {
-       
+
     }
 
     return (

@@ -14,7 +14,6 @@ const CartProvider = ({ children }) => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const token = localStorage.getItem('token');
 
     useEffect(() => {
         getCart();
@@ -124,7 +123,6 @@ const CartProvider = ({ children }) => {
         } catch (error) {
             console.error('Error fetching cart:', error);
             setError('Failed to load cart');
-            toast.error('Failed to load cart');
         } finally {
             setLoading(false);
         }

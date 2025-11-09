@@ -84,6 +84,8 @@ const useAuth = () => {
     }
     const logout = () => {
         localStorage.removeItem("token")
+        toast.success('Logout successful!')
+        navigate('/login')
     }
     const resetPassword = () => {
 

@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import useProduct from './useProduct';
 import { useParams, useNavigate } from 'react-router-dom';
 import { CiShoppingCart, CiHeart } from "react-icons/ci";
-import { FaStar, FaStarHalfAlt, FaRegStar, FaChevronLeft } from "react-icons/fa";
+import { FaStar, FaStarHalfAlt, FaRegStar, FaChevronLeft, FaHeart } from "react-icons/fa";
 import { TbTruckDelivery } from "react-icons/tb";
 import { BsShieldCheck } from "react-icons/bs";
 import toast from 'react-hot-toast';
 import useCart from '../cart/useCart';
+import { useWishlist } from '../wishlist/WishlistContext';
 
 function ProductDetail() {
   const { product, getProductById, getProductsByCategory, getRelatedProducts, relatedProducts } = useProduct();
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, checkWishlistStatus } = useWishlist();
   const { id } = useParams();
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(0);
@@ -20,6 +22,14 @@ function ProductDetail() {
     toast.error('Out of stock');
     setQuantity(product?.stock);
   }
+
+  const toggleWishlist = (productId) => {
+        if (checkWishlistStatus(productId)) {
+            removeFromWishlist(productId);
+        } else {
+            addToWishlist(productId);
+        }
+    };
 
 
 
@@ -230,26 +240,38 @@ function ProductDetail() {
                 onMouseEnter={() => setHoveredProductId(product._id)}
                 onMouseLeave={() => setHoveredProductId(null)}
               >
-                <div onClick={() => getProductById(product._id)} className='relative w-full h-64'>
-                  <img
-                    className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-grab'
-                    src={import.meta.env.VITE_BASE_URL + product.images[0]}
-                    alt={product.name}
-                    style={{ transform: hoveredProductId === product._id ? 'translateX(-100%)' : 'translateX(0)' }}
-                  />
-                  {product.images[1] && (
+                <div className='relative w-full h-64'>
+                  <div
+                    onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); }}
+                    className='absolute top-2 right-2 z-10 p-2 bg-black/70 rounded-full hover:bg-black/80 transition-colors cursor-pointer'
+                  >
+                    {checkWishlistStatus(product._id) ? (
+                      <FaHeart className='text-rose-500 text-xl' />
+                    ) : (
+                      <CiHeart className='text-white text-xl hover:text-rose-500' />
+                    )}
+                  </div>
+                  <div onClick={() => getProductById(product._id)} className='w-full h-full'>
                     <img
-                      className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-grab'
-                      src={import.meta.env.VITE_BASE_URL + product.images[1]}
+                      className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer'
+                      src={import.meta.env.VITE_BASE_URL + product.images[0]}
                       alt={product.name}
-                      style={{ transform: hoveredProductId === product._id ? 'translateX(0)' : 'translateX(100%)' }}
+                      style={{ transform: hoveredProductId === product._id ? 'translateX(-100%)' : 'translateX(0)' }}
                     />
-                  )}
+                    {product.images[1] && (
+                      <img
+                        className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer'
+                        src={import.meta.env.VITE_BASE_URL + product.images[1]}
+                        alt={product.name}
+                        style={{ transform: hoveredProductId === product._id ? 'translateX(0)' : 'translateX(100%)' }}
+                      />
+                    )}
+                  </div>
                 </div>
                 <div className=''>
                   <p className="text-gray-700 font-semibold text-[12px] flex justify-end mt-2 mr-2">{new Date(product?.createdAt).toLocaleDateString()}</p>
                   <div className='px-2'>
-                    <h2 className='text-lg font-bold'>{product.name}</h2>
+                    <h2 className='text-lg font-bold truncate' title={product.name}>{product.name}</h2>
                     <div className="flex items-center justify-between">
                       <p className='text-rose-600 text-xl font-bold'>{product.price} $</p>
                     </div>

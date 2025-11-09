@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import Product from './features/products/Product';
 import ProductDetail from './features/products/ProductDetail';
@@ -12,20 +12,15 @@ import CategoryIdProduct from './features/category/CategoryIdProduct';
 import Cart from './features/cart/Cart';
 import Wishlist from './features/wishlist/Wishlist';
 
-// Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('token');
   const location = useLocation();
 
-  if (!token) {
-    // Redirect to login page with the current location to redirect back after login
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
+  if (!token) return <Navigate to="/login" state={{ from: location }} replace />;
 
   return children;
 };
 
-// Component to handle page titles based on route
 const PageTitle = () => {
   const location = useLocation();
 
@@ -33,7 +28,6 @@ const PageTitle = () => {
     const pathname = location.pathname;
     let pageTitle = 'TP-Cambo';
 
-    // Set page title based on the current route
     if (pathname === '/') pageTitle = 'Home';
     else if (pathname.includes('/product/')) pageTitle = 'Product Details';
     else if (pathname === '/login') pageTitle = 'Login';
@@ -54,7 +48,7 @@ const PageTitle = () => {
 
 function App() {
   return (
-    <BrowserRouter>
+    <>
       <PageTitle />
       <Toaster
         position="bottom-right"
@@ -70,7 +64,7 @@ function App() {
           className: "relative overflow-hidden rounded-lg",
           duration: 4000,
           style: {
-            background: "rgba(0, 0, 0, 0.85)", // 
+            background: "rgba(0, 0, 0, 0.85)",
             color: "#f3f4f6",
             borderRadius: "10px",
             boxShadow:
@@ -79,23 +73,22 @@ function App() {
             fontSize: "14px",
             backdropFilter: "blur(8px)",
             border: "1px solid rgba(255, 255, 255, 0.15)",
-            maxWidth: "360px",
           },
 
           success: {
             iconTheme: {
-              primary: "#D4AF37", // gold
+              primary: "#D4AF37",
               secondary: "#000",
             },
             style: {
               borderLeft: "4px solid #D4AF37",
-              background: "rgba(0, 0, 0, 0.85)", // single color
+              background: "rgba(0, 0, 0, 0.85)",
             },
           },
 
           error: {
             iconTheme: {
-              primary: "#EF4444", // red
+              primary: "#EF4444",
               secondary: "#000",
             },
             style: {
@@ -132,11 +125,10 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* 404 Route - Catch all unmatched routes */}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </>
   )
 }
 

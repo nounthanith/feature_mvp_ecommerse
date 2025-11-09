@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, NavLink, useLocation } from 'react-router-dom';
-import { FiMenu, FiX, FiShoppingCart, FiUser, FiSearch } from 'react-icons/fi';
+import { FiMenu, FiX, FiShoppingCart, FiUser } from 'react-icons/fi';
 import Marquee from 'react-fast-marquee';
 import Footer from './Footer';
-import { toast } from 'react-hot-toast';
 import { BsHeart } from 'react-icons/bs';
 import useCart from '../features/cart/useCart';
-import useWishlist from '../features/wishlist/useWishlist';
-
+// src/layouts/Navbar.jsx
+import { useWishlist } from '../features/wishlist/WishlistContext';
 function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -19,11 +18,12 @@ function Navbar() {
 
     const cartCount = cart.items?.length;
 
-    const { count, countWishlist } = useWishlist();
-    const wishlistCount = count?.data?.count;
     useEffect(() => {
-        countWishlist();
-    }, []);
+        setIsLoggedIn(!!localStorage.getItem('token'));
+    }, [location]);
+
+    const { count } = useWishlist();
+    const wishlistCount = count?.data?.count;
     // Listen for login/logout
     useEffect(() => {
         const handleStorageChange = () => {
@@ -46,6 +46,11 @@ function Navbar() {
         return () => document.removeEventListener('scroll', handleScroll);
     }, [scrolled]);
 
+    // Also sync login state on route changes within the same tab
+    useEffect(() => {
+        setIsLoggedIn(!!localStorage.getItem('token'));
+    }, [location]);
+
     const navLinks = [
         { name: 'Shop & Collections', path: '/' },
         { name: 'Our Partner', path: '/our-partner' },
@@ -53,26 +58,32 @@ function Navbar() {
         { name: 'Contact Us', path: '/contact' },
     ];
 
+    if (!isLoggedIn) {
+        navLinks.push({ name: 'Login', path: '/login' });
+    } else {
+        navLinks.push({ name: 'Profile', path: '/profile' });
+    }
+
     return (
         <>
             <div className="bg-gradient-to-r from-black via-pink-950 to-black py-1 text-white text-sm font-medium">
                 <Marquee
-                autoFill
-                speed={40}
-                pauseOnHover={true}
-                gradient={false}
-                direction="left"
-            >
-                <div className='flex items-center space-x-8 mx-4'>
-                    <span>🚚 Free shipping on orders over $50</span>
-                    <span className='sm:inline'>•</span>
-                    <span className='sm:inline'>🔥 New arrivals just dropped!</span>
-                    <span className='md:inline'>•</span>
-                    <span className='md:inline'>🎁 15% off your first order - NEW15</span>
-                    <span className='lg:inline'>•</span>
-                    <span className='lg:inline'>💯 100% Satisfaction Guaranteed</span>
-                </div>
-            </Marquee>
+                    autoFill
+                    speed={40}
+                    pauseOnHover={true}
+                    gradient={false}
+                    direction="left"
+                >
+                    <div className='flex items-center space-x-8 mx-4'>
+                        <span>🚚 Free shipping on orders over $50</span>
+                        <span className='sm:inline'>•</span>
+                        <span className='sm:inline'>🔥 New arrivals just dropped!</span>
+                        <span className='md:inline'>•</span>
+                        <span className='md:inline'>🎁 15% off your first order - NEW15</span>
+                        <span className='lg:inline'>•</span>
+                        <span className='lg:inline'>💯 100% Satisfaction Guaranteed</span>
+                    </div>
+                </Marquee>
             </div>
             <header
                 className={`sticky top-0 w-full z-50 transition-all duration-300 border-b border-gray-300 ${scrolled ? 'bg-white shadow-md py-2' : 'bg-white/90 backdrop-blur-sm py-4'
@@ -126,7 +137,7 @@ function Navbar() {
                                     {cartCount > 9 ? '9+' : cartCount}
                                 </span>
                             </button>
-                            <button onClick={() => navigate('/login')} className="p-2 text-gray-600 hover:text-rose-600">
+                            <button onClick={() => navigate(localStorage.getItem('token') ? '/profile' : '/login')} className="p-2 text-gray-600 hover:text-rose-600">
                                 <FiUser className="w-5 h-5" />
                             </button>
                             {/* Mobile menu button */}
