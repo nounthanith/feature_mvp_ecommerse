@@ -6,6 +6,8 @@ import { FaStar, FaStarHalfAlt, FaRegStar, FaChevronLeft, FaHeart } from "react-
 import { TbTruckDelivery } from "react-icons/tb";
 import { BsShieldCheck } from "react-icons/bs";
 import toast from 'react-hot-toast';
+import Dialog from '../../components/Dialog';
+import useOrder from '../order/useOrder';
 import useCart from '../cart/useCart';
 import { useWishlist } from '../wishlist/WishlistContext';
 
@@ -17,6 +19,13 @@ function ProductDetail() {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const { CreateOrder } = useOrder();
+  const [buyOpen, setBuyOpen] = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [country, setCountry] = useState('');
 
   if (quantity > product?.stock) {
     toast.error('Out of stock');
@@ -61,6 +70,7 @@ function ProductDetail() {
   </div>
 
   return (
+    <>
     <div className="max-w-6xl mx-auto">
       {/* Back Button */}
       <button
@@ -187,7 +197,7 @@ function ProductDetail() {
                 <CiShoppingCart className="w-5 h-5" />
                 Add to Cart
               </button>
-              <button className="flex-1 border-2 border-black cursor-pointer text-black hover:bg-black hover:text-white py-3 px-6 rounded-none font-medium transition-all">
+              <button onClick={() => setBuyOpen(true)} className="flex-1 border-2 border-black cursor-pointer text-black hover:bg-black hover:text-white py-3 px-6 rounded-none font-medium transition-all">
                 Buy Now
               </button>
             </div>
@@ -295,7 +305,47 @@ function ProductDetail() {
         </div>
       </div>
     </div>
+    <Dialog
+      open={buyOpen}
+      title="Shipping Details"
+      description="Enter your shipping information to place the order"
+      confirmText="Place Order"
+      cancelText="Cancel"
+      onConfirm={async () => {
+        const payload = {
+          shippingAddress: {
+            fullName,
+            address,
+            city,
+            postalCode,
+            country,
+          },
+          paymentMethod: 'bakong',
+        };
+        try {
+          await CreateOrder(payload);
+          setBuyOpen(false);
+        } catch (e) {
+          setBuyOpen(false);
+        }
+      }}
+      onCancel={() => setBuyOpen(false)}
+      onClose={() => setBuyOpen(false)}
+      disableConfirm={!fullName || !address || !city || !postalCode || !country}
+    >
+      <div className="grid grid-cols-1 gap-3">
+        <input value={fullName} onChange={(e)=>setFullName(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Full name" />
+        <input value={address} onChange={(e)=>setAddress(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Address" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input value={city} onChange={(e)=>setCity(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="City" />
+          <input value={postalCode} onChange={(e)=>setPostalCode(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Postal code" />
+        </div>
+        <input value={country} onChange={(e)=>setCountry(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Country" />
+      </div>
+    </Dialog>
+    </>
   );
 }
 
 export default ProductDetail;
+
