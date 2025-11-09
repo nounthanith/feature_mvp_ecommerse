@@ -1,10 +1,12 @@
 import useAuth from './useAuth'
 import { useEffect, useState } from 'react'
+import Dialog from '../../components/Dialog'
 import { RxPerson } from "react-icons/rx";
 
 function Profile() {
   const { logout, getProfile, profile, } = useAuth();
   const [loading, setLoading] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
   const date = new Date(profile?.createdAt);
 
   console.log(profile)
@@ -37,11 +39,22 @@ function Profile() {
         </p>
       </div>
       <button
-        onClick={() => logout()}
+        onClick={() => setConfirmOpen(true)}
         className="mt-3 px-4 py-2 bg-white ring-2 ring-black text-red-500 rounded hover:bg-black hover:text-white hover:ring-black hover:ring-2 transition-colors text-sm font-medium"
       >
         Logout
       </button>
+
+      <Dialog
+        open={confirmOpen}
+        title="Logout"
+        description="Are you sure you want to log out?"
+        confirmText="Logout"
+        cancelText="Cancel"
+        onConfirm={() => { logout(); setConfirmOpen(false); }}
+        onCancel={() => setConfirmOpen(false)}
+        onClose={() => setConfirmOpen(false)}
+      />
     </div>
   )
 }
