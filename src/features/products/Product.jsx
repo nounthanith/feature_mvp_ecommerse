@@ -7,11 +7,15 @@ import Category from '../category/Category';
 import useCart from '../cart/useCart';
 // src/features/products/Product.jsx
 import { useWishlist } from '../wishlist/WishlistContext';
+import Pagination from './Pagination';
+
 function Product() {
-    const { products, loading, error, getProducts, getProductById } = useProduct();
+    const { products, loading, error, getProducts, getProductById, pagination } = useProduct();
     const { addToWishlist, removeFromWishlist, checkWishlistStatus } = useWishlist();
     const [hoveredProductId, setHoveredProductId] = useState(null);
     const { addToCart } = useCart();
+
+    const [page, setPage] = useState(1);
 
     const toggleWishlist = (productId) => {
         if (checkWishlistStatus(productId)) {
@@ -23,9 +27,10 @@ function Product() {
 
     // console.log(products);
     useEffect(() => {
-        getProducts();
-
-    }, []);
+        getProducts(page);
+        // getProducts is stable from the hook context we use; avoid adding it as a dep to prevent ref-change loops
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page]);
 
     if (loading) return (
         <div className="flex items-center justify-center min-h-[80vh]">
@@ -52,7 +57,7 @@ function Product() {
                     </div>
                 </div>
                 <button
-                    onClick={() => getProducts()}
+                    onClick={() => getProducts(page)}
                     className="mt-4 px-4 py-2 bg-rose-500 text-white rounded hover:bg-rose-600 transition-colors text-sm font-medium"
                 >
                     Retry
@@ -147,6 +152,8 @@ function Product() {
                     ))}
                 </div>
             </div>
+
+            <Pagination page={page} totalPages={pagination.totalPages} onPageChange={setPage} />
         </div>
     );
 }

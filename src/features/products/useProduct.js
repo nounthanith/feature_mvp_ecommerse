@@ -8,13 +8,38 @@ const useProduct = () => {
     const [error, setError] = useState(null);
     const [product, setProduct] = useState(null);
     const [relatedProducts, setRelatedProducts] = useState([]);
+    const [pagination, setPagination] = useState({ page: 1, totalPages: 1, totalItems: 0, limit: 0 });
     const navigate = useNavigate();
 
-    const getProducts = async () => {
+    const getProducts = async (page = 1) => {
         setLoading(true);
         try {
-            const response = await api.get("/products");
-            setProducts(response.data.data);
+            const response = await api.get(`/products`, { params: { page } });
+            const body = response?.data ?? {};
+
+            // Extract items from common shapes
+            let items = [];
+            if (Array.isArray(body?.data)) items = body.data;
+            else if (Array.isArray(body)) items = body;
+            else if (Array.isArray(body?.data?.docs)) items = body.data.docs;
+            else if (Array.isArray(body?.data?.items)) items = body.data.items;
+            else if (Array.isArray(body?.docs)) items = body.docs;
+            else if (Array.isArray(body?.items)) items = body.items;
+
+            setProducts(items);
+
+            // Extract pagination from common locations
+            const meta = body?.pagination || body?.meta || body?.data || body;
+            const currentPage = meta?.page ?? body?.page ?? page ?? 1;
+            const limit = meta?.limit ?? body?.limit ?? items.length ?? 0;
+            const totalItems = meta?.total ?? body?.total ?? meta?.totalDocs ?? 0;
+            let totalPages = meta?.totalPages ?? body?.totalPages;
+
+            if (!totalPages && totalItems && limit) {
+                totalPages = Math.max(1, Math.ceil(totalItems / limit));
+            }
+
+            setPagination({ page: currentPage, totalPages: totalPages || 1, totalItems: totalItems || 0, limit: limit || 0 });
         } catch (error) {
             setError(error);
         } finally {
@@ -88,6 +113,7 @@ const useProduct = () => {
         getFeaturedProducts,
         getRelatedProducts,
         relatedProducts,
+        pagination,
     };
 };
 
