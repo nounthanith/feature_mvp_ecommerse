@@ -24,7 +24,7 @@ export default function Cart() {
     const [city, setCity] = useState('');
     const [postalCode, setPostalCode] = useState('');
     const [country, setCountry] = useState('');
-    const [paymentMethod, setPaymentMethod] = useState('bakong');
+    const [paymentMethod, setPaymentMethod] = useState('none');
     const [placing, setPlacing] = useState(false);
 
     const handleClearCart = async () => {
@@ -264,7 +264,7 @@ export default function Cart() {
 
                                     <button
                                         className="w-full bg-rose-600 text-white py-3 rounded-md hover:bg-rose-700 transition-colors"
-                                        onClick={() => setCheckoutOpen(true)}
+                                        onClick={() => { if (!localStorage.getItem('token')) { toast.error('Please login to continue'); navigate('/login'); return; } setCheckoutOpen(true); }}
                                     >
                                         Proceed to Checkout
                                     </button>
@@ -297,7 +297,7 @@ export default function Cart() {
                         await clearCart();
                         setCheckoutOpen(false);
                         setFullName(''); setAddress(''); setCity(''); setPostalCode(''); setCountry('');
-                        setPaymentMethod('bakong');
+                        setPaymentMethod('none');
                         navigate('/profile');
                     } catch (e) {
                         setCheckoutOpen(false);
@@ -317,11 +317,6 @@ export default function Cart() {
                         <input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Postal code" />
                     </div>
                     <input value={country} onChange={(e) => setCountry(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Country" />
-                    <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200">
-                        <option value="bakong">Bakong</option>
-                        <option value="cod">Cash on Delivery</option>
-                        <option value="card">Card</option>
-                    </select>
                 </div>
             </Dialog>
         </>

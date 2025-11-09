@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import api from '../../lib/api';
+import { toast } from 'react-hot-toast';
 
 const useOrder = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const token = localStorage.getItem('token');
 
     const getOrders = async () => {
         try {
             setLoading(true);
             const res = await api.get('/orders/my-orders', {
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });
@@ -30,7 +32,7 @@ const useOrder = () => {
             setLoading(true);
             const res = await api.post('/orders', order, {
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });

@@ -197,7 +197,7 @@ function ProductDetail() {
                 <CiShoppingCart className="w-5 h-5" />
                 Add to Cart
               </button>
-              <button onClick={() => setBuyOpen(true)} className="flex-1 border-2 border-black cursor-pointer text-black hover:bg-black hover:text-white py-3 px-6 rounded-none font-medium transition-all">
+              <button onClick={() => { if (!localStorage.getItem('token')) { toast.error('Please login to continue'); return; } setBuyOpen(true); }} className="flex-1 border-2 border-black cursor-pointer text-black hover:bg-black hover:text-white py-3 px-6 rounded-none font-medium transition-all">
                 Buy Now
               </button>
             </div>
