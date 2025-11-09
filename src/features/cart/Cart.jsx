@@ -28,7 +28,7 @@ export default function Cart() {
 
     if (loading) {
         return (
-            <div className="min-h-[60vh] flex items-center justify-center">
+            <div className="py-60 flex items-center justify-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-600"></div>
             </div>
         );
@@ -41,44 +41,10 @@ export default function Cart() {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Mobile Header */}
-            <div className="md:hidden flex items-center justify-between mb-6">
-                <button
-                    onClick={() => navigate(-1)}
-                    className="p-2 -ml-2 text-gray-600 hover:text-rose-600 flex justify-center items-center"
-                >
-                    <FiArrowLeft className="w-5 h-5" /><span>back</span>
-                </button>
-                <h1 className="text-xl font-semibold text-gray-900 underline underline-offset-4">Your Cart</h1>
-                <button
-                    onClick={handleClearCart}
-                    className="text-sm text-purple-600 cursor-pointer underline hover:text-purple-800 transition-colors"
-                    disabled={loading || !cart?.items?.length}
-                >
-                    {loading ? 'Clearing...' : 'Clear Cart'}
-                </button>
-            </div>
 
-            {/* Desktop Header */}
-            <div className='flex justify-between items-center mt-2'>
-                <h1 className="hidden md:block text-2xl font-bold text-gray-900 mb-5">
-                    Your Shopping Cart
-                    {cart?.items?.length > 0 && (
-                        <span className="ml-3 text-sm font-normal bg-gray-100 text-gray-700 px-3 py-1 rounded-full border">
-                            {cart.totalItems} {cart.totalItems === 1 ? 'item' : 'items'}
-                        </span>
-                    )}
-                </h1>
-                <button
-                    onClick={handleClearCart}
-                    className="text-sm hidden md:block text-purple-600 cursor-pointer underline hover:text-purple-800 transition-colors"
-                    disabled={loading || !cart?.items?.length}
-                >
-                    {loading ? 'Clearing...' : 'Clear Cart'}
-                </button>
-            </div>
 
             {!cart?.items?.length ? (
-                <div className="text-center py-12 bg-white h-[60vh] flex items-center justify-center">
+                <div className="text-center py-60 bg-white py-60 flex items-center justify-center">
                     <div>
                         <FiShoppingCart className="mx-auto h-16 w-16 text-gray-300" />
                         <h2 className="mt-4 text-lg font-medium text-gray-900">Your cart is empty</h2>
@@ -93,6 +59,41 @@ export default function Cart() {
                 </div>
             ) : (
                 <div className="lg:flex gap-6">
+                    <div className="md:hidden flex items-center justify-between mb-6">
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="p-2 -ml-2 text-gray-600 hover:text-rose-600 flex justify-center items-center"
+                        >
+                            <FiArrowLeft className="w-5 h-5" /><span>back</span>
+                        </button>
+                        <h1 className="text-xl font-semibold text-gray-900 underline underline-offset-4">Your Cart</h1>
+                        <button
+                            onClick={handleClearCart}
+                            className="text-sm text-purple-600 cursor-pointer underline hover:text-purple-800 transition-colors"
+                            disabled={loading || !cart?.items?.length}
+                        >
+                            {loading ? 'Clearing...' : 'Clear Cart'}
+                        </button>
+                    </div>
+
+                    {/* Desktop Header */}
+                    <div className='flex justify-between items-center mt-2'>
+                        <h1 className="hidden md:block text-2xl font-bold text-gray-900 mb-5">
+                            Your Shopping Cart
+                            {cart?.items?.length > 0 && (
+                                <span className="ml-3 text-sm font-normal bg-gray-100 text-gray-700 px-3 py-1 rounded-full border">
+                                    {cart.totalItems} {cart.totalItems === 1 ? 'item' : 'items'}
+                                </span>
+                            )}
+                        </h1>
+                        <button
+                            onClick={handleClearCart}
+                            className="text-sm hidden md:block text-purple-600 cursor-pointer underline hover:text-purple-800 transition-colors"
+                            disabled={loading || !cart?.items?.length}
+                        >
+                            {loading ? 'Clearing...' : 'Clear Cart'}
+                        </button>
+                    </div>
                     {/* Cart Items */}
                     <div className="lg:w-2/3">
                         <div className="bg-white rounded-lg shadow-sm overflow-hidden">

@@ -26,7 +26,7 @@ const PageTitle = () => {
 
   useEffect(() => {
     const pathname = location.pathname;
-    let pageTitle = 'TP-Cambo';
+    let pageTitle = '404 Not Found';
 
     if (pathname === '/') pageTitle = 'Home';
     else if (pathname.includes('/product/')) pageTitle = 'Product Details';

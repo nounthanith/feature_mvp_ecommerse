@@ -24,7 +24,7 @@ function Wishlist() {
     }, []);
 
     if (loading) return (
-        <div className="flex items-center justify-center min-h-[80vh]">
+        <div className="flex items-center justify-center py-60 p-6">
             <div className="animate-pulse flex flex-col items-center space-y-4">
                 <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
                 <p className="text-gray-600">Loading products...</p>
@@ -33,7 +33,7 @@ function Wishlist() {
     );
 
     if (error) return (
-        <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
+        <div className="flex flex-col items-center justify-center py-60 p-6 text-center">
             <div className="bg-red-50 border-l-4 border-red-500 p-4 w-full max-w-md">
                 <div className="flex">
                     <div className="shrink-0">
@@ -58,7 +58,7 @@ function Wishlist() {
     );
 
     if (!wishlist.products?.length) return (
-        <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
+        <div className="flex flex-col items-center justify-center py-60 p-6 text-center">
             <svg className="h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>

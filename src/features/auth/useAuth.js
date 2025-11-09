@@ -1,9 +1,10 @@
+import { useState } from "react";
 import api from "../../lib/api"
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 const useAuth = () => {
+    const [profile, setProfile] = useState(null)
     const navigate = useNavigate();
-    // Poll verification status every 1.2 seconds
     const checkEmailVerification = async (userId, maxAttempts = 25) => {
         return new Promise((resolve) => {
             let attempts = 0;
@@ -82,6 +83,16 @@ const useAuth = () => {
         localStorage.setItem("token", res.data.data.token)
         return res.data
     }
+
+    const getProfile = async () => {
+        const res = await api.get("/auth/profile", {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        })
+        setProfile(res.data.data.user)
+    }
+
     const logout = () => {
         localStorage.removeItem("token")
         toast.success('Logout successful!')
@@ -96,7 +107,9 @@ const useAuth = () => {
         login,
         logout,
         resetPassword,
-        checkEmailVerification
+        checkEmailVerification,
+        getProfile,
+        profile
     }
 }
 export default useAuth

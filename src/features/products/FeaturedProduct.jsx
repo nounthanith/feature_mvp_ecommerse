@@ -2,11 +2,17 @@ import React, { useEffect, useState } from 'react';
 import useProduct from './useProduct';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import { useRealTimeFormatted } from '../../lib/realTime';
 
 function FeaturedProduct() {
     const { featuredProducts, getFeaturedProducts } = useProduct();
     const [currentSlide, setCurrentSlide] = useState(0);
     const navigate = useNavigate();
+    const { now, day } = useRealTimeFormatted();
+    const pad = (n) => String(n).padStart(2, '0');
+    const hours = pad(now.getHours());
+    const minutes = pad(now.getMinutes());
+    const seconds = pad(now.getSeconds());
 
     useEffect(() => {
         getFeaturedProducts();
@@ -32,8 +38,27 @@ function FeaturedProduct() {
         </div>;
     }
 
+
     return (
         <div className="relative w-full h-[500px] overflow-hidden max-w-7xl mx-auto p-2">
+            <div className="absolute top-6 left-4 z-10 text-white bg-black/20 backdrop-blur-sm px-4 py-3 rounded">
+                <div className="mb-2 text-[10px] md:text-xs tracking-[0.2em] uppercase text-white/80">Today {day}</div>
+                <div className="flex items-start gap-6">
+                    <div className="text-center">
+                        <div className="text-5xl md:text-7xl font-extrabold leading-none">{hours}</div>
+                        <div className="mt-1 text-[10px] md:text-xs tracking-[0.2em] uppercase text-white/80">Hours</div>
+                    </div>
+                    <div className="text-center">
+                        <div className="text-5xl md:text-7xl font-extrabold leading-none">{minutes}</div>
+                        <div className="mt-1 text-[10px] md:text-xs tracking-[0.2em] uppercase text-white/80">Minutes</div>
+                    </div>
+                    <div className="text-center">
+                        <div className="text-5xl md:text-7xl font-extrabold leading-none">{seconds}</div>
+                        <div className="mt-1 text-[10px] md:text-xs tracking-[0.2em] uppercase text-white/80">Seconds</div>
+                    </div>
+                </div>
+            </div>
+
             {/* Carousel container */}
             <div
                 className="flex transition-transform duration-1000 ease-in-out h-full"
@@ -54,8 +79,8 @@ function FeaturedProduct() {
                             <div className="max-w-2xl text-center">
                                 <h2 className="text-4xl md:text-3xl font-bold mb-4">{product.name}</h2>
                                 <p className="text-lg mb-6">{product.description}</p>
-                                <button onClick={() => navigate(`/product/${product._id}`)} className="text-black font-bold text-xl border px-8 py-2 rounded-none hover:bg-white/10 transition-colors">
-                                    Shop Now
+                                <button onClick={() => navigate(`/product/${product._id}`)} className="text-white font-bold text-xl border px-8 py-2 rounded-none hover:bg-black/40 bg-black/50 transition-colors">
+                                    <span className="animate-pulse">Shop Now</span>
                                 </button>
                             </div>
                         </div>
