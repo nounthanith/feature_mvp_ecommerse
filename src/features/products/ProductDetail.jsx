@@ -52,15 +52,13 @@ function ProductDetail() {
     }
   }, [categoryId, product?._id]);
 
-  const handleAddToCart = () => {
-    if (quantity > product?.stock) {
-      toast.error('Out of stock');
-      setQuantity(product?.stock);
-    }
-    addToCart({ ...product, quantity });
-  };
 
-  if (!product) return <div className="flex items-center justify-center pt-20 text-gray-600">Loading product details...</div>;
+  if (!product) return <div className="flex items-center justify-center min-h-[80vh]">
+    <div className="animate-pulse flex flex-col items-center space-y-4">
+      <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-gray-600">Loading products details...</p>
+    </div>
+  </div>
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -124,13 +122,20 @@ function ProductDetail() {
               )}
             </div>
 
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between items-start relative">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
               </div>
-              <button className="text-gray-400 hover:text-rose-500 transition-colors">
-                <CiHeart className="w-6 h-6" />
-              </button>
+              <div
+                onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); }}
+                className='absolute top-2 right-2 z-10 p-2 bg-black/70 rounded-full hover:bg-black/80 transition-colors cursor-pointer'
+              >
+                {checkWishlistStatus(product._id) ? (
+                  <FaHeart className='text-rose-500 text-xl' />
+                ) : (
+                  <CiHeart className='text-white text-xl hover:text-rose-500' />
+                )}
+              </div>
             </div>
 
             <div className="mb-6">
