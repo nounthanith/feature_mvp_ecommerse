@@ -2,10 +2,12 @@ import { useState } from "react";
 import api from "../../lib/api"
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+
 const useAuth = () => {
     const [profile, setProfile] = useState(null)
     const navigate = useNavigate();
-    const checkEmailVerification = async (userId, maxAttempts = 25) => {
+
+    const checkEmailVerification = async (userId, maxAttempts = 300) => {
         return new Promise((resolve) => {
             let attempts = 0;
 
@@ -13,8 +15,9 @@ const useAuth = () => {
                 try {
                     attempts++;
                     const res = await api.get(`/auth/check-verification/${userId}`);
+                    const verified = (res.data?.data?.isEmailVerified ?? res.data?.data?.user?.isEmailVerified) === true;
 
-                    if (res.data?.data?.isEmailVerified) {
+                    if (verified) {
                         clearInterval(checkInterval);
                         resolve({ isVerified: true, user: res.data?.data });
                     } else if (attempts >= maxAttempts) {
@@ -22,53 +25,51 @@ const useAuth = () => {
                         resolve({ isVerified: false, user: null });
                     }
                 } catch (error) {
-                    // console.error('Verification check error:', error);
-                    clearInterval(checkInterval);
-                    resolve({ isVerified: false, user: null });
+                    // On transient errors, keep polling until maxAttempts is reached
+                    if (attempts >= maxAttempts) {
+                        clearInterval(checkInterval);
+                        resolve({ isVerified: false, user: null });
+                    }
                 }
-            }, 1200); // Check every 1.2 seconds
+            }, 1200); // Check every 1.2 seconds (~6 minutes total)
         });
     };
 
     const register = async (userData) => {
         try {
             const res = await api.post("/auth/register", userData);
-            // console.log('Registration response:', res.data);
 
             if (res.data?.data?.user) {
                 const { user } = res.data.data;
 
                 if (user.isEmailVerified) {
                     navigate('/login');
-                } else {
-                    // Start polling for verification
-                    const { isVerified } = await checkEmailVerification(user._id);
+                    return res.data;
+                }
 
-                    if (isVerified) {
-                        navigate('/login', {
-                            state: {
-                                message: 'Email verified successfully!',
-                                email: user.email
-                            }
-                        });
-                    } else {
-                        navigate('/login', {
-                            state: {
-                                message: 'Please verify your email to continue',
-                                email: user.email
-                            }
-                        });
-                    }
+                // Start polling for verification
+                const pollUserId = user?._id ?? user?.id ?? user?.userId;
+                const { isVerified } = await checkEmailVerification(pollUserId);
+
+                if (isVerified) {
+                    navigate('/login', {
+                        state: {
+                            message: 'Email verified successfully!',
+                            email: user.email
+                        }
+                    });
+                } else {
+                    toast('Please verify your email to continue');
                 }
             }
 
             return res.data;
         } catch (error) {
-            // console.error('Registration error:', error);
             const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
             throw error;
         }
     }
+
     const login = async (email, password) => {
         const res = await api.post("/auth/login", { email, password })
         localStorage.setItem("token", res.data.data.token)
@@ -89,18 +90,21 @@ const useAuth = () => {
         toast.success('Logout successful!')
         navigate('/login')
     }
-    const resetPassword = () => {
 
+    const resendVerification = () => {
+        const res = api.post("/auth/resend", { email })
+        return res.data
     }
+
 
     return {
         register,
         login,
         logout,
-        resetPassword,
         checkEmailVerification,
         getProfile,
-        profile
+        profile,
+        resendVerification
     }
 }
 export default useAuth
