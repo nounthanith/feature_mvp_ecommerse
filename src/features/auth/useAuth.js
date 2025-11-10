@@ -7,7 +7,8 @@ const useAuth = () => {
     const [profile, setProfile] = useState(null)
     const navigate = useNavigate();
 
-    const checkEmailVerification = async (userId, maxAttempts = 300) => {
+    // Check email verification status 2 minutes
+    const checkEmailVerification = async (userId, maxAttempts = 200) => {
         return new Promise((resolve) => {
             let attempts = 0;
 
@@ -91,10 +92,18 @@ const useAuth = () => {
         navigate('/login')
     }
 
-    const resendVerification = () => {
-        const res = api.post("/auth/resend", { email })
-        return res.data
-    }
+    const resendVerification = async (email) => {
+        try {
+            const res = await api.post("/auth/resend", { email });
+            
+            return res.data;
+        } catch (error) {
+            throw error.response?.data || {
+                success: false,
+                message: error.message || 'Failed to resend verification email'
+            };
+        }
+    };
 
 
     return {
