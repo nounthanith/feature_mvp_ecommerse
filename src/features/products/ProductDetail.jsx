@@ -320,7 +320,13 @@ function ProductDetail() {
             postalCode,
             country,
           },
-          paymentMethod: 'bakong',
+          paymentMethod: 'none',
+          orderItems: [
+            {
+              product: product._id,
+              quantity,
+            },
+          ],
         };
         try {
           await CreateOrder(payload);
