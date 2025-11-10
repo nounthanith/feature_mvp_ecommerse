@@ -11,6 +11,7 @@ export default function Dialog({
     onCancel,
     onClose,
     disableConfirm = false,
+    hideActions = false,
 }) {
     useEffect(() => {
         const onKeyDown = (e) => {
@@ -40,24 +41,27 @@ export default function Dialog({
 
                 {children ? <div className="px-5 pt-4">{children}</div> : null}
 
-                <div className="flex items-center justify-end gap-3 px-5 py-4">
-                    <button
-                        type="button"
-                        onClick={onCancel ?? onClose}
-                        className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
-                    >
-                        {cancelText}
-                    </button>
-                    <button
-                        type="button"
-                        disabled={disableConfirm}
-                        onClick={onConfirm}
-                        className={`px-4 py-2 rounded-md text-white transition-colors ${disableConfirm ? 'bg-rose-300 cursor-not-allowed' : 'bg-rose-600 hover:bg-rose-700'}`}
-                    >
-                        {confirmText}
-                    </button>
-                </div>
+                {hideActions ? null : (
+                    <div className="flex items-center justify-end gap-3 px-5 py-4">
+                        <button
+                            type="button"
+                            onClick={onCancel ?? onClose}
+                            className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                        >
+                            {cancelText}
+                        </button>
+                        <button
+                            type="button"
+                            disabled={disableConfirm}
+                            onClick={onConfirm}
+                            className={`px-4 py-2 rounded-md text-white transition-colors ${disableConfirm ? 'bg-rose-300 cursor-not-allowed' : 'bg-rose-600 hover:bg-rose-700'}`}
+                        >
+                            {confirmText}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
 }
+

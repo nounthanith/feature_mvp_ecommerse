@@ -39,16 +39,12 @@ const useAuth = () => {
                 const { user } = res.data.data;
 
                 if (user.isEmailVerified) {
-                    toast.success('Registration successful! You can now login.');
                     navigate('/login');
                 } else {
-                    toast.loading('Waiting for email verification...');
-
                     // Start polling for verification
                     const { isVerified } = await checkEmailVerification(user._id);
 
                     if (isVerified) {
-                        toast.success('Email verified! You can now login.');
                         navigate('/login', {
                             state: {
                                 message: 'Email verified successfully!',
@@ -56,10 +52,6 @@ const useAuth = () => {
                             }
                         });
                     } else {
-                        toast.error('Please check your email and click the verification link', {
-                            icon: 'ℹ️',
-                            duration: 5000
-                        });
                         navigate('/login', {
                             state: {
                                 message: 'Please verify your email to continue',
@@ -74,7 +66,6 @@ const useAuth = () => {
         } catch (error) {
             // console.error('Registration error:', error);
             const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
-            toast.error(errorMessage);
             throw error;
         }
     }
