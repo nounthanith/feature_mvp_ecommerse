@@ -33,9 +33,58 @@ function FeaturedProduct() {
     };
 
     if (featuredProducts.length === 0) {
-        return <div className="h-96 bg-gray-100 flex items-center justify-center">
-            <div className="animate-pulse text-gray-400">Loading featured products...</div>
-        </div>;
+        return (
+            <div className="relative w-full h-[500px] overflow-hidden max-w-7xl mx-auto p-2">
+                <div className="absolute inset-0 bg-gradient-to-br from-red-200 to-gray-500 animate-pulse" />
+
+                <div className="absolute top-6 left-4 z-10 bg-black/10 backdrop-blur-sm px-4 py-3 rounded">
+                    <div className="mb-2 h-3 w-28 bg-white/50 rounded" />
+                    <div className="flex items-start gap-6">
+                        <div className="space-y-2">
+                            <div className="h-10 w-12 bg-white/60 rounded" />
+                            <div className="h-2 w-10 bg-white/40 rounded" />
+                        </div>
+                        <div className="space-y-2">
+                            <div className="h-10 w-12 bg-white/60 rounded" />
+                            <div className="h-2 w-10 bg-white/40 rounded" />
+                        </div>
+                        <div className="space-y-2">
+                            <div className="h-10 w-12 bg-white/60 rounded" />
+                            <div className="h-2 w-10 bg-white/40 rounded" />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="absolute inset-0 flex items-center justify-center z-20 p-4">
+                    <div className="w-full max-w-2xl space-y-4">
+                        <div className="h-8 md:h-10 bg-white/60 rounded" />
+                        <div className="h-16 md:h-20 bg-white/50 rounded" />
+                        <div className="h-10 w-40 bg-white/70 rounded" />
+                    </div>
+                </div>
+
+                <button
+                    disabled
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/70 text-gray-400 p-2 rounded-full z-30 cursor-not-allowed"
+                    aria-label="Previous slide"
+                >
+                    <FiChevronLeft size={24} />
+                </button>
+                <button
+                    disabled
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/70 text-gray-400 p-2 rounded-full z-30 cursor-not-allowed"
+                    aria-label="Next slide"
+                >
+                    <FiChevronRight size={24} />
+                </button>
+
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-30">
+                    {[0,1,2].map((i) => (
+                        <span key={i} className={`w-3 h-3 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/50'}`} />
+                    ))}
+                </div>
+            </div>
+        );
     }
 
 
