@@ -136,7 +136,7 @@ function Product() {
                                         In stock
                                     </div>
                                 ) : (
-                                    <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold">
+                                    <div className="absolute top-2 left-2 z-10 bg-red-500 backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold animate-pulse">
                                         Out of stock
                                     </div>
                                 )}
