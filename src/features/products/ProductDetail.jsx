@@ -26,11 +26,20 @@ function ProductDetail() {
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [country, setCountry] = useState('');
+  const available = Number((product?.countInStock ?? product?.stock) || 0);
 
-  if (quantity > product?.stock) {
-    toast.error('Out of stock');
-    setQuantity(product?.stock);
-  }
+  useEffect(() => {
+    if (!product) return;
+    if (available <= 0) {
+      if (quantity !== 1) setQuantity(1);
+      return;
+    }
+    if (quantity > available) {
+      setQuantity(available);
+      toast.error('Out of stock');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [available]);
 
   const toggleWishlist = (productId) => {
     if (checkWishlistStatus(productId)) {
@@ -161,10 +170,8 @@ function ProductDetail() {
 
               <div className="mb-6">
                 <h3 className="text-sm font-medium text-gray-900">Availability</h3>
-                <p className="mt-1 text-sm text-green-600">
-                  {product.countInStock > 0
-                    ? `In Stock (${product.countInStock} available)`
-                    : "Out of Stock"}
+                <p className={`mt-1 text-sm ${available > 0 ? 'text-green-600' : 'text-rose-600'}`}>
+                  {available > 0 ? `In Stock (${available} available)` : 'Out of Stock'}
                 </p>
               </div>
 
@@ -180,7 +187,7 @@ function ProductDetail() {
                   </button>
                   <span className="w-12 text-center font-medium">{quantity}</span>
                   <button
-                    onClick={() => setQuantity(prev => Math.min(product.countInStock || 10, prev + 1))}
+                    onClick={() => setQuantity(prev => Math.min(available || 1, prev + 1))}
                     className="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100 transition cursor-pointer"
                   >
                     +
@@ -191,13 +198,14 @@ function ProductDetail() {
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
-                  onClick={() => addToCart(product._id, quantity)}
-                  className="flex-1 bg-black hover:bg-black/80 cursor-pointer text-white py-3 px-6 rounded-none font-medium flex items-center justify-center gap-2 transition-all"
+                  disabled={available <= 0}
+                  onClick={() => { if (available <= 0) { toast.error('Out of stock'); return; } addToCart(product._id, quantity); }}
+                  className={`flex-1 ${available <= 0 ? 'bg-gray-100 cursor-not-allowed' : 'bg-black hover:bg-black/80 cursor-pointer'} text-black py-3 px-6 rounded-none font-medium flex items-center justify-center gap-2 transition-all`}
                 >
                   <CiShoppingCart className="w-5 h-5" />
                   Add to Cart
                 </button>
-                <button onClick={() => { if (!localStorage.getItem('token')) { toast.error('Please login to continue'); return; } setBuyOpen(true); }} className="flex-1 border-2 border-black cursor-pointer text-black hover:bg-black hover:text-white py-3 px-6 rounded-none font-medium transition-all">
+                <button disabled={available <= 0} onClick={() => { if (!localStorage.getItem('token')) { toast.error('Please login to continue'); return; } if (available <= 0) { toast.error('Out of stock'); return; } setBuyOpen(true); }} className={`flex-1 border-2 border-black ${available <= 0 ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:bg-black hover:text-white'} text-black py-3 px-6 rounded-none font-medium transition-all`}>
                   Buy Now
                 </button>
               </div>
@@ -301,8 +309,9 @@ function ProductDetail() {
                       </div>
                     </div>
                     <button
-                      onClick={() => addToCart(product._id, 1)}
-                      className="mt-2 bg-black hover:bg-black/80 text-white font-semibold py-2 px-4 w-full flex items-center justify-center gap-2 rounded-none cursor-pointer transition-all duration-300">
+                      disabled={Number(product.stock || 0) <= 0}
+                      onClick={() => { if ((product.stock || 0) <= 0) { return; } addToCart(product._id, 1); }}
+                      className={`mt-2 w-full flex items-center justify-center gap-2 rounded-none font-semibold py-2 px-4 transition-all duration-300 ${Number(product.stock || 0) <= 0 ? 'bg-gray-100 text-black border-2 border-black cursor-not-allowed' : 'bg-black hover:bg-black/80 text-white cursor-pointer border-2 border-black'}`}>
                       Add to cart
                       <CiShoppingCart className="text-xl" />
                     </button>

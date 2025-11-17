@@ -38,10 +38,12 @@ const useOrder = () => {
             });
             setOrders(res.data);
             setError(null);
+            toast.success('Order created successfully');
             return res.data;
         } catch (error) {
             console.error('Error creating order:', error);
             setError('Failed to create order');
+            toast.error('Failed to create order');
             throw error;
         } finally {
             setLoading(false);

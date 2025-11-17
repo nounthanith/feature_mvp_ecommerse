@@ -42,6 +42,7 @@ const CartProvider = ({ children }) => {
             toast.success('Item added to cart');
             return res.data;
         } catch (error) {
+            toast.error('Failed to add item to cart');
             console.error('Error adding item to cart:', error);
             setError('Failed to add item to cart');
             throw error;

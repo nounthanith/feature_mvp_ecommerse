@@ -46,21 +46,7 @@ export default function Cart() {
     }
 
     if (error) {
-        return (
-            <div className="py-60 flex items-center justify-center">
-                <div className="text-center">
-                    <FiShoppingCart className="mx-auto h-16 w-16 text-gray-300" />
-                    <h2 className="mt-4 text-lg font-medium text-gray-900">Something went wrong</h2>
-                    <p className="mt-1 text-gray-500">{typeof error === 'string' ? error : 'Failed to load your cart. Please try again.'}</p>
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="mt-6 inline-block px-6 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
-                    >
-                        Go Back
-                    </button>
-                </div>
-            </div>
-        );
+        // toast.error(error);
     }
 
     // Compute derived totals as a reliable fallback for UI consistency
@@ -178,9 +164,12 @@ export default function Cart() {
                                                                     </span>
                                                                     <button
                                                                         onClick={(e) => {
-                                                                            updateCartItem(item.product._id, item.quantity + 1);
+                                                                            const max = Number(item.product?.countInStock ?? item.product?.stock ?? 0);
+                                                                            const next = max > 0 ? Math.min(item.quantity + 1, max) : item.quantity + 1;
+                                                                            updateCartItem(item.product._id, next);
                                                                         }}
                                                                         className="p-1.5 border rounded-none hover:bg-gray-50"
+                                                                        disabled={Number(item.product?.countInStock ?? item.product?.stock ?? 0) > 0 && item.quantity >= Number(item.product?.countInStock ?? item.product?.stock ?? 0)}
                                                                     >
                                                                         <FiPlus className="w-3.5 h-3.5" />
                                                                     </button>
@@ -211,8 +200,13 @@ export default function Cart() {
                                                         </button>
                                                         <span className="px-3 py-1 border-x">{item.quantity}</span>
                                                         <button
-                                                            onClick={() => updateCartItem(item.product._id, item.quantity + 1)}
+                                                            onClick={() => {
+                                                                const max = Number(item.product?.countInStock ?? item.product?.stock ?? 0);
+                                                                const next = max > 0 ? Math.min(item.quantity + 1, max) : item.quantity + 1;
+                                                                updateCartItem(item.product._id, next);
+                                                            }}
                                                             className="p-2 text-gray-600 hover:bg-gray-50"
+                                                            disabled={Number(item.product?.countInStock ?? item.product?.stock ?? 0) > 0 && item.quantity >= Number(item.product?.countInStock ?? item.product?.stock ?? 0)}
                                                         >
                                                             <FiPlus className="w-3.5 h-3.5" />
                                                         </button>
@@ -225,7 +219,7 @@ export default function Cart() {
                                                         ${(Number(item.price ?? item.product?.price ?? 0) * item.quantity).toFixed(2)}
                                                     </div>
                                                     <button
-                                                        onClick={() => removeFromCart(item._id)}
+                                                        onClick={() => removeFromCart(item.product._id)}
                                                         className="text-gray-400 hover:text-rose-600 ml-4"
                                                         title="Remove item"
                                                     >
