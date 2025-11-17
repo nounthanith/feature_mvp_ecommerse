@@ -46,7 +46,7 @@ function Category() {
         {/* Scrollable container */}
         <div
           ref={scrollContainer}
-          className="flex overflow-x-auto scrollbar-hide px-16 py-4 gap-4 border-b border-t"
+          className="flex overflow-x-auto scrollbar-hide px-16 border-b border-t"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
@@ -54,7 +54,7 @@ function Category() {
             <Link
               to={`/category/${category._id}`}
               key={category._id}
-              className="relative inline-block shrink-0 px-6 py-3 text-2xl font-bold whitespace-nowrap text-gray-900 hover:text-black transition-all duration-300 cursor-grab"
+              className="relative inline-block shrink-0 px-8 py-6 text-2xl font-bold whitespace-nowrap hover:bg-gray-200/50 text-gray-900 hover:text-black transition-all duration-300 cursor-grab"
             >
               <span className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full">
                 {category.name}
