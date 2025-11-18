@@ -9,3 +9,12 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
 }
+
+@font-face {
+    font-family: 'KantumruyPro';
+    src: url('assets/fonts/KantumruyPro-Medium.ttf');
+}
+
+body {
+    font-family: 'KantumruyPro', sans-serif;
+}
