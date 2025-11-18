@@ -132,14 +132,14 @@ function Wishlist() {
                                 )}
                             </div>
                             {product.stock > 0 ? (
-                                    <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold">
-                                        In stock
-                                    </div>
-                                ) : (
-                                    <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold">
-                                        Out of stock
-                                    </div>
-                                )}
+                                <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold">
+                                    In stock
+                                </div>
+                            ) : (
+                                <div className="absolute top-2 left-2 z-10 bg-red-500 backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold animate-pulse">
+                                    Out of stock
+                                </div>
+                            )}
                         </div>
                         <div className=''>
                             <p className="text-gray-700 font-semibold text-[12px] flex justify-end mt-2 mr-2">{new Date(product?.createdAt).toLocaleDateString()}</p>
@@ -150,8 +150,9 @@ function Wishlist() {
                                 </div>
                             </div>
                             <button
-                                onClick={async () => { await addToCart(product._id, 1); removeFromWishlist(product._id); }}
-                                className="mt-2 bg-black hover:bg-black/80 text-white font-semibold py-2 px-4 w-full flex items-center justify-center gap-2 rounded-none cursor-pointer transition-all duration-300">
+                                disabled={Number(product.stock || 0) <= 0}
+                                onClick={() => { if ((product.stock || 0) <= 0) { return; } addToCart(product._id, 1); }}
+                                className={`mt-2 w-full flex items-center justify-center gap-2 rounded-none font-semibold py-2 px-4 transition-all duration-300 ${Number(product.stock || 0) <= 0 ? 'bg-gray-100 border-2 border-black text-black cursor-not-allowed line-through' : 'bg-black border-2 border-black hover:bg-black/80 text-white cursor-pointer'}`}>
                                 Add to cart
                                 <CiShoppingCart className="text-xl" />
                             </button>

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import useCategory from './useCategory';
 import { Link } from 'react-router-dom';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaArrowDown, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 function Category() {
   const { categories, loading, error } = useCategory();
@@ -28,6 +28,8 @@ function Category() {
           <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
         </span>
       </h2>
+
+      <div className="flex justify-center mb-3"><span className="p-2 rounded-full bg-rose-50 animate-bounce"><FaArrowDown className="text-rose-500" /></span></div>
 
       <div className="relative group">
         {/* Gradient Overlays */}

@@ -311,7 +311,7 @@ function ProductDetail() {
                     <button
                       disabled={Number(product.stock || 0) <= 0}
                       onClick={() => { if ((product.stock || 0) <= 0) { return; } addToCart(product._id, 1); }}
-                      className={`mt-2 w-full flex items-center justify-center gap-2 rounded-none font-semibold py-2 px-4 transition-all duration-300 ${Number(product.stock || 0) <= 0 ? 'bg-gray-100 text-black border-2 border-black cursor-not-allowed' : 'bg-black hover:bg-black/80 text-white cursor-pointer border-2 border-black'}`}>
+                      className={`mt-2 w-full flex items-center justify-center gap-2 rounded-none font-semibold py-2 px-4 transition-all duration-300 ${Number(product.stock || 0) <= 0 ? 'bg-gray-100 text-black border-2 border-black cursor-not-allowed line-through' : 'bg-black hover:bg-black/80 text-white cursor-pointer border-2 border-black'}`}>
                       Add to cart
                       <CiShoppingCart className="text-xl" />
                     </button>
