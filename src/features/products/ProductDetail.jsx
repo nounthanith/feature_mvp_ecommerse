@@ -200,7 +200,7 @@ function ProductDetail() {
                 <button
                   disabled={available <= 0}
                   onClick={() => { if (available <= 0) { toast.error('Out of stock'); return; } addToCart(product._id, quantity); }}
-                  className={`flex-1 ${available <= 0 ? 'bg-gray-100 cursor-not-allowed' : 'bg-black hover:bg-black/80 cursor-pointer'} text-black py-3 px-6 rounded-none font-medium flex items-center justify-center gap-2 transition-all`}
+                  className={`flex-1 ${available <= 0 ? 'bg-gray-100 cursor-not-allowed' : 'bg-black text-white hover:bg-black/80 cursor-pointer'} text-black py-3 px-6 rounded-none font-medium flex items-center justify-center gap-2 transition-all`}
                 >
                   <CiShoppingCart className="w-5 h-5" />
                   Add to Cart
