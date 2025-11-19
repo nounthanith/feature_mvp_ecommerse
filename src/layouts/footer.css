@@ -1,0 +1,11 @@
+.footer-grid-bg {
+  background-image:
+    /* Grid lines on top */
+    linear-gradient(rgba(255, 255, 255, 0.04) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 2px, transparent 2px),
+    /* Color gradient at the bottom */
+    linear-gradient(to bottom, black, black, black);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+
+

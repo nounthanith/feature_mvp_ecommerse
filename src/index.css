@@ -2,19 +2,23 @@
 
 /* Hide scrollbar but keep functionality */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none;
+  /* Chrome, Safari and Opera */
 }
 
 @font-face {
-    font-family: 'KantumruyPro';
-    src: url('assets/fonts/KantumruyPro-Medium.ttf');
+  font-family: 'KantumruyPro';
+  src: url('assets/fonts/KantumruyPro-Medium.ttf');
 }
 
 body {
-    font-family: 'KantumruyPro', sans-serif;
+  font-family: 'KantumruyPro', sans-serif;
 }
+
