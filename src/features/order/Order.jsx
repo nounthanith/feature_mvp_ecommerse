@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import useOrder from './useOrder';
+import Pagination from '../products/Pagination';
 
-function Order() {
-    const { orders, loading, error, getOrders } = useOrder();
+function Order({ page = 1 }) {
+    const { orders, loading, error, getOrders, pagination } = useOrder();
     useEffect(() => {
-        getOrders();
-    }, []);
+        getOrders(page);
+    }, [page]);
     const data = orders?.data;
 
     if (loading) {
@@ -54,7 +55,7 @@ function Order() {
 
     return (
         <div className="space-y-6">
-            <div className="text-sm text-gray-500">Count: <span className="font-medium text-gray-900">{orders?.count}</span> orders</div>
+            <div className="text-sm text-gray-500"> <span className="font-medium text-gray-900">{pagination?.total}</span> orders</div>
 
             {data.map((o) => {
                 const created = o.createdAt ? new Date(o.createdAt).toLocaleString() : '';
@@ -73,14 +74,15 @@ function Order() {
                 const phone = addr?.phone || addr?.phoneNumber || '';
 
                 return (
-                    <div key={o._id} className="rounded-xl shadow-lg overflow-hidden bg-white">
+                    <div key={o._id} className="rounded-lg shadow-lg overflow-hidden bg-white">
                         {/* Gradient header (no hard border) */}
                         <div className="bg-gradient-to-r from-rose-50 to-pink-50 px-5 py-4">
                             <div className="flex flex-wrap items-center justify-between gap-3">
                                 <div className="flex items-center gap-3">
                                     <div className="text-sm text-gray-500">Order</div>
                                     <div className="font-semibold">#{String(o._id).slice(-6)}</div>
-                                    <span className={`text-xs px-2 py-1 rounded-full ${statusClass(o.status)}`}>{o.status ?? 'Pending'}</span>
+                                    <span className={`text-xs px-2 py-1 rounded-full capitalize ${statusClass(o.status)}`}>{o.status ?? 'Pending'}</span>
+                                    <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">Delivered: {o.deliveredAt ? new Date(o.deliveredAt).toLocaleString() : 'Not Delivered'}</span>
                                 </div>
                                 <div className="text-sm text-gray-500">{created}</div>
                             </div>
@@ -139,6 +141,7 @@ function Order() {
                     </div>
                 );
             })}
+            <Pagination page={pagination.page} totalPages={pagination.pages} onPageChange={(page) => getOrders(page)} />
         </div>
     )
 }

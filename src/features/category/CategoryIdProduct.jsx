@@ -9,6 +9,7 @@ import { useWishlist } from '../wishlist/WishlistContext';
 import { FaHeart } from "react-icons/fa";
 import { CiHeart } from "react-icons/ci";
 import useCart from '../cart/useCart';
+import Marquee from 'react-fast-marquee';
 
 function CategoryIdProduct() {
     const { products, loading, error, getCategoryProducts } = useCategory();
@@ -90,13 +91,45 @@ function CategoryIdProduct() {
         <div className="">
             <Category />
 
-            <h2 className="text-2xl font-bold text-center text-black group mt-5">
-                <span className="relative inline-block">
-                    {products.data[0].category.name}
-                    <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
-                </span>
-            </h2>
-            <p className="text-center text-gray-600 px-2 max-w-7xl mx-auto mb-5">{products.data[0].category.description}</p>
+            {/* Sticky Hero Banner */}
+            <div
+                className="relative max-w-7xl mx-auto h-[200px] sm:h-[200px] lg:h-[200px] flex flex-col justify-center items-center rounded-none overflow-hidden"
+                style={{
+                    backgroundImage: `url(${import.meta.env.VITE_BASE_URL + products?.data?.[0]?.category?.image})`,
+                    backgroundAttachment: 'fixed',
+                    backgroundPosition: 'center',
+                    backgroundSize: 'cover',
+                }}
+            >
+                <div className="absolute inset-0 bg-black/50"></div>
+                <div className="relative z-10 text-center px-4">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 group">
+                        <span className="relative inline-block">
+                            {products?.data?.[0]?.category?.name}
+                            <span className="absolute left-0 bottom-0 w-0 h-[4px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
+                        </span>
+                    </h2>
+                    <p className="text-white/90 text-sm sm:text-base lg:text-lg max-w-3xl mx-auto">
+                        {products?.data?.[0]?.category?.description}
+                    </p>
+                </div>
+            </div>
+            <div className="overflow-hidden border-y text-sm font-medium bg-black border-white text-white max-w-7xl mx-auto">
+                <Marquee autoFill speed={55} gradient={false} className="cursor-grab py-3">
+                    <div className="flex items-center space-x-10 mx-4">
+                        {/* <img src={race} className="w-10 h-10 opacity-90" alt="logo" /> */}
+                        <span>🚚 Free Shipping Over $50</span>
+                        <span>•</span>
+                        <span>🔥 New Collection Released!</span>
+                        <span>•</span>
+                        <span>🎁 15% OFF with code NEW15</span>
+                        <span>•</span>
+                        <span>💯 100% Satisfaction Guaranteed</span>
+                        <span>•</span>
+                        {/* <img src={race} className="w-10 h-10 opacity-90" alt="logo" /> */}
+                    </div>
+                </Marquee>
+            </div>
 
             <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2">
                 {products.data.map((product, index) => (
