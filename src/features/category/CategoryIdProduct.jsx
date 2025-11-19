@@ -89,65 +89,49 @@ function CategoryIdProduct() {
 
     return (
         <div className="">
+            
+
             {/* Sticky Hero Banner */}
             <div
-                className="relative max-w-7xl mx-auto h-[420px] sm:h-[420px] lg:h-[420px] flex flex-col justify-center items-center overflow-hidden rounded-xl shadow-2xl"
+                className="relative max-w-7xl mx-auto h-[400px] sm:h-[400px] lg:h-[400px] flex flex-col justify-center items-center rounded-none overflow"
                 style={{
                     backgroundImage: `url(${import.meta.env.VITE_BASE_URL + products?.data?.[0]?.category?.image})`,
                     backgroundAttachment: 'fixed',
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
+                    
                 }}
             >
-                {/* Dark gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/70 backdrop-blur-[1px]"></div>
-
-                {/* Floating light aura */}
-                <div className="absolute inset-0">
-                    <div className="absolute top-20 left-32 w-40 h-40 bg-rose-400/20 blur-3xl rounded-full animate-pulse"></div>
-                    <div className="absolute bottom-20 right-32 w-40 h-40 bg-blue-400/20 blur-3xl rounded-full animate-pulse"></div>
-                </div>
-
-                {/* TEXT CONTENT */}
+                <div className="absolute inset-0 bg-black/50"></div>
                 <div className="relative z-10 text-center px-4">
-                    <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white drop-shadow-xl group tracking-wide">
-                        <span className="relative inline-block px-3 py-1">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 group">
+                        <span className="relative inline-block">
                             {products?.data?.[0]?.category?.name}
-                            <span className="absolute left-0 bottom-0 w-0 h-[4px] bg-rose-500 rounded-full transition-all duration-700 group-hover:w-full"></span>
+                            <span className="absolute left-0 bottom-0 w-0 h-[4px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
                         </span>
                     </h2>
-
-                    {/* Description */}
-                    <p className="text-white/90 mt-4 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-white/90 text-sm sm:text-base lg:text-lg max-w-3xl mx-auto">
                         {products?.data?.[0]?.category?.description}
                     </p>
-
-                    {/* Glassmorphism Tag */}
-                    <div className="mt-6 inline-flex px-6 py-2 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white font-semibold shadow-lg">
-                        Premium Category • Updated Collection
-                    </div>
                 </div>
-
-
-                {/* Marquee */}
-                <div className="overflow-hidden border-y text-sm font-medium bg-black border-white text-white max-w-7xl mx-auto">
-                    <Marquee autoFill speed={55} gradient={false} className="cursor-grab py-3">
-                        <div className="flex items-center space-x-10 mx-4">
-                            <span>🚚 Free Shipping Over $50</span>
-                            <span>•</span>
-                            <span>🔥 New Collection Released!</span>
-                            <span>•</span>
-                            <span>🎁 15% OFF with code NEW15</span>
-                            <span>•</span>
-                            <span>💯 100% Satisfaction Guaranteed</span>
-                            <span>•</span>
-                        </div>
-                    </Marquee>
-                </div>
-
-                <Category />
             </div>
-
+            <div className="overflow-hidden border-y text-sm font-medium bg-black border-white text-white max-w-7xl mx-auto">
+                <Marquee autoFill speed={20} gradient={false} className="cursor-grab py-3">
+                    <div className="flex items-center space-x-10 mx-4">
+                        {/* <img src={race} className="w-10 h-10 opacity-90" alt="logo" /> */}
+                        <span>🚚 Free Shipping Over $50</span>
+                        <span>•</span>
+                        <span>🔥 New Collection Released!</span>
+                        <span>•</span>
+                        <span>🎁 15% OFF with code NEW15</span>
+                        <span>•</span>
+                        <span>💯 100% Satisfaction Guaranteed</span>
+                        <span>•</span>
+                        {/* <img src={race} className="w-10 h-10 opacity-90" alt="logo" /> */}
+                    </div>
+                </Marquee>
+            </div>
+            <Category />
 
             <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2">
                 {products.data.map((product, index) => (
