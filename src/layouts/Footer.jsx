@@ -69,7 +69,7 @@ export default function Footer() {
             <div className="flex flex-col items-center md:items-end gap-y-4 md:gap-y-0">
               <div className="flex items-center justify-center space-x-6">
                 {[
-                  { icon: <FaFacebookF size={22} />, link: "https://web.facebook.com/tha.nith.549" },
+                  { icon: <FaFacebookF size={22} />, link: "https://facebook.com/tha.nith.549" },
 
                 ].map((item, i) => (
                   <Link

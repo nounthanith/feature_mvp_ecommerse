@@ -89,11 +89,11 @@ function CategoryIdProduct() {
 
     return (
         <div className="">
-            <Category />
+            
 
             {/* Sticky Hero Banner */}
             <div
-                className="relative max-w-7xl mx-auto h-[200px] sm:h-[200px] lg:h-[200px] flex flex-col justify-center items-center rounded-none overflow-hidden"
+                className="relative max-w-7xl mx-auto h-[400px] sm:h-[400px] lg:h-[400px] flex flex-col justify-center items-center rounded-none overflow-hidden"
                 style={{
                     backgroundImage: `url(${import.meta.env.VITE_BASE_URL + products?.data?.[0]?.category?.image})`,
                     backgroundAttachment: 'fixed',
@@ -130,6 +130,7 @@ function CategoryIdProduct() {
                     </div>
                 </Marquee>
             </div>
+            <Category />
 
             <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2">
                 {products.data.map((product, index) => (
