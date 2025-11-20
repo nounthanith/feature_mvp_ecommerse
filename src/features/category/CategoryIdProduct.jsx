@@ -93,13 +93,13 @@ function CategoryIdProduct() {
 
             {/* Sticky Hero Banner */}
             <div
-                className="relative max-w-7xl mx-auto h-[400px] sm:h-[400px] lg:h-[400px] flex flex-col justify-center items-center rounded-none"
+                className="relative max-w-7xl mx-auto h-[500px] sm:h-[500px] lg:h-[500px] flex flex-col justify-center items-center rounded-none"
                 style={{
                     backgroundImage: `url(${import.meta.env.VITE_BASE_URL + products?.data?.[0]?.category?.image})`,
                     backgroundAttachment: 'fixed',
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
-
+                    backgroundRepeat: 'no-repeat',
                 }}
             >
                 <div className="absolute inset-0 bg-black/50"></div>

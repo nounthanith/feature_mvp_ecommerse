@@ -26,6 +26,14 @@ function ProductDetail() {
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [country, setCountry] = useState('');
+  const [phone, setPhone] = useState('');
+  const paymentMethods = [
+    { value: 'cashOnDelivery', label: 'Cash on Delivery' },
+    { value: 'bakong', label: 'Bakong Wallet' },
+    { value: 'creditCard', label: 'Credit / Debit Card' },
+  ];
+  const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0].value);
+  const [placing, setPlacing] = useState(false);
   const available = Number((product?.countInStock ?? product?.stock) || 0);
 
   useEffect(() => {
@@ -327,38 +335,74 @@ function ProductDetail() {
         open={buyOpen}
         title="Shipping Details"
         description="Enter your shipping information to place the order"
-        confirmText="Place Order"
+        confirmText={placing ? 'Placing…' : 'Place Order'}
         cancelText="Cancel"
         onConfirm={async () => {
+          const unitPrice = Number(product?.price ?? 0);
+          const normalizedUnitPrice = Number(unitPrice.toFixed(2));
+          const orderItem = {
+            product: product?._id || id,
+            name: product?.name,
+            image: product?.images?.[0],
+            price: normalizedUnitPrice,
+            quantity,
+          };
+          const itemsPrice = Number((normalizedUnitPrice * quantity).toFixed(2));
+          const shippingPrice = Number((itemsPrice > 100 ? 0 : 1.5).toFixed(2));
+          const taxPrice = Number((itemsPrice * 0).toFixed(2));
           const payload = {
-            shippingAddress: {
-              fullName,
-              address,
-              city,
-              postalCode,
-              country,
-            },
-            paymentMethod: 'bakong',
+            orderItems: [orderItem],
+            shippingAddress: { fullName, address, city, postalCode, country, phone },
+            paymentMethod,
+            itemsPrice,
+            shippingPrice,
+            taxPrice,
+            totalPrice: Number((itemsPrice + shippingPrice + taxPrice).toFixed(2)),
           };
           try {
+            setPlacing(true);
             await CreateOrder(payload);
             setBuyOpen(false);
+            setFullName(''); 
+            setAddress(''); 
+            setCity(''); 
+            setPostalCode(''); 
+            setCountry('');
+            setPhone('');
+            navigate('/profile');
           } catch (e) {
             setBuyOpen(false);
+          } finally {
+            setPlacing(false);
           }
         }}
         onCancel={() => setBuyOpen(false)}
         onClose={() => setBuyOpen(false)}
-        disableConfirm={!fullName || !address || !city || !postalCode || !country}
+        disableConfirm={placing || !fullName || !address || !city || !postalCode || !country || !phone || !paymentMethod}
       >
         <div className="grid grid-cols-1 gap-3">
           <input value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: John Doe/ចន ដូ" />
           <input value={address} onChange={(e) => setAddress(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: Phnom Penh/ភ្នំពេញ" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input value={city} onChange={(e) => setCity(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: Toul Kork/ទួលគោក" />
-            <input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Phone/លេខទូរស័ព្ទ" />
+            <input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Postal Code" />
           </div>
           <input value={country} onChange={(e) => setCountry(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: Cambodia/កម្ពុជា" />
+          <input value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Phone/លេខទូរស័ព្ទ" />
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-gray-700">Payment Method</label>
+            <select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200 bg-white"
+            >
+              {paymentMethods.map((method) => (
+                <option key={method.value} value={method.value}>
+                  {method.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </Dialog>
     </>
