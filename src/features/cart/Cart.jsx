@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiShoppingCart, FiTrash2, FiPlus, FiMinus, FiArrowLeft } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import useCart from './useCart';
@@ -18,6 +18,7 @@ export default function Cart() {
 
     const navigate = useNavigate();
     const { CreateOrder } = useOrder();
+    const STORAGE_KEY = 'checkoutInfo';
     const [checkoutOpen, setCheckoutOpen] = useState(false);
     const [fullName, setFullName] = useState('');
     const [address, setAddress] = useState('');
@@ -32,6 +33,32 @@ export default function Cart() {
     ];
     const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0].value);
     const [placing, setPlacing] = useState(false);
+
+    useEffect(() => {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return;
+            const parsed = JSON.parse(saved);
+            if (parsed.fullName) setFullName(parsed.fullName);
+            if (parsed.address) setAddress(parsed.address);
+            if (parsed.city) setCity(parsed.city);
+            if (parsed.postalCode) setPostalCode(parsed.postalCode);
+            if (parsed.country) setCountry(parsed.country);
+            if (parsed.phone) setPhone(parsed.phone);
+            if (parsed.paymentMethod) setPaymentMethod(parsed.paymentMethod);
+        } catch (err) {
+            console.error('Failed to load saved checkout info', err);
+        }
+    }, []);
+
+    const persistCheckoutInfo = () => {
+        try {
+            const payload = { fullName, address, city, postalCode, country, phone, paymentMethod };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        } catch (err) {
+            console.error('Failed to save checkout info', err);
+        }
+    };
 
     const handleClearCart = async () => {
         try {
@@ -294,6 +321,7 @@ export default function Cart() {
                     try {
                         setPlacing(true);
                         await CreateOrder(payload);
+                        persistCheckoutInfo();
                         await clearCart();
                         setCheckoutOpen(false);
                         setFullName(''); setAddress(''); setCity(''); setPostalCode(''); setCountry('');

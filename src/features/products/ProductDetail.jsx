@@ -27,6 +27,7 @@ function ProductDetail() {
   const [postalCode, setPostalCode] = useState('');
   const [country, setCountry] = useState('');
   const [phone, setPhone] = useState('');
+  const STORAGE_KEY = 'checkoutInfo';
   const paymentMethods = [
     { value: 'cashOnDelivery', label: 'Cash on Delivery' },
     { value: 'bakong', label: 'Bakong Wallet' },
@@ -35,6 +36,40 @@ function ProductDetail() {
   const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0].value);
   const [placing, setPlacing] = useState(false);
   const available = Number((product?.countInStock ?? product?.stock) || 0);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return;
+      const parsed = JSON.parse(saved);
+      if (parsed.fullName) setFullName(parsed.fullName);
+      if (parsed.address) setAddress(parsed.address);
+      if (parsed.city) setCity(parsed.city);
+      if (parsed.postalCode) setPostalCode(parsed.postalCode);
+      if (parsed.country) setCountry(parsed.country);
+      if (parsed.phone) setPhone(parsed.phone);
+      if (parsed.paymentMethod) setPaymentMethod(parsed.paymentMethod);
+    } catch (err) {
+      console.error('Failed to load saved checkout info', err);
+    }
+  }, []);
+
+  const persistCheckoutInfo = () => {
+    try {
+      const payload = {
+        fullName,
+        address,
+        city,
+        postalCode,
+        country,
+        phone,
+        paymentMethod,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch (err) {
+      console.error('Failed to save checkout info', err);
+    }
+  };
 
   useEffect(() => {
     if (!product) return;
@@ -362,6 +397,7 @@ function ProductDetail() {
           try {
             setPlacing(true);
             await CreateOrder(payload);
+            persistCheckoutInfo();
             setBuyOpen(false);
             setFullName(''); 
             setAddress(''); 
