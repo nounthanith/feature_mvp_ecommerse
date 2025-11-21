@@ -19,7 +19,7 @@ function ProductDetail() {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const { CreateOrder } = useOrder();
+  const { CreateOrder, buyNow } = useOrder();
   const [buyOpen, setBuyOpen] = useState(false);
   const [fullName, setFullName] = useState('');
   const [address, setAddress] = useState('');
@@ -29,11 +29,21 @@ function ProductDetail() {
   const [phone, setPhone] = useState('');
   const STORAGE_KEY = 'checkoutInfo';
   const paymentMethods = [
-    { value: 'cashOnDelivery', label: 'Cash on Delivery' },
+    { value: 'none', label: 'No Payment Method' },
+    { value: 'cash_on_delivery', label: 'Cash on Delivery' },
     { value: 'bakong', label: 'Bakong Wallet' },
-    { value: 'creditCard', label: 'Credit / Debit Card' },
+    { value: 'paypal', label: 'Paypal' },
+    { value: 'stripe', label: 'Stripe' },
   ];
-  const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0].value);
+  //'paypal', 'stripe', 'cash_on_delivery', 'bakong', 'none'
+  const countryCodes = {
+    'KH': 'Cambodia',
+    'US': 'United States',
+    'TH': 'Thailand',
+    'VN': 'Vietnam',
+    'LA': 'Laos',
+  };
+  const [paymentMethod, setPaymentMethod] = useState('none');
   const [placing, setPlacing] = useState(false);
   const available = Number((product?.countInStock ?? product?.stock) || 0);
 
@@ -373,38 +383,32 @@ function ProductDetail() {
         confirmText={placing ? 'Placing…' : 'Place Order'}
         cancelText="Cancel"
         onConfirm={async () => {
-          const unitPrice = Number(product?.price ?? 0);
-          const normalizedUnitPrice = Number(unitPrice.toFixed(2));
-          const orderItem = {
-            product: product?._id || id,
-            name: product?.name,
-            image: product?.images?.[0],
-            price: normalizedUnitPrice,
-            quantity,
-          };
-          const itemsPrice = Number((normalizedUnitPrice * quantity).toFixed(2));
-          const shippingPrice = Number((itemsPrice > 100 ? 0 : 1.5).toFixed(2));
-          const taxPrice = Number((itemsPrice * 0).toFixed(2));
           const payload = {
-            orderItems: [orderItem],
-            shippingAddress: { fullName, address, city, postalCode, country, phone },
-            paymentMethod,
-            itemsPrice,
-            shippingPrice,
-            taxPrice,
-            totalPrice: Number((itemsPrice + shippingPrice + taxPrice).toFixed(2)),
+            productId: product?._id || id,
+            quantity: quantity,
+            shippingAddress: {
+              fullName,
+              address,
+              city,
+              postalCode,
+              country: countryCodes[country] || country || 'Cambodia',
+              phone
+            },
+            paymentMethod: paymentMethod === 'none' ? 'none' : paymentMethod,
           };
+          console.log('Buy Now Payload:', JSON.stringify(payload, null, 2));
           try {
             setPlacing(true);
-            await CreateOrder(payload);
+            await buyNow(payload);
             persistCheckoutInfo();
             setBuyOpen(false);
-            setFullName(''); 
-            setAddress(''); 
-            setCity(''); 
-            setPostalCode(''); 
+            setFullName('');
+            setAddress('');
+            setCity('');
+            setPostalCode('');
             setCountry('');
             setPhone('');
+            setPaymentMethod('none');
             navigate('/profile');
           } catch (e) {
             setBuyOpen(false);
@@ -414,7 +418,7 @@ function ProductDetail() {
         }}
         onCancel={() => setBuyOpen(false)}
         onClose={() => setBuyOpen(false)}
-        disableConfirm={placing || !fullName || !address || !city || !postalCode || !country || !phone || !paymentMethod}
+        disableConfirm={placing || !fullName || !address || !city || !postalCode || !country || !phone || paymentMethod === 'none'}
       >
         <div className="grid grid-cols-1 gap-3">
           <input value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: John Doe/ចន ដូ" />
@@ -423,7 +427,21 @@ function ProductDetail() {
             <input value={city} onChange={(e) => setCity(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: Toul Kork/ទួលគោក" />
             <input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Postal Code" />
           </div>
-          <input value={country} onChange={(e) => setCountry(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: Cambodia/កម្ពុជា" />
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-gray-700">Country Code</label>
+            <select
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200 bg-white"
+            >
+              <option value="">Select Country</option>
+              {Object.entries(countryCodes).map(([code, name]) => (
+                <option key={code} value={code}>
+                  {code} - {name}
+                </option>
+              ))}
+            </select>
+          </div>
           <input value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Phone/លេខទូរស័ព្ទ" />
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">Payment Method</label>

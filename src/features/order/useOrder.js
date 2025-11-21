@@ -44,8 +44,34 @@ const useOrder = () => {
             return res.data;
         } catch (error) {
             console.error('Error creating order:', error);
-            setError('Failed to create order');
-            toast.error('Failed to create order');
+            const errorMessage = error?.response?.data?.message || error?.response?.data?.error || error?.message || 'Failed to create order';
+            console.error('Backend error details:', error?.response?.data);
+            setError(errorMessage);
+            toast.error(errorMessage);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const buyNow = async (orderData) => {
+        try {
+            setLoading(true);
+            const res = await api.post('/orders/buy-now', orderData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            setError(null);
+            toast.success('Order created successfully');
+            return res.data;
+        } catch (error) {
+            console.error('Error creating buy now order:', error);
+            const errorMessage = error?.response?.data?.message || error?.response?.data?.error || error?.message || 'Failed to create order';
+            console.error('Backend error details:', error?.response?.data);
+            setError(errorMessage);
+            toast.error(errorMessage);
             throw error;
         } finally {
             setLoading(false);
@@ -58,7 +84,8 @@ const useOrder = () => {
         error,
         pagination,
         getOrders,
-        CreateOrder
+        CreateOrder,
+        buyNow
     };
 }
 

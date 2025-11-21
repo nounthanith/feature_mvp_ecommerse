@@ -27,11 +27,20 @@ export default function Cart() {
     const [country, setCountry] = useState('');
     const [phone, setPhone] = useState('');
     const paymentMethods = [
-        { value: 'cashOnDelivery', label: 'Cash on Delivery' },
+        { value: 'none', label: 'No Payment Method' },
+        { value: 'cash_on_delivery', label: 'Cash on Delivery' },
         { value: 'bakong', label: 'Bakong Wallet' },
-        { value: 'creditCard', label: 'Credit / Debit Card' },
+        { value: 'paypal', label: 'Paypal' },
+        { value: 'stripe', label: 'Stripe' },
     ];
-    const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0].value);
+    const countryCodes = {
+        'KH': 'Cambodia',
+        'US': 'United States',
+        'TH': 'Thailand',
+        'VN': 'Vietnam',
+        'LA': 'Laos',
+    };
+    const [paymentMethod, setPaymentMethod] = useState('none');
     const [placing, setPlacing] = useState(false);
 
     useEffect(() => {
@@ -315,9 +324,17 @@ export default function Cart() {
                 cancelText="Cancel"
                 onConfirm={async () => {
                     const payload = {
-                        shippingAddress: { fullName, address, city, postalCode, country, phone },
-                        paymentMethod
+                        shippingAddress: { 
+                            fullName, 
+                            address, 
+                            city, 
+                            postalCode, 
+                            country: countryCodes[country] || country || 'Cambodia', 
+                            phone 
+                        },
+                        paymentMethod: paymentMethod === 'none' ? 'none' : paymentMethod
                     };
+                    console.log('Cart Checkout Payload:', JSON.stringify(payload, null, 2));
                     try {
                         setPlacing(true);
                         await CreateOrder(payload);
@@ -325,7 +342,7 @@ export default function Cart() {
                         await clearCart();
                         setCheckoutOpen(false);
                         setFullName(''); setAddress(''); setCity(''); setPostalCode(''); setCountry('');
-                        setPaymentMethod(paymentMethods[0].value);
+                        setPaymentMethod('none');
                         setPhone('');
                         navigate('/profile');
                     } catch (e) {
@@ -336,7 +353,7 @@ export default function Cart() {
                 }}
                 onCancel={() => setCheckoutOpen(false)}
                 onClose={() => setCheckoutOpen(false)}
-                disableConfirm={placing || !fullName || !address || !city || !postalCode || !country || !paymentMethod || !phone}
+                disableConfirm={placing || !fullName || !address || !city || !postalCode || !country || paymentMethod === 'none' || !phone}
             >
                 <div className="grid grid-cols-1 gap-3">
                     <input value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: John Doe/ចន ដូ" />
@@ -345,7 +362,21 @@ export default function Cart() {
                         <input value={city} onChange={(e) => setCity(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: Toul Kork/ទួលគោក" />
                         <input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Postal Code/លេខកិច្ចការស្រុក" />
                     </div>
-                    <input value={country} onChange={(e) => setCountry(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: Cambodia/កម្ពុជា" />
+                    <div className="space-y-1">
+                        <label className="text-sm font-medium text-gray-700">Country Code</label>
+                        <select
+                            value={country}
+                            onChange={(e) => setCountry(e.target.value)}
+                            className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200 bg-white"
+                        >
+                            <option value="">Select Country</option>
+                            {Object.entries(countryCodes).map(([code, name]) => (
+                                <option key={code} value={code}>
+                                    {code} - {name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     <input value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Phone/លេខទូរស័ព្ទ" />
                     <div className="space-y-1">
                         <label className="text-sm font-medium text-gray-700">Payment Method</label>
