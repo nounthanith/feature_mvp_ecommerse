@@ -1,7 +1,9 @@
 import React, { useRef, useState } from 'react';
 import useCategory from './useCategory';
 import { Link } from 'react-router-dom';
+import race from "./../../assets/race.png";
 import { FaArrowDown, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import Marquee from 'react-fast-marquee';
 
 function Category() {
   const { categories, loading, error } = useCategory();
@@ -56,10 +58,16 @@ function Category() {
             <Link
               to={`/category/${category._id}`}
               key={category._id}
-              className="relative inline-block shrink-0 px-8 py-6 text-2xl font-bold whitespace-nowrap hover:bg-red-100/50 text-gray-900 hover:text-black transition-all duration-300 cursor-grab"
+              className="relative inline-block shrink-0 px-8 py-6 text-2xl font-bold whitespace-nowrap hover:bg-gray-100/50 text-gray-900 hover:text-black transition-all duration-300 cursor-grab"
             >
               <span className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full">
-                {category.name}
+                 <div className="flex items-center gap-2">
+                  <span className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                    </span>
+                  {category.name}
+                 </div>
               </span>
             </Link>
           ))}
@@ -73,6 +81,22 @@ function Category() {
         >
           <FaChevronRight className="text-gray-600" />
         </button>
+      </div>
+      <div className="overflow-hidden text-sm font-medium bg-white text-black border-b-2">
+        <Marquee autoFill speed={25} gradient={false} className="cursor-grab">
+          <div className="flex items-center space-x-10 mx-4">
+            <img src={race} className="w-10 h-10 opacity-90" alt="logo" />
+            <span>🚚 Free Shipping Over $50</span>
+            <span>•</span>
+            <span>🔥 New Collection Released!</span>
+            <span>•</span>
+            <span>🎁 15% OFF with code NEW15</span>
+            <span>•</span>
+            <span>💯 100% Satisfaction Guaranteed</span>
+            <span>•</span>
+            <img src={race} className="w-10 h-10 opacity-90" alt="logo" />
+          </div>
+        </Marquee>
       </div>
     </div>
   );
