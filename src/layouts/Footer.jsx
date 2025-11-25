@@ -4,6 +4,7 @@ import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 import race from "../assets/race.png";
 import "./footer.css";
 import { Link } from "react-router-dom";
+import Shuffle from "../components/Shuffle";
 
 export default function Footer() {
   const navLinks = [
@@ -38,6 +39,7 @@ export default function Footer() {
         text-white 
         footer-grid-bg 
         border-t border-white/10
+        text-center
       ">
         {/* Glow Overlay */}
         <div className="absolute inset-0 bg-white/5 pointer-events-none"></div>
@@ -107,7 +109,23 @@ export default function Footer() {
             <Link to="tel:+88593939290" className="text-gray-300 hover:text-white font-bold leading-normal transition-colors duration-200">+885 939 392 90</Link>
           </div>
         </div>
+
+        <Shuffle
+          className="text-center"
+          text="THANK YOU FOR SHOPPING WITH TP-CAMBO"
+          shuffleDirection="right"
+          duration={0.35}
+          animationMode="evenodd"
+          shuffleTimes={1}
+          ease="power3.out"
+          stagger={0.03}
+          threshold={0.1}
+          triggerOnce={true}
+          triggerOnHover={true}
+          respectReducedMotion={true}
+        />
       </div>
+
     </footer>
   );
 }

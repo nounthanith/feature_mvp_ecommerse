@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound';
 import CategoryIdProduct from './features/category/CategoryIdProduct';
 import Cart from './features/cart/Cart';
 import Wishlist from './features/wishlist/Wishlist';
+import Arrival from './features/arrival/Arrival';
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('token');
@@ -117,6 +118,7 @@ function App() {
           <Route path="/category/:id" element={<CategoryIdProduct />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/arrival" element={<Arrival />} />
           <Route
             path="/profile"
             element={
