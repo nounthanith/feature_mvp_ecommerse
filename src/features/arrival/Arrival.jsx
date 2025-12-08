@@ -14,7 +14,7 @@ function Arrival() {
     const { addToCart } = useCart();
     const { addToWishlist, removeFromWishlist, checkWishlistStatus } = useWishlist();
 
-    
+
 
     useEffect(() => {
         getArrival();
@@ -72,7 +72,7 @@ function Arrival() {
                             onMouseLeave={() => setHoveredProductId(null)}
                         >
                             <div className="relative w-full h-60">
-                                
+
                                 <div className="w-full h-full">
                                     <img
                                         className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer"
