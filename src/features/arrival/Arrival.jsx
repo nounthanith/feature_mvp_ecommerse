@@ -2,14 +2,25 @@ import React, { useEffect, useState } from 'react'
 import useArrival from './useArrival'
 import { CiHeart, CiShoppingCart } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 import useProduct from '../products/useProduct';
+import useCart from '../cart/useCart';
+import { useWishlist } from '../wishlist/WishlistContext';
+import { IoWarningOutline } from "react-icons/io5";
 
 function Arrival() {
     const { arrival, loading, error, getArrival } = useArrival();
-    const navigate = useNavigate();
     const [hoveredProductId, setHoveredProductId] = useState(null);
-    const {getProductById} = useProduct();
+    const { getProductById } = useProduct();
+    const { addToCart } = useCart();
+    const { addToWishlist, removeFromWishlist, checkWishlistStatus } = useWishlist();
+
+    const toggleWishlist = (productId) => {
+        if (checkWishlistStatus(productId)) {
+            removeFromWishlist(productId);
+        } else {
+            addToWishlist(productId);
+        }
+    };
 
     useEffect(() => {
         getArrival();
@@ -56,26 +67,33 @@ function Arrival() {
                     <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
                 </span>
             </h2>
-            <div className="">
-                <div className="max-w-7xl mx-auto flex overflow-x-auto gap-1 p-2 scrollbar-hide">
-                    {arrival?.data?.map((product, index) => (
+
+            <div className="overflow-x-auto scrollbar-hide">
+                <div className="max-w-7xl mx-auto flex pb-5 snap-x snap-mandatory">
+                    {arrival?.data?.map((product) => (
                         <div
                             key={product._id}
-                            className='overflow-hidden cursor-pointer flex-shrink-0 w-[178px] sm:w-[290px]'
+                            className="flex-shrink-0 snap-start w-[210px] sm:w-[260px] bg-white transition-all duration-300 overflow-hidden cursor-pointer"
                             onMouseEnter={() => setHoveredProductId(product._id)}
                             onMouseLeave={() => setHoveredProductId(null)}
                         >
-                            <div className='relative w-full h-64'>
-                                <div onClick={() => getProductById(product._id)} className='w-full h-full'>
+                            <div className="relative w-full h-60">
+                                <div
+                                    onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); }}
+                                    className="absolute top-2 right-2 z-10 p-2 bg-black/70 rounded-full hover:bg-black/80 transition-colors cursor-pointer backdrop-blur-sm"
+                                >
+                                    <IoWarningOutline className="text-white text-xl" />
+                                </div>
+                                <div onClick={() => getProductById(product._id)} className="w-full h-full">
                                     <img
-                                        className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer'
+                                        className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer"
                                         src={import.meta.env.VITE_BASE_URL + product.images[0]}
                                         alt={product.name}
                                         style={{ transform: hoveredProductId === product._id ? 'translateX(-100%)' : 'translateX(0)' }}
                                     />
                                     {product.images[1] && (
                                         <img
-                                            className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer'
+                                            className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer"
                                             src={import.meta.env.VITE_BASE_URL + product.images[1]}
                                             alt={product.name}
                                             style={{ transform: hoveredProductId === product._id ? 'translateX(0)' : 'translateX(100%)' }}
@@ -83,28 +101,28 @@ function Arrival() {
                                     )}
                                 </div>
                                 {product.stock > 0 ? (
-                                    <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold">
-                                        In stock
+                                    <div className="absolute top-2 left-2 z-10 bg-black/80 backdrop-blur-sm px-2 py-1 text-white text-[11px] font-semibold">
+                                        Available
                                     </div>
                                 ) : (
-                                    <div className="absolute top-2 left-2 z-10 bg-green-500 backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold animate-pulse">
-                                        Not available
+                                    <div className="absolute top-2 left-2 z-10 bg-red-500 backdrop-blur-sm px-2 py-1 text-white text-[11px] font-semibold animate-pulse">
+                                        Not Available
                                     </div>
                                 )}
                             </div>
-                            <div className=''>
-                                <p className="text-gray-700 font-semibold text-[12px] flex justify-end mt-2 mr-2">Arrival on {new Date(product?.expectedArrivalDate).toLocaleDateString()}</p>
-                                <div className='px-2'>
-                                    <h2 className='text-lg font-bold truncate' title={product.name}>{product.name}</h2>
-                                    <div className="flex items-center justify-between">
-                                        <p className='text-rose-600 text-xl font-bold'>{product.price} $</p>
-                                    </div>
-                                </div>
+                            <div className="px-2 pb-3 pt-2 space-y-1">
+                                <p className="text-gray-700 font-semibold text-[12px] flex justify-between items-center">
+                                    <span className="text-gray-500">Arrival</span>
+                                    <span className="text-gray-600">{new Date(product?.expectedArrivalDate).toLocaleDateString()}</span>
+                                </p>
+                                <h2 className="text-lg font-bold truncate" title={product.name}>{product.name}</h2>
+
+                                <p className="text-rose-600 text-xl font-bold">{product.price} $</p>
+
                                 <button
-                                    disabled={Number(product.stock || 0) <= 0}
-                                    onClick={() => { if ((product.stock || 0) <= 0) { return; } addToCart(product._id, 1); }}
-                                    className={`mt-2 w-full flex items-center justify-center gap-2 rounded-none font-semibold py-2 px-4 transition-all duration-300 ${Number(product.stock || 0) <= 0 ? 'bg-gray-100 border-2 border-black text-black cursor-not-allowed' : 'bg-black border-2 border-black hover:bg-black/80 text-white cursor-pointer'}`}>
-                                    Not available
+
+                                    className={`mt-2 w-full flex items-center justify-center gap-2 rounded-none font-semibold py-2 px-4 transition-all duration-300 bg-gray-100 border-2 border-black text-black cursor-not-allowed line-through'`}>
+                                    Comming Soon
                                     <CiShoppingCart className="text-xl" />
                                 </button>
                             </div>
