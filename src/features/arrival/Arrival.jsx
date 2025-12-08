@@ -14,13 +14,7 @@ function Arrival() {
     const { addToCart } = useCart();
     const { addToWishlist, removeFromWishlist, checkWishlistStatus } = useWishlist();
 
-    const toggleWishlist = (productId) => {
-        if (checkWishlistStatus(productId)) {
-            removeFromWishlist(productId);
-        } else {
-            addToWishlist(productId);
-        }
-    };
+    
 
     useEffect(() => {
         getArrival();
@@ -69,7 +63,7 @@ function Arrival() {
             </h2>
 
             <div className="overflow-x-auto scrollbar-hide">
-                <div className="max-w-7xl mx-auto flex pb-5 snap-x snap-mandatory">
+                <div className="max-w-7xl mx-auto flex snap-x snap-mandatory">
                     {arrival?.data?.map((product) => (
                         <div
                             key={product._id}
@@ -78,13 +72,8 @@ function Arrival() {
                             onMouseLeave={() => setHoveredProductId(null)}
                         >
                             <div className="relative w-full h-60">
-                                <div
-                                    onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); }}
-                                    className="absolute top-2 right-2 z-10 p-2 bg-black/70 rounded-full hover:bg-black/80 transition-colors cursor-pointer backdrop-blur-sm"
-                                >
-                                    <IoWarningOutline className="text-white text-xl" />
-                                </div>
-                                <div onClick={() => getProductById(product._id)} className="w-full h-full">
+                                
+                                <div className="w-full h-full">
                                     <img
                                         className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer"
                                         src={import.meta.env.VITE_BASE_URL + product.images[0]}
@@ -105,7 +94,7 @@ function Arrival() {
                                         Available
                                     </div>
                                 ) : (
-                                    <div className="absolute top-2 left-2 z-10 bg-red-500 backdrop-blur-sm px-2 py-1 text-white text-[11px] font-semibold animate-pulse">
+                                    <div className="absolute top-2 left-2 z-10 bg-purple-500 backdrop-blur-sm px-2 py-1 text-white text-[11px] font-semibold animate-pulse">
                                         Not Available
                                     </div>
                                 )}
