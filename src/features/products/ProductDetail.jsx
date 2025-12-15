@@ -25,7 +25,7 @@ function ProductDetail() {
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
-  const [country, setCountry] = useState('');
+  const [country, setCountry] = useState('KH');
   const [phone, setPhone] = useState('');
   const STORAGE_KEY = 'checkoutInfo';
   const paymentMethods = [
@@ -33,15 +33,10 @@ function ProductDetail() {
     { value: 'cash_on_delivery', label: 'Cash on Delivery' },
     { value: 'bakong', label: 'Bakong Wallet' },
     { value: 'paypal', label: 'Paypal' },
-    { value: 'stripe', label: 'Stripe' },
   ];
   //'paypal', 'stripe', 'cash_on_delivery', 'bakong', 'none'
   const countryCodes = {
     'KH': 'Cambodia',
-    'US': 'United States',
-    'TH': 'Thailand',
-    'VN': 'Vietnam',
-    'LA': 'Laos',
   };
   const [paymentMethod, setPaymentMethod] = useState('none');
   const [placing, setPlacing] = useState(false);
@@ -58,7 +53,7 @@ function ProductDetail() {
       if (parsed.postalCode) setPostalCode(parsed.postalCode);
       if (parsed.country) setCountry(parsed.country);
       if (parsed.phone) setPhone(parsed.phone);
-      if (parsed.paymentMethod) setPaymentMethod(parsed.paymentMethod);
+      // if (parsed.paymentMethod) setPaymentMethod(parsed.paymentMethod);
     } catch (err) {
       console.error('Failed to load saved checkout info', err);
     }
@@ -394,7 +389,7 @@ function ProductDetail() {
               country: countryCodes[country] || country || 'Cambodia',
               phone
             },
-            paymentMethod: paymentMethod === 'none' ? 'none' : paymentMethod,
+
           };
           console.log('Buy Now Payload:', JSON.stringify(payload, null, 2));
           try {
@@ -408,7 +403,6 @@ function ProductDetail() {
             setPostalCode('');
             setCountry('');
             setPhone('');
-            setPaymentMethod('none');
             navigate('/profile');
           } catch (e) {
             setBuyOpen(false);
@@ -418,7 +412,7 @@ function ProductDetail() {
         }}
         onCancel={() => setBuyOpen(false)}
         onClose={() => setBuyOpen(false)}
-        disableConfirm={placing || !fullName || !address || !city || !postalCode || !country || !phone || paymentMethod === 'none'}
+        disableConfirm={placing || !fullName || !address || !city || !postalCode || !country || !phone}
       >
         <div className="grid grid-cols-1 gap-3">
           <input value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: John Doe/ចន ដូ" />
@@ -443,7 +437,7 @@ function ProductDetail() {
             </select>
           </div>
           <input value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Phone/លេខទូរស័ព្ទ" />
-          <div className="space-y-1">
+          {/* <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700">Payment Method</label>
             <select
               value={paymentMethod}
@@ -456,7 +450,7 @@ function ProductDetail() {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
         </div>
       </Dialog>
     </>

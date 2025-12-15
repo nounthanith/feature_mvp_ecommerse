@@ -134,11 +134,14 @@ function Product() {
                                     )}
                                 </div>
                                 {product.stock > 0 ? (
-                                    <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold">
-                                        In stock
+                                    // <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold">
+                                    //     In stock
+                                    // </div>
+                                    <div>
+                                        {/* In Stock No Design */}
                                     </div>
                                 ) : (
-                                    <div className="absolute top-2 left-2 z-10 bg-red-500 backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold animate-pulse">
+                                    <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold animate-pulse">
                                         Out of stock
                                     </div>
                                 )}

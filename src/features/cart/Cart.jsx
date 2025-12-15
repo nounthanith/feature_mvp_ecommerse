@@ -16,6 +16,7 @@ export default function Cart() {
         clearCart
     } = useCart();
 
+    console.log(cart.totalPrice);
     const navigate = useNavigate();
     const { CreateOrder } = useOrder();
     const STORAGE_KEY = 'checkoutInfo';
@@ -24,21 +25,16 @@ export default function Cart() {
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [postalCode, setPostalCode] = useState('');
-    const [country, setCountry] = useState('');
+    const [country, setCountry] = useState('KH');
     const [phone, setPhone] = useState('');
     const paymentMethods = [
         { value: 'none', label: 'No Payment Method' },
         { value: 'cash_on_delivery', label: 'Cash on Delivery' },
         { value: 'bakong', label: 'Bakong Wallet' },
         { value: 'paypal', label: 'Paypal' },
-        { value: 'stripe', label: 'Stripe' },
     ];
     const countryCodes = {
         'KH': 'Cambodia',
-        'US': 'United States',
-        'TH': 'Thailand',
-        'VN': 'Vietnam',
-        'LA': 'Laos',
     };
     const [paymentMethod, setPaymentMethod] = useState('none');
     const [placing, setPlacing] = useState(false);
@@ -54,7 +50,7 @@ export default function Cart() {
             if (parsed.postalCode) setPostalCode(parsed.postalCode);
             if (parsed.country) setCountry(parsed.country);
             if (parsed.phone) setPhone(parsed.phone);
-            if (parsed.paymentMethod) setPaymentMethod(parsed.paymentMethod);
+            // if (parsed.paymentMethod) setPaymentMethod(parsed.paymentMethod);
         } catch (err) {
             console.error('Failed to load saved checkout info', err);
         }
@@ -286,15 +282,16 @@ export default function Cart() {
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">Shipping</span>
-                                            <span>{shippingCost != null ? `$${Number(shippingCost).toFixed(2)}` : 'Calculated at checkout'}</span>
+                                            <span>${Number(cart.shippingPrice ?? 0).toFixed(2)}</span>
+
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">Tax</span>
-                                            <span>${Number(tax ?? 0).toFixed(2)}</span>
+                                            <span>${Number(cart.taxPrice ?? 0).toFixed(2)}</span>
                                         </div>
                                         <div className="border-t pt-3 mt-3 flex justify-between text-lg font-medium">
                                             <span>Total</span>
-                                            <span className="text-rose-600">${computedTotal.toFixed(2)}</span>
+                                            <span className="text-rose-600">${Number(cart.totalPrice ?? 0).toFixed(2)}</span>
                                         </div>
                                     </div>
 
@@ -324,13 +321,13 @@ export default function Cart() {
                 cancelText="Cancel"
                 onConfirm={async () => {
                     const payload = {
-                        shippingAddress: { 
-                            fullName, 
-                            address, 
-                            city, 
-                            postalCode, 
-                            country: countryCodes[country] || country || 'Cambodia', 
-                            phone 
+                        shippingAddress: {
+                            fullName,
+                            address,
+                            city,
+                            postalCode,
+                            country: countryCodes[country] || country || 'Cambodia',
+                            phone
                         },
                         paymentMethod: paymentMethod === 'none' ? 'none' : paymentMethod
                     };
@@ -353,7 +350,7 @@ export default function Cart() {
                 }}
                 onCancel={() => setCheckoutOpen(false)}
                 onClose={() => setCheckoutOpen(false)}
-                disableConfirm={placing || !fullName || !address || !city || !postalCode || !country || paymentMethod === 'none' || !phone}
+                disableConfirm={placing || !fullName || !address || !city || !postalCode || !country || !phone}
             >
                 <div className="grid grid-cols-1 gap-3">
                     <input value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: John Doe/ចន ដូ" />
@@ -378,20 +375,6 @@ export default function Cart() {
                         </select>
                     </div>
                     <input value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Phone/លេខទូរស័ព្ទ" />
-                    <div className="space-y-1">
-                        <label className="text-sm font-medium text-gray-700">Payment Method</label>
-                        <select
-                            value={paymentMethod}
-                            onChange={(e) => setPaymentMethod(e.target.value)}
-                            className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200 bg-white"
-                        >
-                            {paymentMethods.map((method) => (
-                                <option key={method.value} value={method.value}>
-                                    {method.label}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
                 </div>
             </Dialog>
         </>

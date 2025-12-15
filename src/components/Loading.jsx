@@ -5,14 +5,25 @@ export default function Loading({ children }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 3000);
-    return () => clearTimeout(timer);
+    // 🔒 Disable scroll
+    document.body.style.overflow = "hidden";
+
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      // 🔓 Enable scroll again
+      document.body.style.overflow = "auto";
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+      document.body.style.overflow = "auto";
+    };
   }, []);
 
   return (
-    <div className="relative">
+    <>
       {isLoading && (
-        <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black flex items-center justify-center z-[9999]">
           <div className="snake-loader">
             <div className="dot"></div>
             <div className="dot"></div>
@@ -24,12 +35,12 @@ export default function Loading({ children }) {
       )}
 
       <div
-        className={`${
-          isLoading ? "opacity-0" : "opacity-100"
-        } transition-opacity duration-700`}
+        className={`transition-opacity duration-700 ${
+          isLoading ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
       >
         {children}
       </div>
-    </div>
+    </>
   );
 }
