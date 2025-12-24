@@ -5,18 +5,52 @@ import { FaHeart } from "react-icons/fa";
 import FeaturedProduct from './FeaturedProduct';
 import Category from '../category/Category';
 import useCart from '../cart/useCart';
-// src/features/products/Product.jsx
 import { useWishlist } from '../wishlist/WishlistContext';
-import Pagination from './Pagination';
 import Arrival from '../arrival/Arrival';
 
 function Product() {
     const { products, loading, error, getProducts, getProductById, pagination } = useProduct();
     const { addToWishlist, removeFromWishlist, checkWishlistStatus } = useWishlist();
-    const [hoveredProductId, setHoveredProductId] = useState(null);
     const { addToCart } = useCart();
-
+    
+    const [hoveredProductId, setHoveredProductId] = useState(null);
     const [page, setPage] = useState(1);
+    
+    // State to ensure loading animation shows for exactly 1.2s
+    const [isInitialSync, setIsInitialSync] = useState(true);
+
+    // Initial Data Fetch + 1.2s Timer
+    useEffect(() => {
+        getProducts(page);
+        
+        if (page === 1) {
+            const timer = setTimeout(() => {
+                setIsInitialSync(false);
+            }, 1200); // 1.2 seconds
+            return () => clearTimeout(timer);
+        }
+    }, [page]);
+
+    // Infinite scroll logic
+    useEffect(() => {
+        const handleScroll = () => {
+            if (loading) return;
+            if (!pagination || page >= pagination.totalPages) return;
+
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const threshold = document.body.offsetHeight - 300; 
+
+            if (scrollPosition >= threshold) {
+                setPage((prev) => {
+                    if (prev >= pagination.totalPages) return prev;
+                    return prev + 1;
+                });
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [loading, pagination?.totalPages, page]);
 
     const toggleWishlist = (productId) => {
         if (checkWishlistStatus(productId)) {
@@ -26,83 +60,66 @@ function Product() {
         }
     };
 
-    // console.log(products);
-    useEffect(() => {
-        getProducts(page);
-        // getProducts is stable from the hook context we use; avoid adding it as a dep to prevent ref-change loops
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page]);
-
-    if (loading) return (
-        <div className="flex items-center justify-center min-h-[80vh]">
-            <div className="animate-pulse flex flex-col items-center space-y-4">
-                <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-gray-600">Loading products...</p>
+    // --- 1. INITIAL LOADING SCREEN (Shows for 1.2s) ---
+    if (isInitialSync || (loading && page === 1)) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[80vh] bg-white">
+                <div className="relative w-16 h-16">
+                    {/* Outer gray ring */}
+                    <div className="absolute inset-0 border-4 border-gray-100 rounded-full"></div>
+                    {/* Inner spinning rose ring */}
+                    <div className="absolute inset-0 border-4 border-t-rose-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                </div>
+                <p className="mt-6 text-xs font-black uppercase tracking-[0.5em] text-gray-400 animate-pulse">
+                    Initializing Catalog
+                </p>
+                <div className="mt-2 flex space-x-1">
+                    <div className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-1.5 h-1.5 bg-gray-200 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-1.5 h-1.5 bg-gray-200 rounded-full animate-bounce"></div>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 
+    // --- ERROR STATE ---
     if (error) return (
         <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
             <div className="bg-red-50 border-l-4 border-red-500 p-4 w-full max-w-md">
-                <div className="flex">
-                    <div className="shrink-0">
-                        <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                        </svg>
-                    </div>
-                    <div className="ml-3">
-                        <p className="text-sm text-red-700">
-                            Failed to load products. {error.message || 'Please try again later.'}
-                        </p>
-                    </div>
-                </div>
-                <button
-                    onClick={() => getProducts(page)}
-                    className="mt-4 px-4 py-2 bg-rose-500 text-white rounded hover:bg-rose-600 transition-colors text-sm font-medium"
-                >
-                    Retry
-                </button>
+                <p className="text-sm text-red-700">Failed to load products. {error.message}</p>
+                <button onClick={() => window.location.reload()} className="mt-4 px-4 py-2 bg-rose-500 text-white text-sm font-medium">Retry</button>
             </div>
         </div>
     );
 
-    if (!products?.length) return (
-        <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
-            <svg className="h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-            </svg>
-            <h3 className="text-lg font-medium text-gray-900 mb-1">No products found</h3>
-            <p className="text-gray-500 max-w-md">
-                We couldn't find any products in this category. Check back later or explore other categories.
-            </p>
-            <button
-                onClick={() => window.history.back()}
-                className="mt-6 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors text-sm font-medium"
-            >
-                Go Back
-            </button>
+    // --- NO PRODUCTS STATE ---
+    if (!products?.length && !loading) return (
+        <div className="flex flex-col items-center justify-center min-h-[80vh] text-center">
+            <h3 className="text-lg font-medium text-gray-900">No products found</h3>
+            <button onClick={() => window.history.back()} className="mt-6 px-4 py-2 bg-black text-white text-sm">Go Back</button>
         </div>
     );
 
+    // --- MAIN PRODUCT GRID ---
     return (
-        <div className="">
+        <div className="animate-in fade-in duration-700">
             <FeaturedProduct />
             <Category />
             <Arrival />
 
-            <div className="">
+            <div className="pb-20">
                 <h2 className="text-4xl font-bold text-center text-black group mt-5 mb-5">
-                    <span className="relative inline-block">
+                    <span className="relative inline-block uppercase tracking-tighter font-black italic">
                         Products
                         <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
                     </span>
                 </h2>
+
                 <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2">
-                    {products.map((product, index) => (
+                    {products.map((product) => (
                         <div
                             key={product._id}
-                            className='overflow-hidden  cursor-pointer'
+                            className='overflow-hidden cursor-pointer'
                             onMouseEnter={() => setHoveredProductId(product._id)}
                             onMouseLeave={() => setHoveredProductId(null)}
                         >
@@ -133,31 +150,29 @@ function Product() {
                                         />
                                     )}
                                 </div>
-                                {product.stock > 0 ? (
-                                    // <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold">
-                                    //     In stock
-                                    // </div>
-                                    <div>
-                                        {/* In Stock No Design */}
-                                    </div>
-                                ) : (
-                                    <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold animate-pulse">
+                                {Number(product.stock || 0) <= 0 && (
+                                    <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1 text-white text-[10px] font-bold uppercase animate-pulse">
                                         Out of stock
                                     </div>
                                 )}
                             </div>
-                            <div className=''>
-                                <p className="text-gray-700 font-semibold text-[12px] flex justify-end mt-2 mr-2">{new Date(product?.createdAt).toLocaleDateString()}</p>
-                                <div className='px-2'>
-                                    <h2 className='text-lg font-bold truncate' title={product.name}>{product.name}</h2>
+
+                            <div className='p-2'>
+                                <p className="text-gray-400 font-semibold text-[10px] flex justify-end mt-1 italic">
+                                    {new Date(product?.createdAt).toLocaleDateString()}
+                                </p>
+                                <div className='px-1'>
+                                    <h2 className='text-md font-bold truncate uppercase tracking-tight' title={product.name}>
+                                        {product.name}
+                                    </h2>
                                     <div className="flex items-center justify-between">
-                                        <p className='text-rose-600 text-xl font-bold'>{product.price} $</p>
+                                        <p className='text-rose-600 text-xl font-black'>${product.price}</p>
                                     </div>
                                 </div>
                                 <button
                                     disabled={Number(product.stock || 0) <= 0}
-                                    onClick={() => { if ((product.stock || 0) <= 0) { return; } addToCart(product._id, 1); }}
-                                    className={`mt-2 w-full flex items-center justify-center gap-2 rounded-none font-semibold py-2 px-4 transition-all duration-300 ${Number(product.stock || 0) <= 0 ? 'bg-gray-100 border-2 border-black text-black cursor-not-allowed line-through' : 'bg-black border-2 border-black hover:bg-black/80 text-white cursor-pointer'}`}>
+                                    onClick={() => { if ((product.stock || 0) <= 0) return; addToCart(product._id, 1); }}
+                                    className={`mt-3 w-full flex items-center justify-center gap-2 rounded-none font-black py-2 px-4 transition-all duration-300 text-xs uppercase tracking-widest ${Number(product.stock || 0) <= 0 ? 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed line-through' : 'bg-black border border-black hover:bg-white hover:text-black text-white cursor-pointer'}`}>
                                     Add to cart
                                     <CiShoppingCart className="text-xl" />
                                 </button>
@@ -165,9 +180,31 @@ function Product() {
                         </div>
                     ))}
                 </div>
-            </div>
 
-            <Pagination page={page} totalPages={pagination.totalPages} onPageChange={setPage} />
+                {/* --- 2. BOTTOM SCROLL LOADING ANIMATION --- */}
+                {loading && page > 1 && (
+                    <div className="flex flex-col items-center justify-center py-16">
+                        <div className="flex space-x-2 mb-4">
+                            <div className="w-2.5 h-2.5 bg-rose-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                            <div className="w-2.5 h-2.5 bg-rose-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                            <div className="w-2.5 h-2.5 bg-rose-500 rounded-full animate-bounce"></div>
+                        </div>
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 animate-pulse">
+                            Loading More
+                        </p>
+                    </div>
+                )}
+
+                {/* END OF COLLECTION */}
+                {!loading && products.length > 0 && page >= (pagination?.totalPages || 1) && (
+                    <div className="flex flex-col items-center justify-center py-16 opacity-30">
+                        <div className="h-[1px] w-12 bg-black mb-3"></div>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-black">
+                            End of catalog
+                        </p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

@@ -1,151 +1,134 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import useOrder from './useOrder';
 import Pagination from '../products/Pagination';
+import { HiOutlinePrinter, HiOutlineDownload } from 'react-icons/hi';
 
 function Order({ page = 1 }) {
     const { orders, loading, error, getOrders, pagination } = useOrder();
+
     useEffect(() => {
         getOrders(page);
     }, [page]);
+
     const data = orders?.data;
 
-    console.log(data);
-
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center py-10">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-rose-600"></div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="bg-red-50 text-red-700 px-4 py-3 rounded-md">
-                {typeof error === 'string' ? error : 'Failed to load orders'}
-            </div>
-        );
-    }
-
-    if (!data?.length) {
-        return (
-            <div className="flex flex-col items-center justify-center p-6 text-center">
-                <svg className="h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-                <h3 className="text-lg font-medium text-gray-900 mb-1">No orders found</h3>
-                <p className="text-gray-500 max-w-md">
-                    We couldn't find any orders in this category. Check back later or explore other categories.
-                </p>
-                <button
-                    onClick={() => window.history.back()}
-                    className="mt-6 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors text-sm font-medium"
-                >
-                    Go Back
-                </button>
-            </div>
-        );
-    }
-
-    const statusClass = (s) => {
-        const v = (s || '').toLowerCase();
-        if (v.includes('paid') || v.includes('delivered') || v.includes('completed')) return 'bg-green-100 text-green-700';
-        if (v.includes('processing') || v.includes('pending')) return 'bg-yellow-100 text-yellow-700';
-        if (v.includes('cancel')) return 'bg-red-100 text-red-700';
-        return 'bg-gray-100 text-gray-700';
-    };
+    if (loading) return (
+        <div className="flex items-center justify-center py-20">
+            <div className="h-10 w-10 border-4 border-gray-200 border-t-black animate-spin rounded-full"></div>
+        </div>
+    );
 
     return (
-        <div className="space-y-6">
-            <div className="text-sm text-gray-500"> <span className="font-medium text-gray-900">{pagination?.total}</span> orders</div>
-
-            {data.map((o) => {
-                const created = o.createdAt ? new Date(o.createdAt).toLocaleString() : '';
-                const items = o.orderItems || [];
-                const itemsPrice = Number(o.itemsPrice ?? 0);
-                const shipping = Number(o.shippingPrice ?? 0);
-                const tax = Number(o.taxPrice ?? 0);
-                const total = Number(o.totalPrice ?? (itemsPrice + shipping + tax));
-                const addr = o.shippingAddress || o.shippingInfo || o.address || o.shipping || null;
-                const nameLine = addr?.name || addr?.fullName || '';
-                const street = addr?.address || addr?.address1 || addr?.street || '';
-                const city = addr?.city || '';
-                const state = addr?.state || addr?.province || '';
-                const zip = addr?.postalCode || addr?.zip || '';
-                const country = addr?.country || '';
-                const phone = addr?.phone || addr?.phoneNumber || '';
-
-                return (
-                    <div key={o._id} className="rounded-lg shadow-lg overflow-hidden bg-white">
-                        {/* Gradient header (no hard border) */}
-                        <div className="bg-gradient-to-r from-rose-50 to-pink-50 px-5 py-4">
-                            <div className="flex flex-wrap items-center justify-between gap-3">
-                                <div className="flex items-center gap-3">
-                                    <div className="text-sm text-gray-500">Order</div>
-                                    <div className="font-semibold">#{String(o._id).slice(-6)}</div>
-                                    <span className={`text-xs px-2 py-1 rounded-full capitalize ${statusClass(o.status)}`}>{o.status ?? 'Pending'}</span>
-                                    <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">Delivered: {o.deliveredAt ? new Date(o.deliveredAt).toLocaleString() : 'Not Delivered'}</span>
-                                </div>
-                                <div className="text-sm text-gray-500">{created}</div>
-                            </div>
-                        </div>
-
-                        {/* Items */}
-                        <div className="px-5 py-5 space-y-3">
-                            {items.map((it) => (
-                                <div key={it._id} className="flex items-center justify-between gap-4">
-                                    <div className="flex items-center gap-4 min-w-0">
-                                        <img
-                                            className="h-14 w-14 sm:h-16 sm:w-16 rounded-lg object-cover bg-gray-100 shadow"
-                                            src={it.product?.images?.[0] ? `${import.meta.env.VITE_BASE_URL}/uploads/${it.product.images[0]}` : 'https://via.placeholder.com/80'}
-                                            alt={it.name}
-                                            loading="lazy"
-                                        />
-                                        <div className="min-w-0">
-                                            <div className="font-medium truncate" title={it.name}>{it.name}</div>
-                                            <div className="text-sm text-gray-500">Qty: {it.quantity}</div>
-                                        </div>
-                                    </div>
-                                    <div className="text-sm sm:text-base font-semibold text-gray-900">${Number(it.price ?? 0).toFixed(2)}</div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Address (optional) */}
-                        {addr && (
-                            <div className="px-5 pb-2">
-                                <div className="rounded-lg bg-white/70 ring-1 ring-gray-100 p-4">
-                                    <div className="text-sm font-medium text-gray-900 mb-1">Shipping Address</div>
-                                    <div className="text-sm text-gray-600 space-y-0.5">
-                                        {nameLine ? <div>{nameLine}</div> : null}
-                                        {street ? <div>{street}</div> : null}
-                                        {(city || state || zip) ? (
-                                            <div>{[city, state, zip].filter(Boolean).join(', ')}</div>
-                                        ) : null}
-                                        {country ? <div>{country}</div> : null}
-                                        {phone ? <div className="text-gray-500">{phone}</div> : null}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Soft summary section */}
-                        <div className="px-5 pb-5">
-                            <div className="rounded-lg bg-gray-50 p-4">
-                                <div className="space-y-2 text-sm">
-                                    <div className="flex justify-between"><span className="text-gray-600">Items</span><span>${itemsPrice.toFixed(2)}</span></div>
-                                    <div className="flex justify-between"><span className="text-gray-600">Shipping</span><span>${shipping.toFixed(2)}</span></div>
-                                    <div className="flex justify-between"><span className="text-gray-600">Tax</span><span>${tax.toFixed(2)}</span></div>
-                                    <div className="flex justify-between pt-2 font-semibold"><span>Total</span><span className="text-rose-600">${total.toFixed(2)}</span></div>
-                                </div>
-                            </div>
-                        </div>
+        <div className="max-w-7xl mx-auto px-4 py-8 text-black">
+            {/* Header */}
+            <div className="bg-white border-2 border-black p-8 mb-10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <div className="flex justify-between items-end">
+                    <div>
+                        <h1 className="text-4xl font-black uppercase tracking-tighter">Order History</h1>
+                        <p className="text-gray-500 font-mono text-sm mt-1">Statement of Accounts</p>
                     </div>
-                );
-            })}
-            <Pagination page={pagination.page} totalPages={pagination.pages} onPageChange={(page) => getOrders(page)} />
+                    <div className="text-right">
+                        <p className="text-[10px] font-bold uppercase text-gray-400">Total Records</p>
+                        <p className="text-2xl font-black font-mono">{pagination?.total || 0}</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Grid 2 Column */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {data?.map((o) => {
+                    const addr = o.shippingAddress || o.shippingInfo || o.address || null;
+                    const items = o.orderItems || [];
+
+                    return (
+                        <div key={o._id} className="bg-white border border-black flex flex-col relative overflow-hidden">
+                            {/* Real-life Invoice Header */}
+                            <div className="p-6 border-b border-gray-200 flex justify-between bg-white">
+                                <div className="space-y-1">
+                                    <h3 className="font-black text-xl uppercase tracking-tighter">Invoice</h3>
+                                    <p className="font-mono text-xs text-gray-500">#{String(o._id).toUpperCase()}</p>
+                                </div>
+                                <div className="text-right space-y-1">
+                                    <div className={`text-[10px] font-bold px-2 py-0.5 border border-black uppercase inline-block ${o.status === 'Delivered' ? 'bg-black text-white' : 'bg-white'}`}>
+                                        {o.status || 'Processing'}
+                                    </div>
+                                    <p className="text-xs font-mono block text-gray-400">
+                                        {o.createdAt ? new Date(o.createdAt).toLocaleDateString() : ''}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Info Section */}
+                            <div className="p-6 grid grid-cols-2 gap-4 border-b border-gray-100 bg-gray-50/50">
+                                <div>
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Billed To:</p>
+                                    <p className="text-xs font-bold uppercase">{addr?.name || 'Customer'}</p>
+                                    <p className="text-[11px] text-gray-600 truncate">{addr?.city}, {addr?.country}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Payment:</p>
+                                    <p className="text-xs font-bold uppercase">Paid Online</p>
+                                </div>
+                            </div>
+
+                            {/* Items with Images */}
+                            <div className="p-6 flex-1">
+                                <div className="space-y-4">
+                                    {items.map((it) => {
+                                        const img = it.product?.images?.[0] || it.image;
+                                        const imgUrl = img ? (img.startsWith('http') ? img : `${import.meta.env.VITE_BASE_URL}/uploads/${img}`) : null;
+
+                                        return (
+                                            <div key={it._id} className="flex items-center gap-4 group">
+                                                <div className="h-12 w-12 bg-gray-100 border border-gray-200 flex-shrink-0 grayscale group-hover:grayscale-0 transition-all">
+                                                    {imgUrl ? (
+                                                        <img src={imgUrl} alt="" className="h-full w-full object-cover" />
+                                                    ) : (
+                                                        <div className="h-full w-full flex items-center justify-center text-[8px] text-gray-400">NO IMG</div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-xs font-bold uppercase truncate">{it.name}</p>
+                                                    <p className="text-[10px] font-mono text-gray-400">QTY: {it.quantity} @ ${it.price}</p>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="text-xs font-mono font-bold">${(it.quantity * it.price).toFixed(2)}</p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Summary Footer */}
+                            <div className="p-6 bg-white border-t border-black">
+                                <div className="flex justify-between items-center mb-4">
+                                    <span className="text-xs font-bold uppercase tracking-widest">Total Amount</span>
+                                    <span className="text-2xl font-black font-mono">${Number(o.totalPrice).toFixed(2)}</span>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <button
+                                        onClick={() => window.print()}
+                                        className="border border-black p-2 text-[10px] font-bold uppercase hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <HiOutlinePrinter size={14} /> Print
+                                    </button>
+                                    <button onClick={() => window.print()} className="bg-black text-white p-2 text-[10px] font-bold uppercase hover:bg-gray-800 transition-all flex items-center justify-center gap-2">
+                                        <HiOutlineDownload size={14} /> Download
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Styled Pagination */}
+            <div className="mt-12 flex justify-center">
+                <Pagination page={pagination.page} totalPages={pagination.pages} onPageChange={(p) => getOrders(p)} />
+            </div>
         </div>
-    )
+    );
 }
 
-export default Order
+export default Order;

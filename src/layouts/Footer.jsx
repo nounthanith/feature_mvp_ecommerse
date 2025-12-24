@@ -110,20 +110,20 @@ export default function Footer() {
           </div>
         </div>
 
-        <Shuffle
-          className="text-center"
-          text="THANK YOU FOR SHOPPING WITH TP-CAMBO"
-          shuffleDirection="right"
-          duration={0.35}
-          animationMode="evenodd"
-          shuffleTimes={1}
-          ease="power3.out"
-          stagger={0.03}
-          threshold={0.1}
-          triggerOnce={true}
-          triggerOnHover={true}
-          respectReducedMotion={true}
-        />
+        {/*<Shuffle*/}
+        {/*  className="text-center"*/}
+        {/*  text="THANK YOU FOR SHOPPING WITH TP-CAMBO"*/}
+        {/*  shuffleDirection="right"*/}
+        {/*  duration={0.35}*/}
+        {/*  animationMode="evenodd"*/}
+        {/*  shuffleTimes={1}*/}
+        {/*  ease="power3.out"*/}
+        {/*  stagger={0.03}*/}
+        {/*  threshold={0.1}*/}
+        {/*  triggerOnce={true}*/}
+        {/*  triggerOnHover={true}*/}
+        {/*  respectReducedMotion={true}*/}
+        {/*/>*/}
       </div>
 
     </footer>

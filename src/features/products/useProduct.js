@@ -12,6 +12,7 @@ const useProduct = () => {
     const navigate = useNavigate();
 
     const getProducts = async (page = 1) => {
+        const start = Date.now();
         setLoading(true);
         try {
             const response = await api.get(`/products`, { params: { page } });
@@ -26,7 +27,14 @@ const useProduct = () => {
             else if (Array.isArray(body?.docs)) items = body.docs;
             else if (Array.isArray(body?.items)) items = body.items;
 
-            setProducts(items);
+            if (page === 1) {
+                setProducts(items);
+            } else {
+                setProducts((prev) => {
+                    if (!Array.isArray(prev) || prev.length === 0) return items;
+                    return [...prev, ...items];
+                });
+            }
 
             // Extract pagination from common locations
             const meta = body?.pagination || body?.meta || body?.data || body;
@@ -43,6 +51,11 @@ const useProduct = () => {
         } catch (error) {
             setError(error);
         } finally {
+            const elapsed = Date.now() - start;
+            const remaining = 1000 - elapsed;
+            if (remaining > 0) {
+                await new Promise((resolve) => setTimeout(resolve, remaining));
+            }
             setLoading(false);
         }
     };
@@ -100,7 +113,7 @@ const useProduct = () => {
         }
     };
 
-    
+
 
 
     return {

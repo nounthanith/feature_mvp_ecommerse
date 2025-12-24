@@ -79,7 +79,7 @@ function FeaturedProduct() {
                 </button>
 
                 <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-30">
-                    {[0,1,2].map((i) => (
+                    {[0, 1, 2].map((i) => (
                         <span key={i} className={`w-3 h-3 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/50'}`} />
                     ))}
                 </div>

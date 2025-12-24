@@ -67,7 +67,7 @@ function Arrival() {
                     {arrival?.data?.map((product) => (
                         <div
                             key={product._id}
-                            className="flex-shrink-0 snap-start w-[210px] sm:w-[260px] bg-white transition-all duration-300 overflow-hidden cursor-pointer"
+                            className="flex-shrink-0 snap-start w-[210px] sm:w-[260px] bg-white transition-all duration-300 overflow-hidden cursor-pointer ml-"
                             onMouseEnter={() => setHoveredProductId(product._id)}
                             onMouseLeave={() => setHoveredProductId(null)}
                         >
