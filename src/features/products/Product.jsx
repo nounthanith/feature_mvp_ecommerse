@@ -197,7 +197,7 @@ function Product() {
 
                 {/* END OF COLLECTION */}
                 {!loading && products.length > 0 && page >= (pagination?.totalPages || 1) && (
-                    <div className="flex flex-col items-center justify-center py-6 opacity-30">
+                    <div className="flex flex-col items-center justify-center py-16 opacity-30">
                         <div className="h-px w-12 bg-black mb-3"></div>
                         <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-black">
                             End of Products
