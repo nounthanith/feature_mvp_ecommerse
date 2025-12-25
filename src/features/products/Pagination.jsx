@@ -11,7 +11,7 @@ function Pagination({ page = 1, totalPages = 1, onPageChange = () => { } }) {
     const pages = Array.from({ length: safeTotal }, (_, i) => i + 1);
 
     return (
-        <div className="flex justify-end mt-6 max-w-7xl mx-auto p-2">
+        <div className="flex justify-end mt-8 max-w-7xl mx-auto p-2">
             <nav aria-label="Pagination">
                 <ul className="flex items-center gap-2">
                     <li>

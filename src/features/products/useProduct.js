@@ -27,14 +27,8 @@ const useProduct = () => {
             else if (Array.isArray(body?.docs)) items = body.docs;
             else if (Array.isArray(body?.items)) items = body.items;
 
-            if (page === 1) {
-                setProducts(items);
-            } else {
-                setProducts((prev) => {
-                    if (!Array.isArray(prev) || prev.length === 0) return items;
-                    return [...prev, ...items];
-                });
-            }
+            // For classic pagination: always replace list with current page items
+            setProducts(items);
 
             // Extract pagination from common locations
             const meta = body?.pagination || body?.meta || body?.data || body;

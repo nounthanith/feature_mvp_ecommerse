@@ -100,7 +100,7 @@ export default function Cart() {
 
     return (
         <>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl min-h-[60vh] mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Mobile Header */}
 
 
@@ -311,7 +311,6 @@ export default function Cart() {
                             </div>
                         </div>
                     </>)}
-
             </div>
             <Dialog
                 open={checkoutOpen}

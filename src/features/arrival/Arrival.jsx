@@ -3,12 +3,13 @@ import useArrival from './useArrival'
 import { CiShoppingCart } from 'react-icons/ci';
 import useProduct from '../products/useProduct';
 import useCart from '../cart/useCart';
+import ArrivalSoonFeature from './ArrivalSoonFeature';
 
 function Arrival() {
     const { arrival, loading, error, getArrival } = useArrival();
     const [hoveredProductId, setHoveredProductId] = useState(null);
     const { getProductById } = useProduct();
-    
+
     // State to ensure loading animation shows for exactly 1.2s
     const [isInitialSync, setIsInitialSync] = useState(true);
 
@@ -53,6 +54,11 @@ function Arrival() {
 
     return (
         <div className='max-w-7xl mx-auto animate-in fade-in duration-700'>
+
+
+            <ArrivalSoonFeature />
+
+            
             <h2 className="text-4xl font-bold text-center text-black group mt-5 mb-5">
                 <span className="relative inline-block uppercase tracking-tighter font-black italic">
                     Arrival Soon
@@ -106,7 +112,7 @@ function Arrival() {
                                     <span>Expected</span>
                                     <span>{new Date(product?.expectedArrivalDate).toLocaleDateString()}</span>
                                 </p>
-                                
+
                                 <h2 className="text-md font-black truncate uppercase tracking-tighter" title={product.name}>
                                     {product.name}
                                 </h2>

@@ -12,17 +12,17 @@ function Product() {
     const { products, loading, error, getProducts, getProductById, pagination } = useProduct();
     const { addToWishlist, removeFromWishlist, checkWishlistStatus } = useWishlist();
     const { addToCart } = useCart();
-    
+
     const [hoveredProductId, setHoveredProductId] = useState(null);
     const [page, setPage] = useState(1);
-    
+
     // State to ensure loading animation shows for exactly 1.2s
     const [isInitialSync, setIsInitialSync] = useState(true);
 
     // Initial Data Fetch + 1.2s Timer
     useEffect(() => {
         getProducts(page);
-        
+
         if (page === 1) {
             const timer = setTimeout(() => {
                 setIsInitialSync(false);
@@ -30,27 +30,6 @@ function Product() {
             return () => clearTimeout(timer);
         }
     }, [page]);
-
-    // Infinite scroll logic
-    useEffect(() => {
-        const handleScroll = () => {
-            if (loading) return;
-            if (!pagination || page >= pagination.totalPages) return;
-
-            const scrollPosition = window.innerHeight + window.scrollY;
-            const threshold = document.body.offsetHeight - 300; 
-
-            if (scrollPosition >= threshold) {
-                setPage((prev) => {
-                    if (prev >= pagination.totalPages) return prev;
-                    return prev + 1;
-                });
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [loading, pagination?.totalPages, page]);
 
     const toggleWishlist = (productId) => {
         if (checkWishlistStatus(productId)) {
@@ -71,7 +50,7 @@ function Product() {
                     <div className="absolute inset-0 border-4 border-t-rose-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
                 </div>
                 <p className="mt-6 text-xs font-black uppercase tracking-[0.5em] text-gray-400 animate-pulse">
-                    Initializing Catalog
+                    Initializing Products
                 </p>
                 <div className="mt-2 flex space-x-1">
                     <div className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
@@ -103,10 +82,14 @@ function Product() {
     // --- MAIN PRODUCT GRID ---
     return (
         <div className="animate-in fade-in duration-700">
-            <FeaturedProduct />
-            <Category />
-            <Arrival />
 
+            {/* Featured Product */}
+            <FeaturedProduct />
+            
+            {/* Category */}
+            <Category />
+
+            {/* Products */}
             <div className="pb-20">
                 <h2 className="text-4xl font-bold text-center text-black group mt-5 mb-5">
                     <span className="relative inline-block uppercase tracking-tighter font-black italic">
@@ -181,30 +164,61 @@ function Product() {
                     ))}
                 </div>
 
-                {/* --- 2. BOTTOM SCROLL LOADING ANIMATION --- */}
-                {loading && page > 1 && (
-                    <div className="flex flex-col items-center justify-center py-16">
-                        <div className="flex space-x-2 mb-4">
-                            <div className="w-2.5 h-2.5 bg-rose-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                            <div className="w-2.5 h-2.5 bg-rose-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                            <div className="w-2.5 h-2.5 bg-rose-500 rounded-full animate-bounce"></div>
-                        </div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 animate-pulse">
-                            Loading More
-                        </p>
-                    </div>
-                )}
+                {/* Pagination Controls */}
+                {pagination?.totalPages > 1 && (
+                    <div className="flex flex-col items-center justify-center gap-4 mt-10">
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                                disabled={page === 1 || loading}
+                                className={`px-4 py-2 text-xs uppercase tracking-widest border rounded-none font-black ${page === 1 || loading
+                                    ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                                    : 'bg-black text-white border-black hover:bg-white hover:text-black'}
+                                `}
+                            >
+                                Prev
+                            </button>
 
-                {/* END OF COLLECTION */}
-                {!loading && products.length > 0 && page >= (pagination?.totalPages || 1) && (
-                    <div className="flex flex-col items-center justify-center py-16 opacity-30">
-                        <div className="h-px w-12 bg-black mb-3"></div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-black">
-                            End of Products
+                            {/* Page numbers */}
+                            <div className="flex items-center gap-1">
+                                {Array.from({ length: pagination.totalPages }, (_, idx) => idx + 1).map((p) => (
+                                    <button
+                                        key={p}
+                                        onClick={() => !loading && setPage(p)}
+                                        disabled={loading}
+                                        className={`w-8 h-8 text-xs font-bold border rounded-none flex items-center justify-center ${
+                                            p === page
+                                                ? 'bg-black text-white border-black'
+                                                : 'bg-white text-black border-gray-200 hover:bg-black hover:text-white'
+                                        }`}
+                                    >
+                                        {p}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={() => setPage((prev) => Math.min(pagination.totalPages, prev + 1))}
+                                disabled={page >= pagination.totalPages || loading}
+                                className={`px-4 py-2 text-xs uppercase tracking-widest border rounded-none font-black ${page >= pagination.totalPages || loading
+                                    ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                                    : 'bg-black text-white border-black hover:bg-white hover:text-black'}
+                                `}
+                            >
+                                Next
+                            </button>
+                        </div>
+
+                        {/* Page info */}
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
+                            Page {page} of {pagination.totalPages}
                         </p>
                     </div>
                 )}
             </div>
+
+             {/* Arrival Soon */}
+            <Arrival />
         </div>
     );
 }

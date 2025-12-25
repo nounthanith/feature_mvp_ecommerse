@@ -1,131 +1,84 @@
 import React from "react";
 import Marquee from "react-fast-marquee";
-import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaFacebookF } from "react-icons/fa";
 import race from "../assets/race.png";
 import "./footer.css";
 import { Link } from "react-router-dom";
-import Shuffle from "../components/Shuffle";
 
 export default function Footer() {
   const navLinks = [
-    { name: 'Shop & Collections', path: '/' },
-    { name: 'Our Partner', path: '/our-partner' },
-    { name: 'About Us', path: '/about' },
-    { name: 'Contact Us', path: '/contact' },
+    { name: 'Shop', path: '/' },
+    { name: 'Partner', path: '/our-partner' },
+    { name: 'About', path: '/about' },
+    { name: 'Contact', path: '/contact' },
   ];
+
   return (
-    <footer className="mt-20">
-      {/* Top Marquee */}
-      <div className="overflow-hidden border-y text-sm font-medium bg-black border-white text-white">
-        <Marquee autoFill speed={55} gradient={false} className="cursor-grab py-3">
-          <div className="flex items-center space-x-10 mx-4">
-            <img src={race} className="w-10 h-10 opacity-90" alt="logo" />
-            <span>🚚 Free Shipping Over $50</span>
+    <footer className="mt-10 border-t border-white/10">
+      {/* Top Marquee - Made slimmer */}
+      <div className="overflow-hidden bg-black border-b border-white/10 text-white">
+        <Marquee autoFill speed={40} gradient={false} className="py-2 text-xs font-light tracking-widest uppercase">
+          <div className="flex items-center space-x-8 mx-4">
+            <img src={race} className="w-6 h-6 opacity-70" alt="logo" />
+            <span>Free Shipping Over $50</span>
             <span>•</span>
-            <span>🔥 New Collection Released!</span>
+            <span>15% OFF: NEW15</span>
             <span>•</span>
-            <span>🎁 15% OFF with code NEW15</span>
-            <span>•</span>
-            <span>💯 100% Satisfaction Guaranteed</span>
-            <span>•</span>
-            <img src={race} className="w-10 h-10 opacity-90" alt="logo" />
           </div>
         </Marquee>
       </div>
 
       {/* Footer Main */}
-      <div className="
-        relative 
-        text-white 
-        footer-grid-bg 
-        border-t border-white/10
-        text-center
-      ">
-        {/* Glow Overlay */}
-        <div className="absolute inset-0 bg-white/5 pointer-events-none"></div>
+      <div className="relative text-white footer-grid-bg">
+        <div className="absolute inset-0 bg-black/40 pointer-events-none"></div>
 
-        <div className="container mx-auto px-6 py-14 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-            {/* Logo / Branding */}
+        <div className="container mx-auto px-6 py-8 relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            
+            {/* Left: Branding */}
             <div className="text-center md:text-left">
-              <h2 className="text-2xl font-bold tracking-wide">TP-Cambo</h2>
-              <p className="text-gray-400 text-sm mt-1">Your premium shopping experience.</p>
+              <h2 className="text-xl font-bold tracking-tighter">TP-CAMBO</h2>
+              <p className="text-gray-500 text-[10px] uppercase tracking-widest">Premium Shopping</p>
             </div>
 
-            {/* Navigation Links */}
-            <div className="text-center md:text-left">
-              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2">
+            {/* Center: Inline Navigation Links */}
+            <nav>
+              <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2">
                 {navLinks.map((link, index) => (
                   <li key={index}>
-                    <Link to={link.path} className="text-gray-300 hover:text-white font-bold leading-normal transition-colors duration-200">
+                    <Link to={link.path} className="text-sm text-gray-400 hover:text-white transition-colors">
                       {link.name}
                     </Link>
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
 
-            {/* Social Icons */}
-            <div className="flex flex-col items-center md:items-end gap-y-4 md:gap-y-0">
-              <div className="flex items-center justify-center space-x-6">
-                {[
-                  { icon: <FaFacebookF size={22} />, link: "https://facebook.com/tha.nith.549" },
-
-                ].map((item, i) => (
-                  <Link
-                    key={i}
-                    to={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="
-                                p-3
-                                rounded-full
-                                bg-white/10
-                                backdrop-blur-md
-                                hover:bg-white hover:text-black
-                                transition-all duration-300
-                                shadow-lg
-                                hover:shadow-white/50
-                              "
-                  >
-                    <div className="w-5 h-5">{item.icon}</div>
-                  </Link>
-                ))}
-              </div>
+            {/* Right: Social & Phone */}
+            <div className="flex items-center gap-4">
+              <Link to="tel:+88593939290" className="text-xs text-gray-400 hover:text-white transition-colors border-r border-white/20 pr-4">
+                +885 939 392 90
+              </Link>
+              <Link
+                to="https://facebook.com/tha.nith.549"
+                target="_blank"
+                className="p-2 rounded-full bg-white/5 hover:bg-white hover:text-black transition-all"
+              >
+                <FaFacebookF size={14} />
+              </Link>
             </div>
           </div>
-          {/* Bottom Text */}
-          <div className="text-center text-gray-500 text-sm mt-10">
-            © {new Date().getFullYear()} TP-Cambo. All rights reserved.
-          </div>
-          <div className="text-center text-gray-500 text-sm mt-10">
-            <Link to="/privacy-policy" className="text-gray-300 hover:text-white font-bold leading-normal transition-colors duration-200">Privacy Policy</Link>
-            <span className="mx-2">|</span>
-            <Link to="/terms-conditions" className="text-gray-300 hover:text-white font-bold leading-normal transition-colors duration-200">Terms & Conditions</Link>
-          </div>
-          <div className="text-center text-gray-500 text-sm mt-10">
-            <Link to="tel:+88593939290" className="text-gray-300 hover:text-white font-bold leading-normal transition-colors duration-200">+885 939 392 90</Link>
+
+          {/* Bottom Divider */}
+          <div className="mt-8 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[11px] text-gray-500 gap-4">
+            <p>© {new Date().getFullYear()} TP-Cambo. All rights reserved.</p>
+            <div className="flex gap-4">
+              <Link to="/privacy-policy" className="hover:text-gray-300">Privacy Policy</Link>
+              <Link to="/terms-conditions" className="hover:text-gray-300">Terms & Conditions</Link>
+            </div>
           </div>
         </div>
-
-        {/*<Shuffle*/}
-        {/*  className="text-center"*/}
-        {/*  text="THANK YOU FOR SHOPPING WITH TP-CAMBO"*/}
-        {/*  shuffleDirection="right"*/}
-        {/*  duration={0.35}*/}
-        {/*  animationMode="evenodd"*/}
-        {/*  shuffleTimes={1}*/}
-        {/*  ease="power3.out"*/}
-        {/*  stagger={0.03}*/}
-        {/*  threshold={0.1}*/}
-        {/*  triggerOnce={true}*/}
-        {/*  triggerOnHover={true}*/}
-        {/*  respectReducedMotion={true}*/}
-        {/*/>*/}
       </div>
-
     </footer>
   );
 }

@@ -205,7 +205,7 @@ function Navbar() {
       </div>
 
       {/* ================= PAGE CONTENT ================= */}
-      <div className="pt-[128px]">
+      <div className="pt-24">
         <Outlet />
       </div>
 
