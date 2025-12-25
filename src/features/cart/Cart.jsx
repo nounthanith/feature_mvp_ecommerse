@@ -77,8 +77,30 @@ export default function Cart() {
 
     if (loading) {
         return (
-            <div className="py-60 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-600"></div>
+            <div className="py-60 flex flex-col items-center justify-center bg-white">
+                {/* Mechanical Square Loader */}
+                <div className="relative w-14 h-14">
+                    {/* Outer Static Frame */}
+                    <div className="absolute inset-0 border border-gray-200"></div>
+
+                    {/* Spinning Top/Bottom Bars */}
+                    <div className="absolute inset-0 border-t-2 border-b-2 border-black animate-spin duration-700"></div>
+
+                    {/* Center Pulsing Square */}
+                    <div className="absolute inset-4 bg-rose-600 animate-pulse"></div>
+                </div>
+
+                {/* Status Text */}
+                <div className="mt-8 flex flex-col items-center">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-black">
+                        Accessing_Archives
+                    </h3>
+
+                    {/* Simple Tailwind-only Progress Line */}
+                    <div className="mt-3 w-24 h-[2px] bg-gray-100 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-black w-1/2 animate-[bounce_2s_infinite] left-0"></div>
+                    </div>
+                </div>
             </div>
         );
     }

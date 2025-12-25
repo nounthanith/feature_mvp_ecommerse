@@ -15,17 +15,9 @@ function Product() {
 
     const [hoveredProductId, setHoveredProductId] = useState(null);
     const [page, setPage] = useState(1);
-    const [isInitialSync, setIsInitialSync] = useState(true);
 
     useEffect(() => {
         getProducts(page);
-
-        if (page === 1) {
-            const timer = setTimeout(() => {
-                setIsInitialSync(false);
-            }, 1200);
-            return () => clearTimeout(timer);
-        }
     }, [page]);
 
     const toggleWishlist = (productId) => {
@@ -36,8 +28,8 @@ function Product() {
         }
     };
 
-    // --- NEW REFINED LOADING (The only UI change) ---
-    if (isInitialSync || (loading && page === 1)) {
+    // Loading strictly follows API loading state
+    if (loading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[80vh] bg-white">
                 <div className="relative w-16 h-16">
@@ -168,8 +160,8 @@ function Product() {
                                         onClick={() => !loading && setPage(p)}
                                         disabled={loading}
                                         className={`w-8 h-8 text-xs font-bold border rounded-none flex items-center justify-center ${p === page
-                                                ? 'bg-black text-white border-black'
-                                                : 'bg-white text-black border-gray-200 hover:bg-black hover:text-white'
+                                            ? 'bg-black text-white border-black'
+                                            : 'bg-white text-black border-gray-200 hover:bg-black hover:text-white'
                                             }`}
                                     >
                                         {p}
