@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useWishlist } from './WishlistContext';
 import useProduct from '../products/useProduct';
-import { CiHeart, CiShoppingCart } from 'react-icons/ci';
+import { CiShoppingCart } from 'react-icons/ci';
 import useCart from '../cart/useCart';
 import { GoTrash } from "react-icons/go";
 
@@ -23,140 +23,135 @@ function Wishlist() {
         getWishlist();
     }, []);
 
+    // --- NEW REFINED LOADING ---
     if (loading) return (
-        <div className="flex items-center justify-center py-60 p-6">
-            <div className="animate-pulse flex flex-col items-center space-y-4">
-                <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-gray-600">Loading products...</p>
+        <div className="flex flex-col items-center justify-center min-h-[80vh] bg-white">
+            <div className="relative w-16 h-16">
+                <div className="absolute inset-0 border-4 border-gray-100 rounded-full"></div>
+                <div className="absolute inset-0 border-4 border-t-black border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
             </div>
+            <p className="mt-6 text-[10px] font-black uppercase tracking-[0.5em] text-black animate-pulse">
+                Fetching Wishlist
+            </p>
         </div>
     );
 
     if (error) return (
-        <div className="flex flex-col items-center justify-center py-60 p-6 text-center">
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 w-full max-w-md">
-                <div className="flex">
-                    <div className="shrink-0">
-                        <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                        </svg>
-                    </div>
-                    <div className="ml-3">
-                        <p className="text-sm text-red-700">
-                            Failed to load products. {error.message || 'Please try again later.'}
-                        </p>
-                    </div>
-                </div>
+        <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
+            <div className="bg-red-50 border border-black p-6 w-full max-w-md rounded-none">
+                <p className="text-sm font-bold text-red-700 uppercase tracking-tight">Sync Failed</p>
+                <p className="text-xs text-red-600 mt-2">{error.message || 'Please try again later.'}</p>
                 <button
-                    onClick={() => getProducts()}
-                    className="mt-4 px-4 py-2 bg-rose-500 text-white rounded hover:bg-rose-600 transition-colors text-sm font-medium"
+                    onClick={() => window.location.reload()}
+                    className="mt-6 px-6 py-2 bg-black text-white text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-colors"
                 >
-                    Retry
+                    Retry Connection
                 </button>
             </div>
         </div>
     );
 
     if (!wishlist.products?.length) return (
-        <div className="flex flex-col items-center justify-center py-60 p-6 text-center">
-            <svg className="h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-            </svg>
-            <h3 className="text-lg font-medium text-gray-900 mb-1">No products found</h3>
-            <p className="text-gray-500 max-w-md">
-                We couldn't find any products in your wishlist.
+        <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
+            <div className="w-20 h-20 border-2 border-dashed border-gray-200 flex items-center justify-center mb-6">
+                <GoTrash className="h-8 w-8 text-gray-200" />
+            </div>
+            <h3 className="text-xl font-black uppercase tracking-tighter mb-2 italic">Archive_is_Empty</h3>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest max-w-xs leading-loose">
+                You haven't saved any items to your wishlist yet.
             </p>
             <button
                 onClick={() => window.history.back()}
-                className="mt-6 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors text-sm font-medium"
+                className="mt-8 px-8 py-3 bg-black text-white text-[10px] font-black uppercase tracking-[0.3em] hover:bg-rose-600 transition-all active:scale-95"
             >
-                Go Back
+                Start Shopping
             </button>
         </div>
     );
 
     return (
-        <div>
-            <div className='flex items-center justify-between max-w-7xl mx-auto p-2'>
-                <div className='flex items-center'>
-                    <h2 className="text-2xl font-bold text-start text-black group">
-                        <span className="relative inline-block">
-                            Your Wishlist
-                            <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
-                        </span>
+        <div className="pb-20 animate-in fade-in duration-700">
+            {/* Header Section */}
+            <div className='flex items-end justify-between max-w-7xl mx-auto p-4 border-b border-black mb-6'>
+                <div className='flex items-baseline'>
+                    <h2 className="text-3xl font-black text-black uppercase tracking-tighter italic">
+                        Wishlist
                     </h2>
-                    <p className='ml-3 text-sm font-normal bg-gray-100 text-gray-700 px-3 py-1 rounded-full border'>{wishlist.products?.length} {wishlist.products?.length === 1 ? 'product' : 'products'}</p>
+                    <span className='ml-4 text-[10px] font-black bg-black text-white px-2 py-0.5 uppercase tracking-widest'>
+                        {wishlist.products?.length} {wishlist.products?.length === 1 ? 'Entry' : 'Entries'}
+                    </span>
                 </div>
-                <div className=''>
-                    <button
-                        onClick={() => clearWishlist()}
-                        className="text-sm text-purple-600 cursor-pointer underline hover:text-purple-800 transition-colors "
-                    >
-                        Clear Wishlist
-                    </button>
-                </div>
+                <button
+                    onClick={() => clearWishlist()}
+                    className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-rose-600 transition-colors underline underline-offset-4"
+                >
+                    Empty All
+                </button>
             </div>
+
+            {/* Grid - Consistent with Product Page */}
             <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2">
-                {wishlist.products?.map((product, index) => (
+                {wishlist.products?.map((product) => (
                     <div
                         key={product._id}
-                        className='overflow-hidden  cursor-pointer'
+                        className='overflow-hidden group'
                         onMouseEnter={() => setHoveredProductId(product._id)}
                         onMouseLeave={() => setHoveredProductId(null)}
                     >
-                        <div className='relative w-full h-64'>
+                        <div className='relative w-full h-72 border border-gray-100'>
+                            {/* Remove Icon */}
                             <div
                                 onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); }}
-                                className='absolute top-2 right-2 z-10 p-2 bg-white/50 rounded-full hover:bg-white/80 transition-colors cursor-pointer'
+                                className='absolute top-2 right-2 z-10 p-2 bg-black/80 text-white hover:bg-rose-600 transition-colors cursor-pointer'
                             >
-                                {checkWishlistStatus(product._id) ? (
-                                    <GoTrash className='text-rose-500 text-xl' />
-                                ) : (
-                                    <CiHeart className='text-rose-500 text-xl hover:text-rose-500' />
-                                )}
+                                <GoTrash className='text-lg' />
                             </div>
-                            <div onClick={() => getProductById(product._id)} className='w-full h-full'>
+
+                            <div onClick={() => getProductById(product._id)} className='w-full h-full cursor-pointer'>
                                 <img
-                                    className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer'
+                                    className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out'
                                     src={import.meta.env.VITE_BASE_URL + "/uploads/" + product.images[0]}
                                     alt={product.name}
                                     style={{ transform: hoveredProductId === product._id ? 'translateX(-100%)' : 'translateX(0)' }}
                                 />
                                 {product.images[1] && (
                                     <img
-                                        className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer'
+                                        className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out'
                                         src={import.meta.env.VITE_BASE_URL + "/uploads/" + product.images[1]}
                                         alt={product.name}
                                         style={{ transform: hoveredProductId === product._id ? 'translateX(0)' : 'translateX(100%)' }}
                                     />
                                 )}
                             </div>
-                            {product.stock > 0 ? (
-                                <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold">
-                                    In stock
-                                </div>
-                            ) : (
-                                <div className="absolute top-2 left-2 z-10 bg-red-500 backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold animate-pulse">
-                                    Out of stock
-                                </div>
-                            )}
-                        </div>
-                        <div className=''>
-                            <p className="text-gray-700 font-semibold text-[12px] flex justify-end mt-2 mr-2">{new Date(product?.createdAt).toLocaleDateString()}</p>
-                            <div className='px-2'>
-                                <h2 className='text-lg font-bold truncate' title={product.name}>{product.name}</h2>
-                                <div className="flex items-center justify-between">
-                                    <p className='text-rose-600 text-xl font-bold'>{product.price} $</p>
-                                </div>
+
+                            {/* Stock Badge */}
+                            <div className={`absolute top-2 left-2 z-10 px-2 py-1 text-[9px] font-black uppercase tracking-widest text-white ${product.stock > 0 ? 'bg-black' : 'bg-rose-600 animate-pulse'}`}>
+                                {product.stock > 0 ? 'Available' : 'Sold Out'}
                             </div>
+                        </div>
+
+                        <div className='p-3 bg-white border-x border-b border-gray-50'>
+                            <div className="flex justify-between items-start mb-1">
+                                <h2 className='text-sm font-black uppercase tracking-tight truncate w-3/4' title={product.name}>
+                                    {product.name}
+                                </h2>
+                                <p className='text-rose-600 font-black text-sm'>${product.price}</p>
+                            </div>
+
+                            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mb-4">
+                                Added: {new Date(product?.createdAt).toLocaleDateString()}
+                            </p>
+
                             <button
                                 disabled={Number(product.stock || 0) <= 0}
-                                onClick={() => { if ((product.stock || 0) <= 0) { return; } addToCart(product._id, 1); }}
-                                className={`mt-2 w-full flex items-center justify-center gap-2 rounded-none font-semibold py-2 px-4 transition-all duration-300 ${Number(product.stock || 0) <= 0 ? 'bg-gray-100 border-2 border-black text-black cursor-not-allowed line-through' : 'bg-black border-2 border-black hover:bg-black/80 text-white cursor-pointer'}`}>
-                                Add to cart
-                                <CiShoppingCart className="text-xl" />
+                                onClick={() => { if ((product.stock || 0) <= 0) return; addToCart(product._id, 1); }}
+                                className={`w-full flex items-center justify-center gap-2 rounded-none font-black py-3 px-4 transition-all duration-300 text-[10px] uppercase tracking-[0.2em] ${Number(product.stock || 0) <= 0
+                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed line-through border border-gray-200'
+                                    : 'bg-black text-white hover:bg-rose-600 border border-black hover:border-rose-600'
+                                    }`}>
+                                Move to cart
+                                <CiShoppingCart className="text-base" />
                             </button>
-
                         </div>
                     </div>
                 ))}
@@ -165,4 +160,4 @@ function Wishlist() {
     )
 }
 
-export default Wishlist
+export default Wishlist;

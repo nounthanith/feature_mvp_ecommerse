@@ -1,18 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import useCategory from './useCategory';
 import { Link } from 'react-router-dom';
 import race from "./../../assets/race.png";
-import { FaArrowDown, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Marquee from 'react-fast-marquee';
 
 function Category() {
   const { categories, loading, error } = useCategory();
   const scrollContainer = useRef(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const scrollSpeed = 1; // Adjust scroll speed as needed
 
-  if (loading) return <div className="p-4 text-center">Loading categories...</div>;
-  if (error) return <div className="p-4 text-red-600 text-center">Error loading categories</div>;
+  if (loading) return <div className="p-10 text-center text-[10px] font-bold uppercase tracking-widest">Loading...</div>;
+  if (error) return <div className="p-10 text-center text-red-500 text-[10px] font-bold uppercase">Error_Loading</div>;
 
   const scroll = (direction) => {
     if (scrollContainer.current) {
@@ -23,78 +21,71 @@ function Category() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <h2 className="text-2xl font-bold text-center text-black group mt-5 mb-5">
-        <span className="relative inline-block">
-          Explore Our Categories
-          <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
-        </span>
-      </h2>
+    <div className="max-w-7xl mx-auto mt-8 px-4">
+      {/* Small Header with Minimal Nav */}
+      <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-2">
+        <h2 className="text-xs font-black uppercase tracking-[0.3em] text-gray-400">
+          Shop / <span className="text-black italic">Categories</span>
+        </h2>
+        <div className="flex gap-2">
+          <button onClick={() => scroll('left')} className="p-1 hover:text-rose-600 transition-colors">
+            <FaChevronLeft size={10} />
+          </button>
+          <button onClick={() => scroll('right')} className="p-1 hover:text-rose-600 transition-colors">
+            <FaChevronRight size={10} />
+          </button>
+        </div>
+      </div>
 
-      <div className="flex justify-center mb-3"><span className="p-2 rounded-full bg-rose-50 animate-bounce"><FaArrowDown className="text-rose-500" /></span></div>
-
-      <div className="relative group">
-        {/* Gradient Overlays */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 bg-linear-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-16 bg-linear-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none"></div>
-
-        {/* Left scroll button */}
-        <button
-          onClick={() => scroll('left')}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/80 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
-          aria-label="Scroll left"
-        >
-          <FaChevronLeft className="text-gray-600" />
-        </button>
-
-        {/* Scrollable container */}
+      {/* Main Category Grid - Medium Index Style */}
+      <div className="relative overflow-hidden bg-white border-y-2 border-black">
         <div
           ref={scrollContainer}
-          className="flex overflow-x-auto scrollbar-hide px-16 border-b-2 border-t-2"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
+          className="flex overflow-x-auto scrollbar-hide snap-x"
         >
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <Link
               to={`/category/${category._id}`}
               key={category._id}
-              className="relative inline-block shrink-0 px-8 py-6 text-2xl font-bold whitespace-nowrap hover:bg-gray-100/50 text-gray-900 hover:text-black transition-all duration-300 cursor-grab"
+              className="relative inline-block shrink-0 w-56 md:w-64 border-r border-gray-200 hover:bg-black/10 group transition-all duration-300 snap-start py-10 px-8"
             >
-              <span className="relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full">
-                 <div className="flex items-center gap-2">
-                  <span className="relative flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                    </span>
-                  {category.name}
-                 </div>
+              {/* Category Number (Slightly Smaller) */}
+              <span className="absolute top-4 left-8 text-[9px] font-black text-gray-300 group-hover:text-gray-700 transition-colors tracking-widest">
+                {String(index + 1).padStart(2, '0')} — INDEX
               </span>
+
+              <div className="space-y-3 mt-2">
+                {/* Medium Sized Heading */}
+                <h3 className="text-xl font-black uppercase tracking-tighter text-black group-hover:text-black transition-colors leading-none italic">
+                  {category.name}
+                </h3>
+
+                {/* Accent Line */}
+                <div className="h-[2px] w-6 bg-black group-hover:bg-rose-500 group-hover:w-12 transition-all duration-500"></div>
+
+                <p className="text-[9px] font-bold text-gray-400 group-hover:text-gray-600 uppercase tracking-[0.2em]">
+                  Browse_Archive
+                </p>
+              </div>
+
+              {/* Decorative Corner Square (Small) */}
+              <div className="absolute bottom-3 right-3 w-1.5 h-1.5 bg-gray-200 group-hover:bg-rose-500 transition-colors"></div>
             </Link>
           ))}
         </div>
-
-        {/* Right scroll button */}
-        <button
-          onClick={() => scroll('right')}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/80 rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
-          aria-label="Scroll right"
-        >
-          <FaChevronRight className="text-gray-600" />
-        </button>
       </div>
-      <div className="overflow-hidden text-sm font-medium bg-white text-black border-b-2">
-        <Marquee autoFill speed={25} gradient={false} className="cursor-grab">
-          <div className="flex items-center space-x-10 mx-4">
-            <img src={race} className="w-10 h-10 opacity-90" alt="logo" />
-            <span>🚚 Free Shipping Over $50</span>
-            <span>•</span>
-            <span>🔥 New Collection Released!</span>
-            <span>•</span>
-            <span>🎁 15% OFF with code NEW15</span>
-            <span>•</span>
-            <span>💯 100% Satisfaction Guaranteed</span>
-            <span>•</span>
-            <img src={race} className="w-10 h-10 opacity-90" alt="logo" />
+
+      {/* Very Slim Info Bar */}
+      <div className="mt-6 border-y border-gray-100 py-2">
+        <Marquee autoFill speed={40} gradient={false}>
+          <div className="flex items-center space-x-8 mx-4">
+            <img src={race} className="w-4 h-4 grayscale opacity-40" alt="icon" />
+            <span className="text-[9px] font-bold text-black uppercase tracking-widest">New Arrivals Daily</span>
+            <span className="text-gray-200">|</span>
+            <span className="text-[9px] font-bold text-black uppercase tracking-widest">Secure Checkout</span>
+            <span className="text-gray-200">|</span>
+            <span className="text-[9px] font-bold text-black uppercase tracking-widest">Fast Logistics</span>
+            <span className="text-gray-200">|</span>
           </div>
         </Marquee>
       </div>

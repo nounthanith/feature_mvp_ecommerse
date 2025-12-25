@@ -128,246 +128,234 @@ function ProductDetail() {
 
   return (
     <>
-      <div className="max-w-6xl mx-auto">
-        {/* Back Button */}
+      <div className="max-w-7xl mx-auto px-4 pb-20">
+        {/* Minimalist Back Navigation */}
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center text-black hover:text-blue-600 transition-colors px-4 cursor-pointer mt-4"
+          className="flex items-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 hover:text-black transition-colors py-8 cursor-pointer group"
         >
-          <FaChevronLeft className="mr-2" /> Back to Products
+          <FaChevronLeft className="mr-2 group-hover:-translate-x-1 transition-transform" />
+          Return_to_Archive
         </button>
 
         {/* Main Container */}
-        <div className="max-w-6xl mx-auto overflow-hidden">
-          <div className="md:flex">
-            {/* Product Images */}
-            <div className="md:w-1/2 p-6">
-              <div className="h-96 overflow-hidden rounded-none mb-4 border border-rose-200">
-                <img
-                  src={`${import.meta.env.VITE_BASE_URL}${product.images[selectedImage]}`}
-                  alt={product.name}
-                  className="w-full h-full object-contain transition-transform duration-300 hover:scale-105 cursor-grab"
-                />
-              </div>
+        <div className="md:flex gap-12">
+          {/* Left Column: Product Images */}
+          <div className="md:w-1/2">
+            <div className="relative aspect-square overflow-hidden bg-white border border-black group">
+              <img
+                src={`${import.meta.env.VITE_BASE_URL}${product.images[selectedImage]}`}
+                alt={product.name}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
 
-              <div className="flex space-x-2 overflow-x-auto pb-2">
-                {product.images.map((img, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`w-16 h-16 border-2 rounded-none overflow-hidden shrink-0 hover:shadow-md transition-all ${selectedImage === index ? 'border-rose-500' : 'border-gray-200'}`}
-                  >
-                    <img
-                      src={`${import.meta.env.VITE_BASE_URL}${img}`}
-                      alt={`${product.name} ${index + 1}`}
-                      className="w-full h-full object-cover cursor-grab"
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Product Info */}
-            <div className="md:w-1/2 p-6">
-              <div>
-                {product.isActive ? (
-                  <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[14px] font-semibold">
-                    <span className="relative flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-                    </span>
-                    Active
-                  </span>
+              {/* Wishlist Toggle (Square Style) */}
+              <button
+                onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); }}
+                className='absolute top-4 right-4 z-10 p-4 bg-white border border-black hover:bg-black hover:text-white transition-all cursor-pointer'
+              >
+                {checkWishlistStatus(product._id) ? (
+                  <FaHeart className='text-rose-600 text-xl' />
                 ) : (
-                  <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold bg-red-50 text-red-700 border border-red-300 shadow-sm">
-                    <span className="relative flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                    </span>
-                    Inactive
-                  </span>
+                  <CiHeart className='text-xl' />
                 )}
-              </div>
+              </button>
+            </div>
 
-              <div className="flex justify-between items-start relative">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
-                </div>
-                <div
-                  onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); }}
-                  className='absolute top-2 right-2 z-10 p-2 bg-black/70 rounded-full hover:bg-black/80 transition-colors cursor-pointer'
-                >
-                  {checkWishlistStatus(product._id) ? (
-                    <FaHeart className='text-red-300 text-xl' />
-                  ) : (
-                    <CiHeart className='text-white text-xl hover:text-red-300' />
-                  )}
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <span className="text-4xl font-semibold text-rose-600">${product.price.toFixed(2)}</span>
-              </div>
-
-              <p className="text-gray-700 mb-6 leading-relaxed">{product.description}</p>
-
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-900">Category</h3>
-                <p className="mt-1 text-sm text-gray-500">{product.category?.name || 'N/A'}</p>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-900">Availability</h3>
-                <p className={`mt-1 text-sm ${available > 0 ? 'text-green-600' : 'text-rose-600'}`}>
-                  {available > 0 ? `In Stock (${available} available)` : 'Out of Stock'}
-                </p>
-              </div>
-
-              {/* Quantity Selector */}
-              <div className="flex items-center mb-8">
-                <span className="mr-4 font-medium text-gray-700">Quantity:</span>
-                <div className="flex items-center border border-gray-500 rounded-none">
-                  <button
-                    onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                    className="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100 transition cursor-pointer"
-                  >
-                    -
-                  </button>
-                  <span className="w-12 text-center font-medium">{quantity}</span>
-                  <button
-                    onClick={() => setQuantity(prev => Math.min(available || 1, prev + 1))}
-                    className="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100 transition cursor-pointer"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
+            {/* Thumbnail Gallery (Square) */}
+            <div className="flex gap-2 mt-4 overflow-x-auto scrollbar-hide">
+              {product.images.map((img, index) => (
                 <button
-                  disabled={available <= 0}
-                  onClick={() => { if (available <= 0) { toast.error('Out of stock'); return; } addToCart(product._id, quantity); }}
-                  className={`flex-1 ${available <= 0 ? 'bg-gray-100 cursor-not-allowed' : 'bg-black text-white hover:bg-black/80 cursor-pointer'} text-black py-3 px-6 rounded-none font-medium flex items-center justify-center gap-2 transition-all`}
+                  key={index}
+                  onClick={() => setSelectedImage(index)}
+                  className={`w-20 h-20 border shrink-0 transition-all ${selectedImage === index ? 'border-black border-2' : 'border-gray-200'}`}
                 >
-                  <CiShoppingCart className="w-5 h-5" />
-                  Add to Cart
+                  <img
+                    src={`${import.meta.env.VITE_BASE_URL}${img}`}
+                    alt={`${product.name} ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
                 </button>
-                <button disabled={available <= 0} onClick={() => { if (!localStorage.getItem('token')) { toast.error('Please login to continue'); return; } if (available <= 0) { toast.error('Out of stock'); return; } setBuyOpen(true); }} className={`flex-1 border-2 border-black ${available <= 0 ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:bg-black hover:text-white'} text-black py-3 px-6 rounded-none font-medium transition-all`}>
-                  Buy Now
-                </button>
-              </div>
-
-              {/* Delivery & Security Info */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
-                  <div className="flex items-center">
-                    <TbTruckDelivery className="w-6 h-6 text-gray-500 mr-2" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Free Delivery</p>
-                      <p className="text-xs text-gray-500">On all orders over $50</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <BsShieldCheck className="w-6 h-6 text-gray-500 mr-2" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Secure Payment</p>
-                      <p className="text-xs text-gray-500">100% secure payment</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Additional Information */}
-          <div className="p-6 border-t border-gray-200 border-b mx-auto">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6 border-b pb-2 border-gray-300">Product Details</h2>
-            <div className="flex justify-start gap-4">
-              <div className='border border-gray-200 shadow-sm p-3 rounded-sm hover:shadow-md transition-all'>
-                <h3 className="font-medium text-gray-900">Date Added</h3>
-                <p className="text-gray-600">{new Date(product.createdAt).toLocaleDateString()}</p>
-              </div>
-              <div className='border border-gray-200 shadow-sm p-3 rounded-sm hover:shadow-md transition-all'>
-                <h3 className="font-medium text-gray-900">Last Updated</h3>
-                <p className="text-gray-600">{new Date(product.updatedAt || product.createdAt).toLocaleDateString()}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Product you may also like */}
-          <div>
-            {relatedProducts.length > 0 && <h2 className="text-2xl font-semibold text-center text-black mb-10 group mt-4">
-              <span className="relative inline-block">
-                You may also like
-                <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-rose-500 transition-all duration-500 group-hover:w-full"></span>
-              </span>
-            </h2>}
-            <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2">
-              {relatedProducts.map((product, index) => (
-                <div
-                  key={product._id}
-                  className='overflow-hidden  cursor-pointer'
-                  onMouseEnter={() => setHoveredProductId(product._id)}
-                  onMouseLeave={() => setHoveredProductId(null)}
-                >
-                  <div className='relative w-full h-64'>
-                    <div
-                      onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); }}
-                      className='absolute top-2 right-2 z-10 p-2 bg-black/70 rounded-full hover:bg-black/80 transition-colors cursor-pointer'
-                    >
-                      {checkWishlistStatus(product._id) ? (
-                        <FaHeart className='text-red-300 text-xl' />
-                      ) : (
-                        <CiHeart className='text-white text-xl hover:text-red-300' />
-                      )}
-                    </div>
-                    <div onClick={() => getProductById(product._id)} className='w-full h-full'>
-                      <img
-                        className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer'
-                        src={import.meta.env.VITE_BASE_URL + product.images[0]}
-                        alt={product.name}
-                        style={{ transform: hoveredProductId === product._id ? 'translateX(-100%)' : 'translateX(0)' }}
-                      />
-                      {product.images[1] && (
-                        <img
-                          className='absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer'
-                          src={import.meta.env.VITE_BASE_URL + product.images[1]}
-                          alt={product.name}
-                          style={{ transform: hoveredProductId === product._id ? 'translateX(0)' : 'translateX(100%)' }}
-                        />
-                      )}
-                    </div>
-                    {product.stock > 0 ? (
-                      <div className="absolute top-2 left-2 z-10 bg-black backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold">
-                        In stock
-                      </div>
-                    ) : (
-                      <div className="absolute top-2 left-2 z-10 bg-red-500 backdrop-blur-sm px-2 py-1  text-white text-xs font-semibold animate-pulse">
-                        Out of stock
-                      </div>
-                    )}
-                  </div>
-                  <div className=''>
-                    <p className="text-gray-700 font-semibold text-[12px] flex justify-end mt-2 mr-2">{new Date(product?.createdAt).toLocaleDateString()}</p>
-                    <div className='px-2'>
-                      <h2 className='text-lg font-bold truncate' title={product.name}>{product.name}</h2>
-                      <div className="flex items-center justify-between">
-                        <p className='text-rose-600 text-xl font-bold'>{product.price} $</p>
-                      </div>
-                    </div>
-                    <button
-                      disabled={Number(product.stock || 0) <= 0}
-                      onClick={() => { if ((product.stock || 0) <= 0) { return; } addToCart(product._id, 1); }}
-                      className={`mt-2 w-full flex items-center justify-center gap-2 rounded-none font-semibold py-2 px-4 transition-all duration-300 ${Number(product.stock || 0) <= 0 ? 'bg-gray-100 text-black border-2 border-black cursor-not-allowed line-through' : 'bg-black hover:bg-black/80 text-white cursor-pointer border-2 border-black'}`}>
-                      Add to cart
-                      <CiShoppingCart className="text-xl" />
-                    </button>
-
-                  </div>
-                </div>
               ))}
             </div>
+          </div>
+
+          {/* Right Column: Product Info */}
+          <div className="md:w-1/2 mt-10 md:mt-0">
+            {/* Status & Category */}
+            <div className="flex items-center gap-4 mb-4">
+              <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 border ${product.isActive ? 'border-black text-black' : 'border-rose-600 text-rose-600'}`}>
+                {product.isActive ? 'Status: Active' : 'Status: Vaulted'}
+              </span>
+              <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                Collection: {product.category?.name || 'General'}
+              </span>
+            </div>
+
+            <h1 className="text-4xl md:text-5xl font-black text-black uppercase tracking-tighter italic mb-4">
+              {product.name}
+            </h1>
+
+            <div className="flex items-baseline gap-4 mb-8">
+              <span className="text-3xl font-black text-rose-600 italic">
+                ${product.price.toFixed(2)}
+              </span>
+              <span className={`text-[10px] font-bold uppercase tracking-widest ${available > 0 ? 'text-green-600' : 'text-rose-600'}`}>
+                {available > 0 ? `// Stock Available: ${available}` : '// Out of stock'}
+              </span>
+            </div>
+
+            <p className="text-sm text-gray-600 leading-relaxed mb-10 max-w-lg">
+              {product.description}
+            </p>
+
+            {/* Quantity Selector (Industrial Style) */}
+            <div className="flex items-center mb-8">
+              <span className="text-[10px] font-black uppercase tracking-widest text-black mr-6">Quantity</span>
+              <div className="flex items-center border-2 border-black">
+                <button
+                  onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                  className="px-4 py-2 hover:bg-black hover:text-white transition-colors font-bold border-r-2 border-black"
+                >
+                  -
+                </button>
+                <span className="w-14 text-center font-black text-sm">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(prev => Math.min(available || 1, prev + 1))}
+                  className="px-4 py-2 hover:bg-black hover:text-white transition-colors font-bold border-l-2 border-black"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-3 mb-12">
+              <button
+                disabled={available <= 0}
+                onClick={() => { if (available <= 0) return; addToCart(product._id, quantity); }}
+                className={`group w-full py-5 flex items-center justify-center gap-3 transition-all duration-500 border-2 border-black font-black uppercase tracking-[0.3em] text-[11px] ${available <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-black text-white hover:bg-white hover:text-black'
+                  }`}
+              >
+                <CiShoppingCart className="text-xl group-hover:scale-125 transition-transform" />
+                Add_to_Cart
+              </button>
+
+              <button
+                disabled={available <= 0}
+                onClick={() => { if (!localStorage.getItem('token')) { navigate('/login'); return; } if (available <= 0) return; setBuyOpen(true); }}
+                className={`w-full py-5 border-2 border-black font-black uppercase tracking-[0.3em] text-[11px] transition-all duration-300 ${available <= 0 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-rose-600 hover:text-white hover:border-rose-600 active:translate-y-1'
+                  }`}
+              >
+                Immediate_Checkout
+              </button>
+            </div>
+
+            {/* Specs Grid */}
+            <div className="grid grid-cols-2 gap-px bg-gray-200 border border-gray-200">
+              <div className="bg-white p-4">
+                <p className="text-[9px] font-black text-gray-400 uppercase mb-1">Date_Added</p>
+                <p className="text-[11px] font-bold text-black">{new Date(product.createdAt).toLocaleDateString()}</p>
+              </div>
+              <div className="bg-white p-4">
+                <p className="text-[9px] font-black text-gray-400 uppercase mb-1">Authenticity</p>
+                <p className="text-[11px] font-bold text-black">Verified_Archive</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Related Products - Original Layout with New Styling */}
+        <div className="mt-16">
+          {relatedProducts.length > 0 && (
+            <h2 className="text-2xl font-black text-center text-black mb-10 group mt-4 uppercase italic tracking-tighter">
+              <span className="relative inline-block">
+                You may also like
+                <span className="absolute left-0 bottom-0 w-0 h-[3px] bg-black transition-all duration-500 group-hover:w-full"></span>
+              </span>
+            </h2>
+          )}
+
+          <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2">
+            {relatedProducts.map((product) => (
+              <div
+                key={product._id}
+                className="overflow-hidden cursor-pointer border border-transparent hover:border-black transition-all duration-300"
+                onMouseEnter={() => setHoveredProductId(product._id)}
+                onMouseLeave={() => setHoveredProductId(null)}
+              >
+                <div className="relative w-full h-64">
+                  {/* Original Circle Wishlist Button */}
+                  <div
+                    onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); }}
+                    className="absolute top-2 right-2 z-10 p-2 bg-black/70 rounded-full hover:bg-black transition-colors cursor-pointer"
+                  >
+                    {checkWishlistStatus(product._id) ? (
+                      <FaHeart className="text-rose-500 text-xl" />
+                    ) : (
+                      <CiHeart className="text-white text-xl hover:text-rose-300" />
+                    )}
+                  </div>
+
+                  {/* Original Image Sliding Logic */}
+                  <div onClick={() => { getProductById(product._id); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="w-full h-full">
+                    <img
+                      className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer"
+                      src={import.meta.env.VITE_BASE_URL + product.images[0]}
+                      alt={product.name}
+                      style={{ transform: hoveredProductId === product._id ? 'translateX(-100%)' : 'translateX(0)' }}
+                    />
+                    {product.images[1] && (
+                      <img
+                        className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 ease-in-out cursor-pointer"
+                        src={import.meta.env.VITE_BASE_URL + product.images[1]}
+                        alt={product.name}
+                        style={{ transform: hoveredProductId === product._id ? 'translateX(0)' : 'translateX(100%)' }}
+                      />
+                    )}
+                  </div>
+
+                  {/* Original Stock Badge */}
+                  {product.stock > 0 ? (
+                    <div className="absolute top-2 left-2 z-10 bg-black px-2 py-1 text-white text-[10px] font-black uppercase tracking-widest">
+                      In stock
+                    </div>
+                  ) : (
+                    <div className="absolute top-2 left-2 z-10 bg-rose-600 px-2 py-1 text-white text-[10px] font-black uppercase tracking-widest animate-pulse">
+                      Out of stock
+                    </div>
+                  )}
+                </div>
+
+                {/* Info Section - Kept your original structure */}
+                <div className="bg-white">
+                  <p className="text-gray-400 font-bold text-[10px] flex justify-end mt-2 mr-2 uppercase tracking-widest">
+                    {new Date(product?.createdAt).toLocaleDateString()}
+                  </p>
+                  <div className="px-2">
+                    <h2 className="text-lg font-black uppercase tracking-tight truncate" title={product.name}>
+                      {product.name}
+                    </h2>
+                    <div className="flex items-center justify-between">
+                      <p className="text-rose-600 text-xl font-black italic">${product.price}</p>
+                    </div>
+                  </div>
+
+                  {/* Original Button Shape with Updated Styling */}
+                  <button
+                    disabled={Number(product.stock || 0) <= 0}
+                    onClick={() => { if ((product.stock || 0) <= 0) return; addToCart(product._id, 1); }}
+                    className={`mt-2 w-full flex items-center justify-center gap-2 rounded-none font-black uppercase text-[11px] tracking-widest py-3 px-4 transition-all duration-300 ${Number(product.stock || 0) <= 0
+                        ? 'bg-gray-100 text-black border-2 border-black cursor-not-allowed line-through'
+                        : 'bg-black hover:bg-black/80 text-white cursor-pointer border-2 border-black'
+                      }`}
+                  >
+                    Add to cart
+                    <CiShoppingCart className="text-xl" />
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -437,20 +425,6 @@ function ProductDetail() {
             </select>
           </div>
           <input value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Phone/លេខទូរស័ព្ទ" />
-          {/* <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Payment Method</label>
-            <select
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200 bg-white"
-            >
-              {paymentMethods.map((method) => (
-                <option key={method.value} value={method.value}>
-                  {method.label}
-                </option>
-              ))}
-            </select>
-          </div> */}
         </div>
       </Dialog>
     </>

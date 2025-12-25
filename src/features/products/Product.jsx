@@ -15,18 +15,15 @@ function Product() {
 
     const [hoveredProductId, setHoveredProductId] = useState(null);
     const [page, setPage] = useState(1);
-
-    // State to ensure loading animation shows for exactly 1.2s
     const [isInitialSync, setIsInitialSync] = useState(true);
 
-    // Initial Data Fetch + 1.2s Timer
     useEffect(() => {
         getProducts(page);
 
         if (page === 1) {
             const timer = setTimeout(() => {
                 setIsInitialSync(false);
-            }, 1200); // 1.2 seconds
+            }, 1200);
             return () => clearTimeout(timer);
         }
     }, [page]);
@@ -39,29 +36,26 @@ function Product() {
         }
     };
 
-    // --- 1. INITIAL LOADING SCREEN (Shows for 1.2s) ---
+    // --- NEW REFINED LOADING (The only UI change) ---
     if (isInitialSync || (loading && page === 1)) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[80vh] bg-white">
                 <div className="relative w-16 h-16">
-                    {/* Outer gray ring */}
                     <div className="absolute inset-0 border-4 border-gray-100 rounded-full"></div>
-                    {/* Inner spinning rose ring */}
-                    <div className="absolute inset-0 border-4 border-t-rose-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                    <div className="absolute inset-0 border-4 border-t-black border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
                 </div>
-                <p className="mt-6 text-xs font-black uppercase tracking-[0.5em] text-gray-400 animate-pulse">
+                <p className="mt-6 text-[10px] font-black uppercase tracking-[0.5em] text-black animate-pulse">
                     Initializing Products
                 </p>
                 <div className="mt-2 flex space-x-1">
-                    <div className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                    <div className="w-1.5 h-1.5 bg-gray-200 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                    <div className="w-1.5 h-1.5 bg-gray-200 rounded-full animate-bounce"></div>
+                    <div className="w-1 h-1 bg-rose-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-1 h-1 bg-gray-200 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-1 h-1 bg-gray-200 rounded-full animate-bounce"></div>
                 </div>
             </div>
         );
     }
 
-    // --- ERROR STATE ---
     if (error) return (
         <div className="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center">
             <div className="bg-red-50 border-l-4 border-red-500 p-4 w-full max-w-md">
@@ -71,25 +65,11 @@ function Product() {
         </div>
     );
 
-    // --- NO PRODUCTS STATE ---
-    if (!products?.length && !loading) return (
-        <div className="flex flex-col items-center justify-center min-h-[80vh] text-center">
-            <h3 className="text-lg font-medium text-gray-900">No products found</h3>
-            <button onClick={() => window.history.back()} className="mt-6 px-4 py-2 bg-black text-white text-sm">Go Back</button>
-        </div>
-    );
-
-    // --- MAIN PRODUCT GRID ---
     return (
         <div className="animate-in fade-in duration-700">
-
-            {/* Featured Product */}
             <FeaturedProduct />
-            
-            {/* Category */}
             <Category />
 
-            {/* Products */}
             <div className="pb-20">
                 <h2 className="text-4xl font-bold text-center text-black group mt-5 mb-5">
                     <span className="relative inline-block uppercase tracking-tighter font-black italic">
@@ -98,6 +78,7 @@ function Product() {
                     </span>
                 </h2>
 
+                {/* Grid kept at gap-1 and square-style */}
                 <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2">
                     {products.map((product) => (
                         <div
@@ -152,6 +133,7 @@ function Product() {
                                         <p className='text-rose-600 text-xl font-black'>${product.price}</p>
                                     </div>
                                 </div>
+                                {/* Kept original square button */}
                                 <button
                                     disabled={Number(product.stock || 0) <= 0}
                                     onClick={() => { if ((product.stock || 0) <= 0) return; addToCart(product._id, 1); }}
@@ -179,18 +161,16 @@ function Product() {
                                 Prev
                             </button>
 
-                            {/* Page numbers */}
                             <div className="flex items-center gap-1">
                                 {Array.from({ length: pagination.totalPages }, (_, idx) => idx + 1).map((p) => (
                                     <button
                                         key={p}
                                         onClick={() => !loading && setPage(p)}
                                         disabled={loading}
-                                        className={`w-8 h-8 text-xs font-bold border rounded-none flex items-center justify-center ${
-                                            p === page
+                                        className={`w-8 h-8 text-xs font-bold border rounded-none flex items-center justify-center ${p === page
                                                 ? 'bg-black text-white border-black'
                                                 : 'bg-white text-black border-gray-200 hover:bg-black hover:text-white'
-                                        }`}
+                                            }`}
                                     >
                                         {p}
                                     </button>
@@ -208,8 +188,6 @@ function Product() {
                                 Next
                             </button>
                         </div>
-
-                        {/* Page info */}
                         <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-500">
                             Page {page} of {pagination.totalPages}
                         </p>
@@ -217,7 +195,6 @@ function Product() {
                 )}
             </div>
 
-             {/* Arrival Soon */}
             <Arrival />
         </div>
     );
