@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 
 const useOrder = () => {
     const [orders, setOrders] = useState([]);
+    const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [pagination, setPagination] = useState({});
@@ -28,6 +29,29 @@ const useOrder = () => {
             setLoading(false);
         }
     };
+
+    const getOrderByID = async (id) => {
+        try {
+            setLoading(true);
+            const res = await api.get(`/orders/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            setOrder(res.data);
+            setError(null);
+            return res.data;
+        } catch (error) {
+            console.error('Error fetching order by ID:', error);
+            const errorMessage = error?.response?.data?.message || error?.response?.data?.error || error?.message || 'Failed to load order';
+            setError(errorMessage);
+            toast.error(errorMessage);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const CreateOrder = async (order) => {
         try {
@@ -80,10 +104,12 @@ const useOrder = () => {
 
     return {
         orders,
+        order,
         loading,
         error,
         pagination,
         getOrders,
+        getOrderByID,
         CreateOrder,
         buyNow
     };

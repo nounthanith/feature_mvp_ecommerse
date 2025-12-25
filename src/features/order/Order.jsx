@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useOrder from './useOrder';
 import Pagination from '../products/Pagination';
 import { HiOutlinePrinter, HiOutlineDownload } from 'react-icons/hi';
 
 function Order({ page = 1 }) {
+    const navigate = useNavigate();
     const { orders, loading, error, getOrders, pagination } = useOrder();
 
     useEffect(() => {
@@ -107,14 +109,20 @@ function Order({ page = 1 }) {
                                     <span className="text-2xl font-black font-mono">${Number(o.totalPrice).toFixed(2)}</span>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
+                                    {/* Print / View Button */}
                                     <button
-                                        onClick={() => window.print()}
-                                        className="border border-black p-2 text-[10px] font-bold uppercase hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2"
+                                        onClick={() => window.open(`/order/${o._id}`, '_blank')}
+                                        className="border border-black p-2 text-[10px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2 cursor-pointer"
                                     >
-                                        <HiOutlinePrinter size={14} /> Print
+                                        <HiOutlinePrinter size={14} /> Print_View
                                     </button>
-                                    <button onClick={() => window.print()} className="bg-black text-white p-2 text-[10px] font-bold uppercase hover:bg-gray-800 transition-all flex items-center justify-center gap-2">
-                                        <HiOutlineDownload size={14} /> Download
+
+                                    {/* Download / Invoice Button */}
+                                    <button
+                                        onClick={() => window.open(`/order/${o._id}`, '_blank')}
+                                        className="bg-black text-white p-2 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                                    >
+                                        <HiOutlineDownload size={14} /> Get_Invoice
                                     </button>
                                 </div>
                             </div>

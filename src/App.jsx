@@ -12,6 +12,7 @@ import CategoryIdProduct from './features/category/CategoryIdProduct';
 import Cart from './features/cart/Cart';
 import Wishlist from './features/wishlist/Wishlist';
 import Arrival from './features/arrival/Arrival';
+import Invoice from './features/order/Invoice';
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('token');
@@ -40,6 +41,7 @@ const PageTitle = () => {
     else if (pathname === '*') pageTitle = 'Not Found';
     else if (pathname === '/cart') pageTitle = 'Cart';
     else if (pathname === '/wishlist') pageTitle = 'Wishlist';
+    else if (pathname.includes('/order/:id')) pageTitle = 'Invoice';
 
     document.title = `TP-Cambo | ${pageTitle}`;
   }, [location]);
@@ -54,57 +56,47 @@ function App() {
       <Toaster
         position="bottom-right"
         reverseOrder={false}
-        gutter={16}
-        containerStyle={{
-          top: 16,
-          left: 16,
-          bottom: 16,
-          right: 16,
-        }}
+        gutter={12}
         toastOptions={{
-          className: "relative overflow-hidden rounded-lg",
-          duration: 4000,
+          duration: 3500,
+          // Modern Industrial Style
           style: {
-            background: "rgba(0, 0, 0, 0.85)",
-            color: "#f3f4f6",
-            borderRadius: "10px",
-            boxShadow:
-              "0 8px 25px rgba(0,0,0,0.3), inset 0 0 10px rgba(255,255,255,0.05)",
-            padding: "16px 20px",
-            fontSize: "14px",
-            backdropFilter: "blur(8px)",
-            border: "1px solid rgba(255, 255, 255, 0.15)",
+            background: "#FFFFFF",
+            color: "#000000",
+            borderRadius: "0px", // Sharp corners
+            border: "2px solid #000000", // Bold border
+            padding: "12px 20px",
+            fontSize: "11px",
+            fontWeight: "900",
+            textTransform: "uppercase",
+            letterSpacing: "0.15em",
+            boxShadow: "8px 8px 0px 0px rgba(0,0,0,0.05)", // Blocky shadow
           },
 
           success: {
             iconTheme: {
-              primary: "#D4AF37",
-              secondary: "#000",
+              primary: "#000000",
+              secondary: "#FFFFFF",
             },
             style: {
-              borderLeft: "4px solid #D4AF37",
-              background: "rgba(0, 0, 0, 0.85)",
+              borderLeft: "8px solid #000000", // Thick accent line
             },
           },
 
           error: {
             iconTheme: {
-              primary: "#EF4444",
-              secondary: "#000",
+              primary: "#E11D48", // Rose-600 to match your theme
+              secondary: "#FFFFFF",
             },
             style: {
-              borderLeft: "4px solid #EF4444",
-              background: "rgba(0, 0, 0, 0.85)",
+              borderLeft: "8px solid #E11D48",
+              color: "#E11D48",
             },
           },
 
           loading: {
-            iconTheme: {
-              primary: "#D4AF37",
-              secondary: "transparent",
-            },
             style: {
-              background: "rgba(0, 0, 0, 0.85)",
+              borderLeft: "8px solid #94a3b8",
             },
           },
         }}
@@ -128,7 +120,9 @@ function App() {
             }
           />
           <Route path="*" element={<NotFound />} />
+
         </Route>
+        <Route path="/order/:id" element={<Invoice />} />
       </Routes>
     </>
   )
