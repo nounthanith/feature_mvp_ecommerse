@@ -12,16 +12,7 @@ function Invoice() {
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <div className="h-10 w-10 border-2 border-black border-t-transparent animate-spin"></div>
-      <p className="mt-4 text-[10px] font-black uppercase tracking-[0.5em]">Generating_Document...</p>
-    </div>
-  );
-
-  if (error) return (
-    <div className="flex items-center justify-center min-h-screen p-8">
-      <div className="border-2 border-black p-10 text-center uppercase font-black text-red-600">
-        Error_System: {error}
-      </div>
+      <div className="h-8 w-8 border-2 border-black border-t-transparent animate-spin"></div>
     </div>
   );
 
@@ -31,110 +22,105 @@ function Invoice() {
   const items = order?.data?.orderItems || [];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
-      {/* Centered Document Container */}
-      <div className="max-w-3xl w-full bg-white border-2 border-black shadow-[20px_20px_0px_0px_rgba(0,0,0,0.05)] p-8 md:p-12">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-4 px-2 sm:py-10">
+      {/* Print Logic Optimization */}
+      <style>
+        {`
+          @media print {
+            @page { size: portrait; margin: 10mm; }
+            body { background: white !important; }
+            .no-print { display: none !important; }
+            .print-container { 
+              box-shadow: none !important; 
+              border: 1px solid black !important;
+              width: 100% !important; 
+              padding: 15px !important;
+            }
+            .text-rose-600 { color: #e11d48 !important; -webkit-print-color-adjust: exact; }
+          }
+        `}
+      </style>
 
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start border-b-2 border-black pb-8 mb-8">
+      <div className="print-container max-w-2xl w-full bg-white border-2 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,0.1)] p-6 md:p-10">
+        
+        {/* Header */}
+        <div className="flex justify-between items-start border-b-2 border-black pb-4 mb-6">
           <div>
-            <h1 className="text-5xl font-black uppercase tracking-tighter italic">Invoice</h1>
-            <p className="font-bold text-[10px] text-gray-400 mt-2 tracking-widest uppercase">
-              ID_Reference: <span className="text-black">#{String(order?.data?._id).toUpperCase()}</span>
+            <h1 className="text-3xl font-black uppercase tracking-tighter italic">Invoice</h1>
+            <p className="font-bold text-[9px] text-gray-400 mt-1">
+              ID: <span className="text-black">#{String(order?.data?._id).toUpperCase()}</span>
             </p>
           </div>
-          <div className="mt-6 md:mt-0 text-left md:text-right flex flex-col items-start md:items-end">
-            <span className="bg-black text-white px-3 py-1 text-[9px] font-black uppercase tracking-widest mb-3">
-              {order.status || 'Processing'}
-            </span>
-            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
-              Issued: {order?.data?.createdAt ? new Date(order?.data?.createdAt).toLocaleDateString() : ''}
-            </p>
-            <button
-              onClick={() => window.print()}
-              className="mt-4 border-2 border-black px-6 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all active:scale-95 no-print"
-            >
-              Print_Document
-            </button>
-          </div>
+          <button
+            onClick={() => window.print()}
+            className="no-print border-2 border-black px-4 py-1 text-[10px] font-black uppercase hover:bg-black hover:text-white transition-all"
+          >
+            Print
+          </button>
         </div>
 
-        {/* Address & Payment Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
-          <div className="border-l-4 border-black pl-4">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Billed_To:</p>
-            <p className="font-black uppercase text-sm">{addr?.fullName}</p>
-            <p className="text-[11px] text-gray-600 uppercase mt-1">
+        {/* Customer & Contact Info */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+          <div className="border-l-2 border-black pl-3">
+            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Billed_To</p>
+            <p className="font-black uppercase text-xs mb-1">{addr?.fullName}</p>
+            <p className="text-[10px] text-gray-600 leading-relaxed uppercase">
               {addr?.address}, {addr?.city}<br />
               {addr?.country}
             </p>
-            <p className="text-[11px] text-gray-500 mt-2 font-mono">{addr?.phone}</p>
-            <p className="text-[11px] text-gray-500 mt-2 font-mono">{order?.data?.user?.email}</p>
           </div>
-          <div className="md:text-right flex flex-col md:items-end">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Transaction_Method:</p>
-            <p className="text-xs font-black uppercase italic border-b-2 border-black inline-block">
-              {order?.data?.paymentMethod || 'Pending_Validation'}
+          
+          <div className="sm:text-right border-l-2 sm:border-l-0 sm:border-r-2 border-black pl-3 sm:pl-0 sm:pr-3">
+            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Contact_Details</p>
+            <p className="text-[10px] font-bold text-black">{addr?.phone}</p>
+            <p className="text-[10px] font-bold text-black break-all">{order?.data?.user?.email}</p>
+            <p className="text-[9px] text-gray-400 mt-2 font-black italic">
+              DATE: {new Date(order?.data?.createdAt).toLocaleDateString()}
             </p>
           </div>
         </div>
 
-        {/* Items Table Header */}
-        <div className="grid grid-cols-4 border-b border-gray-200 pb-2 mb-4">
-          <span className="col-span-2 text-[10px] font-black uppercase tracking-widest text-gray-400">Description</span>
-          <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 text-center">Qty</span>
-          <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Amount</span>
+        {/* Payment Type */}
+        <div className="mb-8 p-2 bg-gray-50 border border-black/5 inline-block">
+          <p className="text-[8px] font-black text-gray-400 uppercase">Method</p>
+          <p className="text-[10px] font-black uppercase italic">{order?.data?.paymentMethod || 'SECURE_TRANSACTION'}</p>
         </div>
 
-        {/* Items List */}
-        <div className="space-y-6 mb-12">
+        {/* Items */}
+        <div className="space-y-4 mb-10">
+          <div className="grid grid-cols-4 border-b border-black pb-1">
+            <span className="col-span-2 text-[9px] font-black uppercase">Archive_Item</span>
+            <span className="text-[9px] font-black uppercase text-center">Qty</span>
+            <span className="text-[9px] font-black uppercase text-right">Sum</span>
+          </div>
           {items.map((it) => (
-            <div key={it._id} className="grid grid-cols-4 items-center">
+            <div key={it._id} className="grid grid-cols-4 items-center py-1">
               <div className="col-span-2">
-                <p className="font-black text-xs uppercase italic">{it.name}</p>
-                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-tighter mt-1">Unit_Price: ${it.price}</p>
+                <p className="font-black text-[11px] uppercase italic truncate">{it.name}</p>
+                <p className="text-[8px] text-gray-400 font-bold">UNIT: ${it.price}</p>
               </div>
-              <div className="text-center font-black text-xs">
-                x{it.quantity}
-              </div>
-              <div className="text-right font-black text-sm italic">
-                ${(it.quantity * it.price).toFixed(2)}
-              </div>
+              <div className="text-center font-black text-[10px]">x{it.quantity}</div>
+              <div className="text-right font-black text-[11px]">${(it.quantity * it.price).toFixed(2)}</div>
             </div>
           ))}
         </div>
 
-        {/* Final Calculation Grid */}
-        <div className="grid grid-cols-2 border-2 border-black bg-white overflow-hidden mt-20">
-          <div className="p-6 border-r-2 border-black flex flex-col justify-center">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-2 h-2 bg-gray-200"></div>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
-                Logistics_Fee
-              </span>
-            </div>
-            <span className="text-3xl font-black italic tracking-tighter text-black">
-              ${Number(order?.data.shippingPrice).toFixed(2)}
-            </span>
+        {/* Totals */}
+        <div className="grid grid-cols-2 border-2 border-black bg-white">
+          <div className="p-4 border-r-2 border-black">
+            <span className="text-[8px] font-black uppercase text-gray-400 block">Shipping</span>
+            <span className="text-xl font-black italic tracking-tighter">${Number(order?.data.shippingPrice).toFixed(2)}</span>
           </div>
-
-          <div className="p-6 flex flex-col justify-center bg-gray-50">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-2 h-2 bg-rose-600"></div>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-black">
-                Grand_Total
-              </span>
-            </div>
-            <span className="text-3xl font-black italic tracking-tighter text-rose-600">
-              ${Number(order?.data.totalPrice).toFixed(2)}
-            </span>
+          <div className="p-4 bg-zinc-50">
+            <span className="text-[8px] font-black uppercase text-black block">Total_Amount</span>
+            <span className="text-xl font-black italic tracking-tighter text-rose-600">${Number(order?.data.totalPrice).toFixed(2)}</span>
           </div>
         </div>
 
-        {/* Footer Signature/Note */}
-        <div className="mt-12 text-center">
-          <p className="text-[9px] font-bold text-gray-300 uppercase tracking-[0.5em]">
-            Thank you for your archive acquisition
+        {/* Footer */}
+        <div className="mt-8 text-center pt-4 border-t border-dashed border-gray-200">
+          <p className="text-[8px] font-bold text-gray-400 uppercase tracking-[0.3em]">
+            Official Digital Archive Receipt
           </p>
         </div>
       </div>
