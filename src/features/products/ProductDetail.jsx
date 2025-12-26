@@ -346,8 +346,8 @@ function ProductDetail() {
                     disabled={Number(product.stock || 0) <= 0}
                     onClick={() => { if ((product.stock || 0) <= 0) return; addToCart(product._id, 1); }}
                     className={`mt-2 w-full flex items-center justify-center gap-2 rounded-none font-black uppercase text-[11px] tracking-widest py-3 px-4 transition-all duration-300 ${Number(product.stock || 0) <= 0
-                        ? 'bg-gray-100 text-black border-2 border-black cursor-not-allowed line-through'
-                        : 'bg-black hover:bg-black/80 text-white cursor-pointer border-2 border-black'
+                      ? 'bg-gray-100 text-black border-2 border-black cursor-not-allowed line-through'
+                      : 'bg-black hover:bg-black/80 text-white cursor-pointer border-2 border-black'
                       }`}
                   >
                     Add to cart
@@ -361,10 +361,10 @@ function ProductDetail() {
       </div>
       <Dialog
         open={buyOpen}
-        title="Shipping Details"
-        description="Enter your shipping information to place the order"
-        confirmText={placing ? 'Placing…' : 'Place Order'}
-        cancelText="Cancel"
+        title="Direct_Acquisition"
+        description="Confirm logistics for immediate dispatch"
+        confirmText={placing ? 'Placing...' : 'Confirm_Order'}
+        cancelText="Abort"
         onConfirm={async () => {
           const payload = {
             productId: product?._id || id,
@@ -377,9 +377,7 @@ function ProductDetail() {
               country: countryCodes[country] || country || 'Cambodia',
               phone
             },
-
           };
-          console.log('Buy Now Payload:', JSON.stringify(payload, null, 2));
           try {
             setPlacing(true);
             await buyNow(payload);
@@ -402,29 +400,78 @@ function ProductDetail() {
         onClose={() => setBuyOpen(false)}
         disableConfirm={placing || !fullName || !address || !city || !postalCode || !country || !phone}
       >
-        <div className="grid grid-cols-1 gap-3">
-          <input value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: John Doe/ចន ដូ" />
-          <input value={address} onChange={(e) => setAddress(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: Phnom Penh/ភ្នំពេញ" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <input value={city} onChange={(e) => setCity(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: Toul Kork/ទួលគោក" />
-            <input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Postal Code" />
-          </div>
+        <div className="grid grid-cols-1 gap-4">
+          {/* Full Name */}
           <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Country Code</label>
+            <label className="text-[9px] font-black uppercase tracking-widest text-gray-400 italic">Recipient_Name</label>
+            <input
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black transition-colors font-bold text-xs"
+              placeholder="NAME/ឈ្មោះ"
+            />
+          </div>
+
+          {/* Address */}
+          <div className="space-y-1">
+            <label className="text-[9px] font-black uppercase tracking-widest text-gray-400 italic">Street_Address</label>
+            <input
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black transition-colors font-bold text-xs"
+              placeholder="STREET/លេខផ្ទះ"
+            />
+          </div>
+
+          {/* City & Postal */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-[9px] font-black uppercase tracking-widest text-gray-400 italic">City</label>
+              <input
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black transition-colors font-bold text-xs"
+                placeholder="CITY/ក្រុង"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[9px] font-black uppercase tracking-widest text-gray-400 italic">Postal</label>
+              <input
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value)}
+                className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black transition-colors font-bold text-xs"
+                placeholder="00000"
+              />
+            </div>
+          </div>
+
+          {/* Country */}
+          <div className="space-y-1">
+            <label className="text-[9px] font-black uppercase tracking-widest text-gray-400 italic">Region_Origin</label>
             <select
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200 bg-white"
+              className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black bg-white font-bold text-xs appearance-none"
             >
-              <option value="">Select Country</option>
+              <option value="">SELECT_COUNTRY</option>
               {Object.entries(countryCodes).map(([code, name]) => (
                 <option key={code} value={code}>
-                  {code} - {name}
+                  {code} - {name.toUpperCase()}
                 </option>
               ))}
             </select>
           </div>
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Phone/លេខទូរស័ព្ទ" />
+
+          {/* Phone */}
+          <div className="space-y-1">
+            <label className="text-[9px] font-black uppercase tracking-widest text-gray-400 italic">Communication_Line</label>
+            <input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black transition-colors font-bold text-xs"
+              placeholder="PHONE/លេខទូរស័ព្ទ"
+            />
+          </div>
         </div>
       </Dialog>
     </>

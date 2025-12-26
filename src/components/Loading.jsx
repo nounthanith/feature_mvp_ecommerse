@@ -12,7 +12,7 @@ export default function Loading({ children }) {
       setIsLoading(false);
       // 🔓 Enable scroll again
       document.body.style.overflow = "auto";
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearTimeout(timer);
@@ -23,7 +23,7 @@ export default function Loading({ children }) {
   return (
     <>
       {isLoading && (
-        <div className="fixed inset-0 bg-black flex items-center justify-center z-[9999]">
+        <div className="fixed inset-0 bg-black flex items-center justify-center z-9999">
           <div className="snake-loader">
             <div className="dot"></div>
             <div className="dot"></div>

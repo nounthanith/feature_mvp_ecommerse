@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useOrder from './useOrder';
-import Pagination from '../products/Pagination';
 import { HiOutlinePrinter, HiOutlineDownload } from 'react-icons/hi';
+import Pagination from '../../components/Pagination';
 
 function Order({ page = 1 }) {
     const navigate = useNavigate();
@@ -82,7 +82,7 @@ function Order({ page = 1 }) {
 
                                         return (
                                             <div key={it._id} className="flex items-center gap-4 group">
-                                                <div className="h-12 w-12 bg-gray-100 border border-gray-200 flex-shrink-0 grayscale group-hover:grayscale-0 transition-all">
+                                                <div className="h-12 w-12 bg-gray-100 border border-gray-200 shrink-0 grayscale group-hover:grayscale-0 transition-all">
                                                     {imgUrl ? (
                                                         <img src={imgUrl} alt="" className="h-full w-full object-cover" />
                                                     ) : (

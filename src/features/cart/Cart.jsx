@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiShoppingCart, FiTrash2, FiPlus, FiMinus, FiArrowLeft } from 'react-icons/fi';
+import { FiShoppingCart, FiPlus, FiMinus, } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import useCart from './useCart';
 import toast from 'react-hot-toast';
@@ -16,7 +16,7 @@ export default function Cart() {
         clearCart
     } = useCart();
 
-    console.log(cart.totalPrice);
+    // console.log(cart.totalPrice);
     const navigate = useNavigate();
     const { CreateOrder } = useOrder();
     const STORAGE_KEY = 'checkoutInfo';
@@ -124,10 +124,8 @@ export default function Cart() {
         <>
             <div className="max-w-7xl min-h-[60vh] mx-auto px-2 sm:px-6 lg:px-8 mt-6">
                 {/* Mobile Header */}
-
-
                 {!cart?.items?.length ? (
-                    <div className="text-center min-h-[70vh] bg-white flex items-center justify-center ">
+                    <div className="text-center min-h-[70vh] bg-white flex items-center justify-center">
                         <div className="p-8">
                             {/* Minimalist Icon Wrapper */}
                             <div className="relative mx-auto h-24 w-24 border border-dashed border-gray-200 flex items-center justify-center mb-8">
@@ -297,10 +295,10 @@ export default function Cart() {
             </div>
             <Dialog
                 open={checkoutOpen}
-                title="Shipping Details"
-                description="Enter your shipping information to place the order"
-                confirmText={placing ? 'Placing…' : 'Place Order'}
-                cancelText="Cancel"
+                title="Shipping_Details"
+                description="Validation required for archive logistics"
+                confirmText={placing ? 'Processing...' : 'Place_Order'}
+                cancelText="Back"
                 onConfirm={async () => {
                     const payload = {
                         shippingAddress: {
@@ -313,7 +311,6 @@ export default function Cart() {
                         },
                         paymentMethod: paymentMethod === 'none' ? 'none' : paymentMethod
                     };
-                    console.log('Cart Checkout Payload:', JSON.stringify(payload, null, 2));
                     try {
                         setPlacing(true);
                         await CreateOrder(payload);
@@ -334,29 +331,78 @@ export default function Cart() {
                 onClose={() => setCheckoutOpen(false)}
                 disableConfirm={placing || !fullName || !address || !city || !postalCode || !country || !phone}
             >
-                <div className="grid grid-cols-1 gap-3">
-                    <input value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: John Doe/ចន ដូ" />
-                    <input value={address} onChange={(e) => setAddress(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: Phnom Penh/ភ្នំពេញ" />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <input value={city} onChange={(e) => setCity(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Eg: Toul Kork/ទួលគោក" />
-                        <input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Postal Code/លេខកិច្ចការស្រុក" />
-                    </div>
+                <div className="grid grid-cols-1 gap-4">
+                    {/* Full Name */}
                     <div className="space-y-1">
-                        <label className="text-sm font-medium text-gray-700">Country Code</label>
+                        <label className="text-[9px] font-black uppercase tracking-widest text-gray-400">Full_Name</label>
+                        <input
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black transition-colors font-bold text-xs"
+                            placeholder="EG: JOHN DOE"
+                        />
+                    </div>
+
+                    {/* Address */}
+                    <div className="space-y-1">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-gray-400">Street_Address</label>
+                        <input
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black transition-colors font-bold text-xs"
+                            placeholder="EG: PHNOM PENH, ST. 123"
+                        />
+                    </div>
+
+                    {/* City & Postal Code */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                            <label className="text-[9px] font-black uppercase tracking-widest text-gray-400">City</label>
+                            <input
+                                value={city}
+                                onChange={(e) => setCity(e.target.value)}
+                                className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black transition-colors font-bold text-xs"
+                                placeholder="CITY"
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-[9px] font-black uppercase tracking-widest text-gray-400">Postal_Code</label>
+                            <input
+                                value={postalCode}
+                                onChange={(e) => setPostalCode(e.target.value)}
+                                className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black transition-colors font-bold text-xs"
+                                placeholder="00000"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Country Select */}
+                    <div className="space-y-1">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-gray-400">Country_Origin</label>
                         <select
                             value={country}
                             onChange={(e) => setCountry(e.target.value)}
-                            className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200 bg-white"
+                            className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black bg-white font-bold text-xs appearance-none"
                         >
-                            <option value="">Select Country</option>
+                            <option value="">SELECT_REGION</option>
                             {Object.entries(countryCodes).map(([code, name]) => (
                                 <option key={code} value={code}>
-                                    {code} - {name}
+                                    {code} - {name.toUpperCase()}
                                 </option>
                             ))}
                         </select>
                     </div>
-                    <input value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-rose-200" placeholder="Phone/លេខទូរស័ព្ទ" />
+
+                    {/* Phone */}
+                    <div className="space-y-1">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-gray-400">Contact_Number</label>
+                        <input
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="w-full border-2 border-gray-100 rounded-none px-3 py-2 outline-none focus:border-black transition-colors font-bold text-xs"
+                            placeholder="+855 000 000"
+                        />
+                    </div>
                 </div>
             </Dialog>
         </>

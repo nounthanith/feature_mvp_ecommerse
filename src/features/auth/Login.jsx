@@ -52,108 +52,108 @@ function Login() {
     };
 
     return (
-        <div className="py-20 flex items-center justify-center p-4">
+        <div className="py-20 flex items-center justify-center p-4 bg-gray-50/50 min-h-[60vh]">
             <div className="w-full max-w-md">
-                <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                {/* Main Industrial Container */}
+                <div className="bg-white border-2 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                     <div className="p-8">
-                        <div className="flex items-center mb-8">
+                        {/* Header with Navigation */}
+                        <div className="flex items-center mb-10">
                             <button
                                 onClick={() => navigate(-1)}
-                                className="p-2 rounded-full hover:bg-gray-100 mr-4 transition-colors"
+                                className="p-2 border border-black hover:bg-black hover:text-white transition-all mr-4 group"
                             >
-                                <FiArrowLeft className="w-5 h-5 text-gray-600" />
+                                <FiArrowLeft className="w-4 h-4" />
                             </button>
-                            <h2 className="text-2xl font-bold text-gray-900">Welcome Back</h2>
+                            <div>
+                                <h2 className="text-3xl font-black uppercase tracking-tighter italic">Auth_Access</h2>
+                                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-1">System_Entry_v2.0</p>
+                            </div>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                                    Email Address
+                            {/* Email Input */}
+                            <div className="space-y-1">
+                                <label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-black">
+                                    Identification_Email
                                 </label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <FiMail className="h-5 w-5 text-gray-400" />
+                                        <FiMail className="h-4 w-4 text-black" />
                                     </div>
                                     <input
                                         id="email"
-                                        name="email"
                                         type="email"
-                                        autoComplete="email"
                                         required
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent focus:outline-none transition"
-                                        placeholder="your@email.com"
+                                        className="block w-full pl-10 pr-3 py-3 border-2 border-gray-100 rounded-none focus:border-black focus:outline-none transition-colors font-bold text-xs uppercase"
+                                        placeholder="USER@ARCHIVE.COM"
                                     />
                                 </div>
                             </div>
 
-                            <div>
-                                <div className="flex justify-between items-center mb-1">
-                                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                        Password
+                            {/* Password Input */}
+                            <div className="space-y-1">
+                                <div className="flex justify-between items-center">
+                                    <label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-black">
+                                        Security_Key
                                     </label>
-                                    
                                 </div>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <FiLock className="h-5 w-5 text-gray-400" />
+                                        <FiLock className="h-4 w-4 text-black" />
                                     </div>
                                     <input
                                         id="password"
-                                        name="password"
                                         type={showPassword ? 'text' : 'password'}
-                                        autoComplete="current-password"
                                         required
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent focus:outline-none transition"
+                                        className="block w-full pl-10 pr-10 py-3 border-2 border-gray-100 rounded-none focus:border-black focus:outline-none transition-colors font-bold text-xs"
                                         placeholder="••••••••"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-black"
                                     >
-                                        {showPassword ? (
-                                            <FiEyeOff className="h-5 w-5" />
-                                        ) : (
-                                            <FiEye className="h-5 w-5" />
-                                        )}
+                                        {showPassword ? <FiEyeOff className="h-4 w-4" /> : <FiEye className="h-4 w-4" />}
                                     </button>
                                 </div>
                             </div>
 
-                            <div>
+                            {/* Submit Button */}
+                            <div className="pt-2">
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className={`w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-all duration-200 ${isLoading ? 'opacity-75 cursor-not-allowed' : ''}`}
+                                    className={`w-full flex justify-center items-center py-4 border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-xs font-black uppercase tracking-[0.3em] transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ${isLoading
+                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200 shadow-none'
+                                            : 'bg-black text-white hover:bg-rose-600 hover:border-rose-600'
+                                        }`}
                                 >
                                     {isLoading ? (
-                                        <span className="flex items-center">
-                                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                            </svg>
-                                            Signing in...
-                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <div className="h-3 w-3 border-2 border-white border-t-transparent animate-spin"></div>
+                                            <span>Authorizing...</span>
+                                        </div>
                                     ) : (
-                                        'Sign in'
+                                        'Initiate_Login'
                                     )}
                                 </button>
                             </div>
                         </form>
                     </div>
 
-                    <div className="bg-gray-50 px-8 py-4 border-t border-gray-200">
-                        <p className="text-sm text-center text-gray-600">
-                            Don't have an account?{' '}
-                            <Link to="/register" className="font-medium text-rose-600 hover:text-rose-700">
-                                Sign up
-                            </Link>
+                    {/* Footer */}
+                    <div className="bg-gray-50 px-8 py-5 border-t-2 border-black flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                            New_Collector?
                         </p>
+                        <Link to="/register" className="text-[10px] font-black text-black uppercase tracking-widest border-b-2 border-black hover:text-rose-600 hover:border-rose-600 transition-all">
+                            Create_Account
+                        </Link>
                     </div>
                 </div>
             </div>

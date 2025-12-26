@@ -4,6 +4,7 @@ import useProduct from '../products/useProduct';
 import { CiShoppingCart } from 'react-icons/ci';
 import useCart from '../cart/useCart';
 import { GoTrash } from "react-icons/go";
+import { Link } from 'react-router-dom';
 
 function Wishlist() {
     const { wishlist, loading, error, getWishlist, clearWishlist, checkWishlistStatus, addToWishlist, removeFromWishlist } = useWishlist();
@@ -60,12 +61,12 @@ function Wishlist() {
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest max-w-xs leading-loose">
                 You haven't saved any items to your wishlist yet.
             </p>
-            <button
-                onClick={() => window.history.back()}
+            <Link
+                to='/'
                 className="mt-8 px-8 py-3 bg-black text-white text-[10px] font-black uppercase tracking-[0.3em] hover:bg-rose-600 transition-all active:scale-95"
             >
                 Start Shopping
-            </button>
+            </Link>
         </div>
     );
 

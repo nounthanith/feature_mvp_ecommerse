@@ -37,7 +37,7 @@ function Profile() {
         {/* Left Section - Profile Info */}
         <div className="flex items-center z-10">
           <div className="h-24 w-24 sm:h-28 sm:w-28 bg-white border-2 border-black flex items-center justify-center relative">
-            <RxPerson className="w-14 h-14 sm:w-16 h-16 text-black" />
+            <RxPerson className="w-14 h-14 sm:w-16 text-black" />
             {/* Small square badge for status */}
             <div className="absolute -bottom-2 -right-2 bg-black text-white text-[10px] px-2 py-1 font-bold uppercase tracking-widest">
               Active

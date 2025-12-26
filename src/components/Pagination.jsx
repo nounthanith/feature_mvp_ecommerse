@@ -21,7 +21,7 @@ function Pagination({ page = 1, totalPages = 1, onPageChange = () => { } }) {
                             className={`px-1 py-1 border rounded-none ${page === 1 ? 'text-gray-400 border-gray-200 cursor-not-allowed' : 'text-black border-gray-300 hover:bg-gray-100 cursor-pointer'}`}
                             aria-label="Previous"
                         >
-                            <IoIosArrowBack size={25}/>
+                            <IoIosArrowBack size={25} />
                         </button>
                     </li>
                     {pages.map((p) => (
@@ -41,7 +41,7 @@ function Pagination({ page = 1, totalPages = 1, onPageChange = () => { } }) {
                             className={`px-1 py-1 border rounded-none ${page === safeTotal ? 'text-gray-400 border-gray-200 cursor-not-allowed' : 'text-black border-gray-300 hover:bg-gray-100 cursor-pointer'}`}
                             aria-label="Next"
                         >
-                            <IoIosArrowForward size={25}/>
+                            <IoIosArrowForward size={25} />
                         </button>
                     </li>
                 </ul>
