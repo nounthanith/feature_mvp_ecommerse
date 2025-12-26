@@ -37,8 +37,8 @@ function Navbar() {
 
   const navLinks = [
     { name: 'ARCHIVE_SHOP', path: '/' },
-    { name: 'PARTNERS', path: '/our-partner' },
-    { name: 'LOGISTICS', path: '/about' },
+    // { name: 'PARTNERS', path: '/our-partner' },
+    { name: 'LOGISTICS', path: '/logistics' },
     { name: 'CONTACT', path: '/contact' },
   ];
 

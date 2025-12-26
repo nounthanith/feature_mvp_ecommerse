@@ -130,7 +130,7 @@ function CategoryIdProduct() {
                     </div>
 
                     {/* PRODUCT GRID - YOUR ORIGINAL STYLE */}
-                    <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2 bg-white border-x border-black">
+                    <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 p-2 bg-white">
                         {products.data.map((product) => (
                             <div
                                 key={product._id}
@@ -196,7 +196,7 @@ function CategoryIdProduct() {
                                         disabled={Number(product.stock || 0) <= 0}
                                         onClick={() => { if ((product.stock || 0) <= 0) return; addToCart(product._id, 1); }}
                                         className={`mt-3 w-full flex items-center justify-center gap-3 font-black uppercase text-[10px] tracking-[0.2em] py-3 transition-all duration-300 border-2 border-black ${Number(product.stock || 0) <= 0
-                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed line-through'
+                                            ? 'bg-gray-100 text-gray-400 border border-gray-400 cursor-not-allowed line-through'
                                             : 'bg-black text-white hover:bg-white hover:text-black'
                                             }`}>
                                         Add_to_Cart

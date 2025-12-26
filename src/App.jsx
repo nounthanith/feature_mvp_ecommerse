@@ -13,6 +13,8 @@ import Cart from './features/cart/Cart';
 import Wishlist from './features/wishlist/Wishlist';
 import Arrival from './features/arrival/Arrival';
 import Invoice from './features/order/Invoice';
+import Contact from "./pages/Contact.jsx";
+import Logistics from './pages/Logistics.jsx';
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('token');
@@ -111,6 +113,8 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/arrival" element={<Arrival />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/logistics" element={<Logistics />} />
           <Route
             path="/profile"
             element={
